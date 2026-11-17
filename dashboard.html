@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tamam Dashboard — لوحة تمام</title>
+<meta name="theme-color" content="#0A3A2D">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#F4F1EA; --surface:#FFFFFF; --surface-2:#FAF8F3; --ink:#1B1A17; --ink-2:#52514e; --muted:#6B6A63;
+  --line:#E4DED1; --line-2:#D9D3C4; --g9:#0A3A2D; --g7:#0E5B47; --g1:#E3EDE8; --amber:#E9A23B; --amber-bg:#FBEBD2;
+  --ok:#1B6B47; --warn:#8A5300; --bad:#B3261E; --bad-bg:#FCE9E7;
+  --s1:#1a8a5f; --s2:#2a78d6; --s3:#eb6834; --s4:#6250d6; --s5:#eda100;
+  --shadow:0 1px 2px rgba(15,34,25,.04),0 6px 20px -12px rgba(15,34,25,.18); --r:16px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    --bg:#121614; --surface:#1a1f1c; --surface-2:#202622; --ink:#f0efec; --ink-2:#c3c2b7; --muted:#a3a29a;
+    --line:#2b322e; --line-2:#36403a; --g9:#0d4a39; --g7:#34b386; --g1:#1f3a30; --amber-bg:#3a2c12;
+    --ok:#4cc38a; --warn:#e0a84a; --bad:#ff8a80; --bad-bg:#3a1e1c;
+    --s1:#199e70; --s2:#3987e5; --s3:#d95926; --s4:#9085e9; --s5:#c98500; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121614; --surface:#1a1f1c; --surface-2:#202622; --ink:#f0efec; --ink-2:#c3c2b7; --muted:#a3a29a;
+  --line:#2b322e; --line-2:#36403a; --g9:#0d4a39; --g7:#34b386; --g1:#1f3a30; --amber-bg:#3a2c12;
+  --ok:#4cc38a; --warn:#e0a84a; --bad:#ff8a80; --bad-bg:#3a1e1c;
+  --s1:#199e70; --s2:#3987e5; --s3:#d95926; --s4:#9085e9; --s5:#c98500; color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic","IBM Plex Sans","Noto Sans Arabic","Segoe UI",system-ui,-apple-system,Tahoma,sans-serif;font-size:14px}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--g7)}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;display:inline-block}
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+[dir=rtl] .flip{transform:scaleX(-1)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* shell */
+.shell{display:flex;min-height:100dvh}
+.side{width:248px;flex:none;background:#0A3A2D;color:#E9F1ED;padding:22px 14px;position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;gap:6px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.05'%3E%3Crect x='11' y='11' width='22' height='22'/%3E%3Crect x='11' y='11' width='22' height='22' transform='rotate(45 22 22)'/%3E%3C/g%3E%3C/svg%3E")}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px}
+.brand .lg{width:42px;height:42px;border-radius:13px;background:#E9A23B;color:#0A3A2D;display:grid;place-items:center;font-weight:800;font-size:22px}
+.brand b{font-size:19px;display:block}.brand small{opacity:.7;font-size:12px}
+.nav-i{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;color:#CFE3DA;font-weight:600;text-decoration:none;font-size:14px}
+.nav-i:hover{background:rgba(255,255,255,.06)}
+.nav-i.on{background:rgba(255,255,255,.12);color:#fff}
+.nav-i .cnt{margin-inline-start:auto;background:#E9A23B;color:#1B1A17;border-radius:999px;font-size:11px;font-weight:800;padding:1px 8px}
+.side .foot{margin-top:auto;font-size:12px;opacity:.7;padding:8px}
+.main{flex:1;min-width:0;padding:22px 26px 60px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.top h1{font-size:24px;color:var(--g9);letter-spacing:-.01em}
+:root[data-theme="dark"] .top h1{color:var(--ink)}
+.top .sub{color:var(--muted);font-size:13px;margin-top:2px}
+.top .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 13px;border-radius:12px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line-2);font-weight:600;font-size:13px}
+.pill.ib{width:40px;justify-content:center;padding:0;position:relative}
+.dot{position:absolute;top:6px;inset-inline-end:6px;min-width:16px;height:16px;border-radius:9px;background:var(--bad);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;padding:0 4px}
+.seg{display:inline-flex;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line-2);border-radius:12px;padding:3px;gap:2px}
+.seg button{height:34px;padding:0 12px;border-radius:9px;font-weight:600;font-size:13px;color:var(--ink-2)}
+.seg button.on{background:var(--g7);color:#fff}
+select.pill{appearance:none;padding-inline-end:28px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 15px) 17px,calc(100% - 10px) 17px;background-size:5px 5px;background-repeat:no-repeat}
+[dir=rtl] select.pill{background-position:15px 17px,10px 17px}
+
+/* cards */
+.grid{display:grid;gap:14px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:14px}
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow),inset 0 0 0 1px var(--line);padding:16px 18px;min-width:0}
+.kpi .lbl{color:var(--muted);font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:8px}
+.kpi .lbl .ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--g1);color:var(--g7)}
+.kpi .v{font-size:27px;font-weight:800;margin-top:10px;letter-spacing:-.02em}
+.kpi .v small{font-size:13px;color:var(--muted);font-weight:600;margin-inline-start:4px}
+.kpi .s{font-size:12px;color:var(--muted);margin-top:4px}
+.kpi.hero{background:#0A3A2D;color:#fff;box-shadow:var(--shadow);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23E9A23B' stroke-opacity='.13'%3E%3Crect x='11' y='11' width='22' height='22'/%3E%3Crect x='11' y='11' width='22' height='22' transform='rotate(45 22 22)'/%3E%3C/g%3E%3C/svg%3E")}
+.kpi.hero .lbl,.kpi.hero .s,.kpi.hero .v small{color:#CFE3DA}
+.kpi.hero .lbl .ico{background:rgba(255,255,255,.12);color:#E9A23B}
+.row2{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);margin-bottom:14px}
+.row3{grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:14px}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.ch h2{font-size:16px}
+.ch .hint{color:var(--muted);font-size:12px}
+.ch a,.ch button.lnk{font-size:12.5px;font-weight:600;color:var(--g7)}
+.emp{color:var(--muted);text-align:center;padding:26px 8px;font-size:13px}
+
+/* insights */
+.insights{display:flex;gap:10px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px;scrollbar-width:thin}
+.ins{flex:0 0 auto;max-width:360px;display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-size:13px;line-height:1.45}
+.ins .ii{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;flex:none}
+.ins.good .ii{background:var(--g1);color:var(--ok)} .ins.warn .ii{background:var(--amber-bg);color:var(--warn)} .ins.bad .ii{background:var(--bad-bg);color:var(--bad)}
+.ins b{display:block;font-size:13px;margin-bottom:1px}
+.ins .tag{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+
+/* chart */
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .grid-l{stroke:var(--line);stroke-width:1}
+.chart .axis{fill:var(--muted);font-size:11px}
+.chart .bar{fill:var(--s1)}
+.chart .bar.hl{fill:var(--g7)}
+.chart .avg{stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4;fill:none}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);padding:8px 10px;border-radius:10px;font-size:12px;line-height:1.45;white-space:nowrap;transform:translate(-50%,-110%);opacity:0;transition:opacity .1s;z-index:5}
+.tip.on{opacity:1}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:6px;vertical-align:-1px}
+.donut-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.donut-wrap svg{width:170px;height:170px;flex:none}
+.dlist{flex:1;min-width:180px;display:flex;flex-direction:column;gap:7px}
+.dlist .it{display:flex;align-items:center;gap:8px;font-size:13px}
+.dlist .it i{width:11px;height:11px;border-radius:3px;flex:none}
+.dlist .it span{flex:1}
+.dlist .it b{font-weight:700}
+.dlist .it em{font-style:normal;color:var(--muted);width:42px;text-align:end}
+.bars-h .it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;margin-bottom:10px;font-size:13px}
+.bars-h .tr{grid-column:1/-1;height:8px;border-radius:4px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)}
+.bars-h .fl{height:100%;border-radius:4px;background:var(--s2)}
+
+/* team */
+.team{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.eng{display:flex;flex-direction:column;gap:10px}
+.eng .hd{display:flex;align-items:center;gap:10px}
+.av{width:38px;height:38px;border-radius:12px;background:var(--g1);color:var(--g7);display:grid;place-items:center;font-weight:800;flex:none}
+.eng .hd b{display:block;font-size:14px}.eng .hd small{color:var(--muted);font-size:12px}
+.eng .bal{font-size:22px;font-weight:800}
+.eng .meta{display:flex;gap:12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.flag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px}
+.flag.warn{background:var(--amber-bg);color:var(--warn)}.flag.ok{background:var(--g1);color:var(--ok)}.flag.bad{background:var(--bad-bg);color:var(--bad)}
+.btn{height:38px;padding:0 14px;border-radius:11px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn.p{background:var(--g7);color:#fff}.btn.s{background:var(--g1);color:var(--g7)}.btn.d{background:var(--bad-bg);color:var(--bad)}.btn.o{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line-2)}
+.btn:disabled{opacity:.5;cursor:default}
+
+/* approvals */
+.appr{display:flex;flex-direction:column;gap:10px}
+.ap{display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)}
+.ap .th{width:52px;height:52px;border-radius:10px;background:var(--line);flex:none;overflow:hidden;display:grid;place-items:center;color:var(--muted)}
+.ap .th img{width:100%;height:100%;object-fit:cover}
+.ap .t{flex:1;min-width:0}.ap .t b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ap .t small{color:var(--muted);font-size:12px}
+.ap .amt{font-weight:800;font-size:16px;white-space:nowrap}
+.ap .acts{display:flex;gap:6px}
+
+/* table */
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tools input{height:40px;border-radius:12px;border:0;box-shadow:inset 0 0 0 1px var(--line-2);background:var(--surface);padding:0 12px;min-width:220px;flex:1;outline:none}
+.tools input:focus{box-shadow:inset 0 0 0 2px var(--g7)}
+.tbl-wrap{overflow-x:auto;border-radius:12px;box-shadow:inset 0 0 0 1px var(--line)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+th{text-align:start;font-size:12px;color:var(--muted);font-weight:700;padding:10px 12px;background:var(--surface-2);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--surface-2)}
+.st{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.st.ok{background:var(--g1);color:var(--ok)}.st.pend{background:var(--amber-bg);color:var(--warn)}.st.rejected{background:var(--bad-bg);color:var(--bad)}.st.done{background:var(--surface-2);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
+.kind{display:inline-flex;align-items:center;gap:6px}
+.kind i{width:8px;height:8px;border-radius:50%}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:10px;color:var(--muted);font-size:12.5px}
+
+/* photos */
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.ph{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .cap{position:absolute;inset-inline:0;bottom:0;padding:16px 8px 6px;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff;font-size:11.5px;display:flex;justify-content:space-between;gap:6px}
+.reports{display:flex;flex-direction:column;gap:10px}
+.rep{padding:12px 14px;border-radius:14px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);font-size:13px;line-height:1.55}
+.rep .hd{display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;font-size:12px;color:var(--muted)}
+.rep .safety{margin-top:6px;color:var(--warn);font-weight:600}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(10,20,15,.55);z-index:40;display:grid;place-items:center;padding:20px}
+.modal{background:var(--surface);border-radius:18px;max-width:860px;width:100%;max-height:90dvh;overflow:auto;padding:20px;box-shadow:0 30px 60px -20px rgba(0,0,0,.5)}
+.modal img.full{width:100%;border-radius:12px;display:block}
+.mh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.toast{position:fixed;bottom:20px;inset-inline-start:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:12px;font-weight:600;z-index:60;box-shadow:0 14px 30px -10px rgba(0,0,0,.5)}
+[dir=rtl] .toast{transform:translateX(50%)}
+
+/* auth */
+.auth{min-height:100dvh;display:grid;grid-template-columns:1.1fr 1fr}
+.auth .art{background:#0A3A2D;color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='66' height='66' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23E9A23B' stroke-opacity='.16'%3E%3Crect x='11' y='11' width='22' height='22'/%3E%3Crect x='11' y='11' width='22' height='22' transform='rotate(45 22 22)'/%3E%3C/g%3E%3C/svg%3E")}
+.auth .art h2{font-size:40px;line-height:1.15;max-width:460px}
+.auth .art p{opacity:.8;max-width:420px;line-height:1.6;margin-top:12px}
+.auth .art .feat{display:grid;gap:12px;margin-top:28px}
+.auth .art .feat div{display:flex;gap:10px;align-items:center;font-weight:600}
+.auth .art .feat i{width:30px;height:30px;border-radius:9px;background:rgba(233,162,59,.18);color:#E9A23B;display:grid;place-items:center}
+.auth form{align-self:center;justify-self:center;width:min(380px,92vw);padding:30px 0}
+.auth form h1{font-size:26px;margin-bottom:6px}
+.auth label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin:14px 0 6px}
+.auth input{width:100%;height:48px;border-radius:12px;border:0;box-shadow:inset 0 0 0 1px var(--line-2);background:var(--surface);padding:0 14px;outline:none;font-size:15px}
+.auth input:focus{box-shadow:inset 0 0 0 2px var(--g7)}
+.auth .err{background:var(--bad-bg);color:var(--bad);padding:10px 12px;border-radius:10px;margin-top:12px;font-size:13px;font-weight:600}
+
+/* statement print */
+.stmt table{min-width:0}
+@media print{
+  .side,.top,.no-print,.scrim .mh .btn{display:none!important}
+  body{background:#fff}.scrim{position:static;background:none;padding:0}.modal{box-shadow:none;max-height:none;padding:0}
+  .main{padding:0}
+}
+
+/* responsive */
+@media (max-width:1100px){.row2,.row3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:860px){
+  .shell{flex-direction:column}
+  .side{width:auto;height:auto;position:sticky;top:0;z-index:30;flex-direction:row;align-items:center;padding:10px 12px;overflow-x:auto;gap:4px}
+  .brand{padding:0 6px 0 0}.brand small,.side .foot{display:none}
+  .nav-i{padding:9px 11px;white-space:nowrap}.nav-i span.lb{display:none}
+  .main{padding:16px 14px 50px}
+  .auth{grid-template-columns:1fr}.auth .art{padding:28px}.auth .art h2{font-size:28px}.auth .art .feat{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="vendor/supabase-2.118.0.js"></script>
+<script>
+/* ============ CONFIG ============ */
+const SUPA_URL = 'https://ebqnnkbuxjqxixzjszkb.supabase.co';
+const SUPA_KEY = 'sb_publishable_vkaDtrpm7F18WM1riRYZcA_cFAZAhpr';
+const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, { auth: { persistSession: true, autoRefreshToken: true, storageKey: 'tamam-dash-auth' } });
+
+/* ============ I18N ============ */
+const T = {
+  ar: {
+    dash: 'لوحة التحكم', title_owner: 'لوحة متابعة المشاريع', title_eng: 'لوحتي — مصروفات العهدة', sub_owner: 'كل المهندسين وكل المصروفات في مكان واحد', sub_eng: 'عهدتك ومصروفاتك فقط',
+    nav_over: 'نظرة عامة', nav_exp: 'المصروفات', nav_appr: 'الموافقات', nav_team: 'الفريق', nav_ph: 'الصور والتقارير', nav_stmt: 'كشف العهدة',
+    today: 'اليوم', d7: '7 أيام', d30: '30 يوماً', all: 'الكل', all_eng: 'كل المهندسين',
+    spent: 'إجمالي المصروف', cash_team: 'العهدة لدى المهندسين', cash_me: 'عهدتي النقدية', awaiting: 'بانتظار الموافقة', vat_rec: 'ضريبة قابلة للاسترداد', entries: 'عدد العمليات', requested: 'طلبات تغذية',
+    vs_prev: '{p} عن الفترة السابقة', items_n: '{n} عملية', valid_vat: 'من {n} فاتورة برقم ضريبي صحيح', engs_n: 'لدى {n} مهندس',
+    daily: 'المصروف اليومي', daily_hint: 'الخط المتقطع = متوسط 7 أيام', breakdown: 'توزيع المصروفات', top_m: 'أعلى الموردين',
+    appr_t: 'بانتظار موافقتك', approve: 'موافقة', reject: 'رفض', no_appr: 'لا يوجد شيء بانتظار الموافقة 🎉', topup: 'طلب تغذية عهدة',
+    team_t: 'المهندسون', bal: 'الرصيد', spent_today: 'مصروف اليوم', pending: 'معلّق', stmt_btn: 'كشف الحساب', low_cash: 'رصيد منخفض', healthy: 'جيد', no_team: 'لا يوجد مهندسون بعد',
+    exp_t: 'سجل المصروفات', search: 'ابحث بالمورد أو المهندس أو رقم السند…', f_kind: 'النوع', f_status: 'الحالة', csv: 'تصدير Excel',
+    c_date: 'التاريخ', c_eng: 'المهندس', c_title: 'البيان', c_kind: 'النوع', c_stage: 'المرحلة', c_pay: 'الدفع', c_vat: 'الضريبة', c_amt: 'المبلغ', c_st: 'الحالة', c_photo: 'المرفق',
+    k_receipt: 'فاتورة', k_labor: 'أجور عمالة', k_video: 'فيديو', st_ok: 'معتمد', st_pend: 'معلّق', st_rejected: 'مرفوض', st_done: 'منشور', cash: 'نقداً', card: 'بطاقة',
+    stage_exc: 'الحفر', stage_fnd: 'التأسيس', stage_fin: 'التشطيب', stage_gen: 'عام', labor: 'العمالة',
+    photos_t: 'آخر صور الموقع', reports_t: 'تقارير الموقع الذكية', no_photos: 'لا توجد صور بعد', no_reports: 'لا توجد تقارير فيديو بعد', view: 'عرض',
+    stmt_t: 'كشف حساب العهدة', print: 'طباعة / PDF', close: 'إغلاق', opening: 'رصيد افتتاحي', s_topup: 'تغذية', s_expense: 'مصروف', s_labor: 'أجور', s_refund: 'رجيع',
+    s_in: 'وارد', s_out: 'صادر', s_run: 'الرصيد', s_note: 'البيان', page: 'صفحة {a} من {b}', prev: 'السابق', next: 'التالي', showing: '{n} عملية',
+    ins_t: 'تنبيهات تمام الذكية', refresh: 'تحديث', updated: 'آخر تحديث {t}', sign_out: 'خروج', owner: 'المالك', engineer: 'مهندس موقع',
+    sign_in: 'تسجيل الدخول', email: 'البريد الإلكتروني', password: 'كلمة المرور', go: 'دخول', auth_err: 'تعذّر الدخول: {m}', open_app: 'فتح تطبيق الجوال',
+    art_h: 'كل ريال في الموقع، واضح أمامك.', art_p: 'تمام يجمع فواتير الموقع وأجور العمالة وتقارير الفيديو في لوحة واحدة: المالك يرى كل المشاريع، والمهندس يرى عهدته فقط.',
+    f1: 'موافقة بضغطة للفواتير فوق 500 ر.س', f2: 'ضريبة القيمة المضافة والفواتير المكررة تُفحص تلقائياً', f3: 'كشف عهدة جاهز للطباعة لكل مهندس',
+    done: 'تم', approved: 'تمت الموافقة', rejected: 'تم الرفض', share: 'نسبة', sar: 'ر.س', lang: 'EN', theme: 'الوضع الداكن', bell: 'الموافقات المعلقة',
+    i_spike: 'مصروف اليوم {x}× متوسط الأسبوع', i_spike_d: 'اليوم {a} ر.س مقابل متوسط {b} ر.س يومياً.',
+    i_low: 'عهدة {n} منخفضة', i_low_d: 'الرصيد {a} ر.س فقط — راجع طلب التغذية.', i_novat: '{n} فاتورة بدون رقم ضريبي صحيح', i_novat_d: '{a} ر.س مشتريات لا يمكن استرداد ضريبتها.',
+    i_wait: '{n} طلب ينتظر قرارك', i_wait_d: 'بقيمة {a} ر.س — المهندسون لا يستطيعون الصرف منها حتى توافق.', i_safety: 'ملاحظة سلامة في تقرير الموقع', i_safety_d: '{d}',
+    i_ok: 'كل شيء تحت السيطرة', i_ok_d: 'لا توجد تنبيهات حالياً. استمروا!', i_vat: 'ضريبة مستردة {a} ر.س', i_vat_d: 'من فواتير معتمدة برقم ضريبي صحيح خلال الفترة.',
+    i_quiet: 'لا مصروفات اليوم', i_quiet_d: 'لم تُسجّل أي عملية اليوم حتى الآن.', i_top: 'أعلى مورد: {m}', i_top_d: '{a} ر.س خلال الفترة ({p} من المصروف).'
+  },
+  en: {
+    dash: 'Dashboard', title_owner: 'Projects overview', title_eng: 'My custody spending', sub_owner: 'Every engineer and every riyal in one place', sub_eng: 'Your custody and your spending only',
+    nav_over: 'Overview', nav_exp: 'Expenses', nav_appr: 'Approvals', nav_team: 'Team', nav_ph: 'Photos & reports', nav_stmt: 'Custody statement',
+    today: 'Today', d7: '7 days', d30: '30 days', all: 'All', all_eng: 'All engineers',
+    spent: 'Total spent', cash_team: 'Cash with engineers', cash_me: 'My cash in hand', awaiting: 'Awaiting approval', vat_rec: 'Recoverable VAT', entries: 'Entries', requested: 'Top-ups requested',
+    vs_prev: '{p} vs previous period', items_n: '{n} items', valid_vat: 'from {n} receipts with a valid VAT number', engs_n: 'across {n} engineers',
+    daily: 'Daily spending', daily_hint: 'Dashed line = 7-day average', breakdown: 'Spending breakdown', top_m: 'Top merchants',
+    appr_t: 'Waiting for your approval', approve: 'Approve', reject: 'Reject', no_appr: 'Nothing waiting for approval 🎉', topup: 'Custody top-up',
+    team_t: 'Engineers', bal: 'Balance', spent_today: 'Spent today', pending: 'pending', stmt_btn: 'Statement', low_cash: 'Low cash', healthy: 'Healthy', no_team: 'No engineers yet',
+    exp_t: 'Expense log', search: 'Search merchant, engineer or voucher no.…', f_kind: 'Type', f_status: 'Status', csv: 'Export Excel',
+    c_date: 'Date', c_eng: 'Engineer', c_title: 'Description', c_kind: 'Type', c_stage: 'Stage', c_pay: 'Paid by', c_vat: 'VAT', c_amt: 'Amount', c_st: 'Status', c_photo: 'File',
+    k_receipt: 'Receipt', k_labor: 'Labor', k_video: 'Video', st_ok: 'Approved', st_pend: 'Pending', st_rejected: 'Rejected', st_done: 'Posted', cash: 'Cash', card: 'Card',
+    stage_exc: 'Excavation', stage_fnd: 'Foundation', stage_fin: 'Finishing', stage_gen: 'General', labor: 'Labor',
+    photos_t: 'Latest site photos', reports_t: 'AI site reports', no_photos: 'No photos yet', no_reports: 'No video reports yet', view: 'View',
+    stmt_t: 'Custody statement', print: 'Print / PDF', close: 'Close', opening: 'Opening balance', s_topup: 'Top-up', s_expense: 'Expense', s_labor: 'Labor', s_refund: 'Refund',
+    s_in: 'In', s_out: 'Out', s_run: 'Balance', s_note: 'Description', page: 'Page {a} of {b}', prev: 'Previous', next: 'Next', showing: '{n} entries',
+    ins_t: 'Tamam smart alerts', refresh: 'Refresh', updated: 'Updated {t}', sign_out: 'Sign out', owner: 'Owner', engineer: 'Site engineer',
+    sign_in: 'Sign in', email: 'Email', password: 'Password', go: 'Sign in', auth_err: 'Could not sign in: {m}', open_app: 'Open the mobile app',
+    art_h: 'Every riyal on site, clear in front of you.', art_p: 'Tamam brings site receipts, labor payments and video reports into one dashboard: owners see every project, engineers see only their own custody.',
+    f1: 'One-click approval for receipts over 500 SAR', f2: 'VAT numbers and duplicate receipts checked automatically', f3: 'Print-ready custody statement per engineer',
+    done: 'Done', approved: 'Approved', rejected: 'Rejected', share: 'Share', sar: 'SAR', lang: 'ع', theme: 'Dark mode', bell: 'Pending approvals',
+    i_spike: "Today's spending is {x}× the weekly average", i_spike_d: 'Today {a} SAR vs an average of {b} SAR per day.',
+    i_low: "{n}'s cash is low", i_low_d: 'Only {a} SAR left — check the top-up request.', i_novat: '{n} receipts without a valid VAT number', i_novat_d: '{a} SAR of purchases where VAT cannot be recovered.',
+    i_wait: '{n} requests waiting for you', i_wait_d: 'Worth {a} SAR — engineers are blocked until you decide.', i_safety: 'Safety note in a site report', i_safety_d: '{d}',
+    i_ok: 'Everything under control', i_ok_d: 'No alerts right now. Keep it up!', i_vat: 'Recoverable VAT {a} SAR', i_vat_d: 'From approved receipts with a valid VAT number in this period.',
+    i_quiet: 'No spending today', i_quiet_d: 'Nothing has been recorded today yet.', i_top: 'Top merchant: {m}', i_top_d: '{a} SAR this period ({p} of spending).'
+  }
+};
+let lang = localStorage.getItem('tamam-dash-lang') || 'ar';
+const t = (k, v) => { let s = (T[lang][k] ?? T.en[k] ?? k); if (v) for (const x in v) s = s.split('{' + x + '}').join(v[x]); return s; };
+const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const fmt = n => Math.round(Number(n) || 0).toLocaleString('en-US');
+const fmt2 = n => (Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const P = {
+  home: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', list: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', check: 'M20 6L9 17l-5-5',
+  users: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8',
+  camera: 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z', file: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8',
+  wallet: 'M3 7a2 2 0 0 1 2-2h13v4M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2zM16 14h.01', clock: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2',
+  shield: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', bell: 'M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0', x: 'M18 6L6 18M6 6l12 12',
+  out: 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9', refresh: 'M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15',
+  down: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3', moon: 'M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z', alert: 'M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01',
+  trend: 'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6', spark: 'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z', receipt: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', phone: 'M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM12 18h.01'
+};
+const I = (n, s) => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"${s ? ` style="width:${s}px;height:${s}px"` : ''}><path d="${P[n]}"/></svg>`;
+
+/* ============ STATE ============ */
+const S = { session: null, profile: null, entries: [], moves: [], topups: [], team: [], period: localStorage.getItem('tamam-dash-period') || 'd30', eng: 'all', q: '', kind: 'all', status: 'all', page: 1, urls: {}, busy: false, updated: '', modal: null, authErr: '', toast: '' };
+const isOwner = () => S.profile && S.profile.role === 'owner';
+const CATS = ['stage_fnd', 'labor', 'stage_fin', 'stage_exc', 'stage_gen'];        // fixed order -> fixed colour slot
+const CAT_COLOR = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)', 'var(--s5)'];
+const catOf = e => e.kind === 'labor' ? 'labor' : ({ exc: 'stage_exc', fnd: 'stage_fnd', fin: 'stage_fin' }[e.stage] || 'stage_gen');
+
+const ryd = iso => {
+  const p = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Riyadh', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date(iso));
+  const g = k => (p.find(x => x.type === k) || {}).value;
+  return { d: `${g('year')}-${g('month')}-${g('day')}`, tm: `${g('hour') === '24' ? '00' : g('hour')}:${g('minute')}` };
+};
+const todayKey = () => ryd(new Date().toISOString()).d;
+const addDays = (key, n) => { const d = new Date(key + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+const periodDays = () => ({ today: 1, d7: 7, d30: 30, all: 3650 }[S.period]);
+const inPeriod = (e, offset = 0) => { const days = periodDays(); const end = addDays(todayKey(), -offset * days); const start = addDays(end, -(days - 1)); return e._d >= start && e._d <= end; };
+const engName = id => { const tm = S.team.find(x => x.engineer_id === id); return tm ? (tm.full_name || tm.email) : (S.profile && S.profile.id === id ? S.profile.full_name : ''); };
+
+/* ============ DATA ============ */
+async function load() {
+  S.busy = true; render();
+  try {
+    const uid = S.session.user.id;
+    const pr = await sb.from('profiles').select('*').eq('id', uid).maybeSingle();
+    S.profile = pr.data || { id: uid, full_name: S.session.user.email, role: 'engineer' };
+    const [en, mv, tp, tm] = await Promise.all([
+      sb.from('entries').select('*, profiles!entries_engineer_id_fkey(full_name)').order('happened_at', { ascending: false }).limit(3000),
+      sb.from('custody_movements').select('*').order('created_at', { ascending: true }).limit(10000),
+      sb.from('topup_requests').select('*, profiles!topup_requests_engineer_id_fkey(full_name)').order('created_at', { ascending: false }).limit(500),
+      isOwner() ? sb.rpc('team_summary') : sb.rpc('wallet_summary')
+    ]);
+    S.entries = (en.data || []).map(e => ({ ...e, _d: ryd(e.happened_at).d, _tm: ryd(e.happened_at).tm, _who: e.profiles ? e.profiles.full_name : '' }));
+    S.moves = mv.data || [];
+    S.topups = (tp.data || []).map(x => ({ ...x, _who: x.profiles ? x.profiles.full_name : '', _d: ryd(x.created_at).d, _tm: ryd(x.created_at).tm }));
+    S.team = isOwner() ? (tm.data || []) : [];
+    S.wallet = !isOwner() && tm.data ? tm.data[0] : null;
+    S.updated = ryd(new Date().toISOString()).tm;
+    signPhotos();
+  } catch (e) { toast(e.message || 'Error'); }
+  S.busy = false; render();
+}
+async function signPhotos() {
+  const paths = S.entries.flatMap(e => [e.photo_path, e.voucher_path]).filter(p => p && !S.urls[p]).slice(0, 120);
+  if (!paths.length) return;
+  const { data } = await sb.storage.from('tamam').createSignedUrls(paths, 3600);
+  (data || []).forEach(x => { if (x.signedUrl) S.urls[x.path] = x.signedUrl; });
+  render();
+}
+
+/* ============ DERIVED ============ */
+function scoped() { return S.entries.filter(e => S.eng === 'all' || e.engineer_id === S.eng); }
+function spendOf(list) { return list.filter(e => e.status === 'ok' && e.amount > 0).reduce((s, e) => s + (e.is_refund ? -1 : 1) * Number(e.amount), 0); }
+function stats() {
+  const all = scoped();
+  const cur = all.filter(e => inPeriod(e)), prev = all.filter(e => inPeriod(e, 1));
+  const spent = spendOf(cur), spentPrev = spendOf(prev);
+  const vatList = cur.filter(e => e.kind === 'receipt' && e.status === 'ok' && !e.is_refund && Number(e.vat) > 0);
+  const pend = all.filter(e => e.status === 'pend');
+  const tpPend = S.topups.filter(x => x.status === 'pend' && (S.eng === 'all' || x.engineer_id === S.eng));
+  const team = S.team.filter(x => S.eng === 'all' || x.engineer_id === S.eng);
+  const cash = isOwner() ? team.reduce((s, x) => s + Number(x.balance), 0) : Number(S.wallet ? S.wallet.balance : 0);
+  return { cur, spent, spentPrev, vat: vatList.reduce((s, e) => s + Number(e.vat), 0), vatN: vatList.length, pend, tpPend, cash, team };
+}
+
+/* ============ CHARTS (hand-made SVG) ============ */
+function dailyChart(list) {
+  const days = Math.min(periodDays() === 1 ? 14 : periodDays() > 60 ? 60 : periodDays(), 60);
+  const end = todayKey(); const keys = Array.from({ length: days }, (_, i) => addDays(end, -(days - 1 - i)));
+  const by = Object.fromEntries(keys.map(k => [k, 0]));
+  scoped().filter(e => e.status === 'ok' && e.amount > 0).forEach(e => { if (e._d in by) by[e._d] += (e.is_refund ? -1 : 1) * Number(e.amount); });
+  const vals = keys.map(k => Math.max(0, by[k]));
+  const avg = vals.map((_, i) => { const w = vals.slice(Math.max(0, i - 6), i + 1); return w.reduce((a, b) => a + b, 0) / w.length; });
+  const max = Math.max(100, ...vals, ...avg) * 1.12;
+  const W = 640, H = 220, pl = 46, pr = 8, pt = 10, pb = 26, iw = W - pl - pr, ih = H - pt - pb;
+  const bw = iw / days, x = i => pl + i * bw, y = v => pt + ih - (v / max) * ih;
+  const ticks = [0, max / 2, max].map(v => Math.round(v / 100) * 100);
+  const rtl = lang === 'ar';
+  const X = i => rtl ? W - pr - (x(i) - pl) - bw : x(i);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t('daily'))}">`;
+  ticks.forEach(v => { s += `<line class="grid-l" x1="${pl}" x2="${W - pr}" y1="${y(v)}" y2="${y(v)}"/><text class="axis" x="${rtl ? W - 2 : pl - 6}" y="${y(v) + 4}" text-anchor="${rtl ? 'end' : 'end'}" ${rtl ? 'direction="ltr"' : ''}>${fmt(v)}</text>`; });
+  vals.forEach((v, i) => {
+    const h = Math.max(v > 0 ? 3 : 0, ih - (y(v) - pt));
+    const bx = X(i) + Math.min(3, bw * .18), bwid = Math.max(2, bw - Math.min(6, bw * .36));
+    if (h > 0) s += `<path class="bar${keys[i] === end ? ' hl' : ''}" d="M${bx},${pt + ih} v${-(h - Math.min(4, h))} q0,-${Math.min(4, h)} ${Math.min(4, bwid / 2)},-${Math.min(4, h)} h${bwid - 2 * Math.min(4, bwid / 2)} q${Math.min(4, bwid / 2)},0 ${Math.min(4, bwid / 2)},${Math.min(4, h)} v${h - Math.min(4, h)} z"/>`;
+    s += `<rect x="${X(i)}" y="${pt}" width="${bw}" height="${ih}" fill="transparent" data-tip="${esc(keys[i].slice(8) + '/' + keys[i].slice(5, 7))}|${fmt(v)}|${fmt(avg[i])}"/>`;
+  });
+  s += `<path class="avg" d="${avg.map((v, i) => (i ? 'L' : 'M') + (X(i) + bw / 2) + ',' + y(v)).join(' ')}"/>`;
+  const step = Math.ceil(days / 7);
+  keys.forEach((k, i) => { if (i % step === 0 || i === days - 1) s += `<text class="axis" x="${X(i) + bw / 2}" y="${H - 6}" text-anchor="middle">${k.slice(8)}/${k.slice(5, 7)}</text>`; });
+  return s + '</svg>';
+}
+function donut(list) {
+  const sums = CATS.map(c => list.filter(e => e.status === 'ok' && !e.is_refund && catOf(e) === c).reduce((s, e) => s + Number(e.amount), 0));
+  const total = sums.reduce((a, b) => a + b, 0);
+  if (!total) return `<div class="emp">—</div>`;
+  const R = 70, r = 46, cx = 85, cy = 85; let a0 = -Math.PI / 2, s = `<svg viewBox="0 0 170 170" role="img" aria-label="${esc(t('breakdown'))}">`;
+  sums.forEach((v, i) => {
+    if (!v) return; const a1 = a0 + (v / total) * Math.PI * 2 - (sums.filter(Boolean).length > 1 ? 0.035 : 0);
+    const big = a1 - a0 > Math.PI ? 1 : 0, p = (a, rad) => `${cx + rad * Math.cos(a)},${cy + rad * Math.sin(a)}`;
+    s += v === total ? `<circle cx="${cx}" cy="${cy}" r="${(R + r) / 2}" fill="none" style="stroke:${CAT_COLOR[i]}" stroke-width="${R - r}"/>`
+      : `<path d="M${p(a0, R)} A${R},${R} 0 ${big} 1 ${p(a1, R)} L${p(a1, r)} A${r},${r} 0 ${big} 0 ${p(a0, r)} Z" style="fill:${CAT_COLOR[i]}"><title>${esc(t(CATS[i]))}: ${fmt(v)} ${t('sar')}</title></path>`;
+    a0 = a1 + (sums.filter(Boolean).length > 1 ? 0.035 : 0);
+  });
+  s += `<text x="${cx}" y="${cy - 2}" text-anchor="middle" style="font-weight:800;font-size:17px;fill:var(--ink)" direction="ltr">${fmt(total)}</text><text x="${cx}" y="${cy + 15}" text-anchor="middle" style="font-size:11px;fill:var(--muted)">${t('sar')}</text></svg>`;
+  const items = CATS.map((c, i) => `<div class="it"><i style="background:${CAT_COLOR[i]}"></i><span>${t(c)}</span><b class="num">${fmt(sums[i])}</b><em class="num">${total ? Math.round(sums[i] / total * 100) : 0}%</em></div>`).join('');
+  return `<div class="donut-wrap">${s}<div class="dlist">${items}</div></div>`;
+}
+
+/* ============ INSIGHTS (rule-based, honest) ============ */
+function insights(st) {
+  const out = []; const all = scoped().filter(e => e.status === 'ok' && e.amount > 0 && !e.is_refund);
+  const tk = todayKey(); const todaySum = all.filter(e => e._d === tk).reduce((s, e) => s + Number(e.amount), 0);
+  const weekAvg = [1, 2, 3, 4, 5, 6, 7].map(n => all.filter(e => e._d === addDays(tk, -n)).reduce((s, e) => s + Number(e.amount), 0)).reduce((a, b) => a + b, 0) / 7;
+  const waitN = st.pend.length + st.tpPend.length, waitA = st.pend.reduce((s, e) => s + Number(e.amount), 0) + st.tpPend.reduce((s, x) => s + Number(x.amount), 0);
+  if (waitN && isOwner()) out.push(['bad', 'clock', t('i_wait', { n: waitN }), t('i_wait_d', { a: fmt(waitA) })]);
+  if (weekAvg > 0 && todaySum > weekAvg * 1.8) out.push(['warn', 'trend', t('i_spike', { x: (todaySum / weekAvg).toFixed(1) }), t('i_spike_d', { a: fmt(todaySum), b: fmt(weekAvg) })]);
+  st.team.filter(x => Number(x.balance) < 500).slice(0, 2).forEach(x => out.push(['warn', 'wallet', t('i_low', { n: esc(x.full_name || x.email) }), t('i_low_d', { a: fmt(x.balance) })]));
+  if (!isOwner() && S.wallet && Number(S.wallet.balance) < 500) out.push(['warn', 'wallet', t('i_low', { n: esc(S.profile.full_name) }), t('i_low_d', { a: fmt(S.wallet.balance) })]);
+  const novat = st.cur.filter(e => e.kind === 'receipt' && e.status === 'ok' && !e.is_refund && !(/^3\d{13}3$/.test(e.vat_no || '')));
+  if (novat.length) out.push(['warn', 'receipt', t('i_novat', { n: novat.length }), t('i_novat_d', { a: fmt(novat.reduce((s, e) => s + Number(e.amount), 0)) })]);
+  const safety = scoped().find(e => e.kind === 'video' && e.details && e.details.report && (e.details.report.safety_issues || []).length && e._d >= addDays(tk, -7));
+  if (safety) out.push(['bad', 'shield', t('i_safety'), esc(safety.details.report.safety_issues[0]) + ' — ' + esc(safety._who || '')]);
+  if (st.vat > 0) out.push(['good', 'shield', t('i_vat', { a: fmt2(st.vat) }), t('i_vat_d')]);
+  const mer = topMerchants(st.cur)[0];
+  if (mer && st.spent > 0) out.push(['good', 'spark', t('i_top', { m: esc(mer[0]) }), t('i_top_d', { a: fmt(mer[1]), p: Math.round(mer[1] / st.spent * 100) + '%' })]);
+  if (!todaySum && S.period !== 'all') out.push(['warn', 'clock', t('i_quiet'), t('i_quiet_d')]);
+  if (!out.length) out.push(['good', 'check', t('i_ok'), t('i_ok_d')]);
+  return out.slice(0, 6);
+}
+function topMerchants(list) {
+  const m = {}; list.filter(e => e.kind === 'receipt' && e.status === 'ok' && !e.is_refund).forEach(e => { const k = (e.title || '—').trim(); m[k] = (m[k] || 0) + Number(e.amount); });
+  return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 5);
+}
+
+/* ============ VIEWS ============ */
+function authView() {
+  return `<div class="auth">
+    <div class="art">
+      <div class="brand" style="padding:0"><div class="lg">ت</div><div><b>Tamam · تمام</b><small>${t('dash')}</small></div></div>
+      <div><h2>${t('art_h')}</h2><p>${t('art_p')}</p>
+        <div class="feat"><div><i>${I('check', 16)}</i>${t('f1')}</div><div><i>${I('shield', 16)}</i>${t('f2')}</div><div><i>${I('file', 16)}</i>${t('f3')}</div></div></div>
+      <div style="opacity:.6;font-size:12px">© Tamam</div>
+    </div>
+    <form id="auth-form" novalidate>
+      <div style="display:flex;justify-content:flex-end"><button type="button" class="pill" data-a="lang">${t('lang')}</button></div>
+      <h1>${t('sign_in')}</h1>
+      <label for="em">${t('email')}</label><input id="em" type="email" autocomplete="email" required>
+      <label for="pw">${t('password')}</label><input id="pw" type="password" autocomplete="current-password" required>
+      ${S.authErr ? `<div class="err" role="alert">${esc(S.authErr)}</div>` : ''}
+      <button class="btn p" style="width:100%;height:50px;margin-top:18px;font-size:15px" type="submit">${t('go')}</button>
+      <p style="text-align:center;margin-top:16px;font-size:13px"><a href="./">${I('phone', 14)} ${t('open_app')}</a></p>
+    </form>
+  </div>`;
+}
+
+function shellView() {
+  const st = stats(); const own = isOwner();
+  const waitN = st.pend.length + st.tpPend.length;
+  const navs = [['over', 'home', 'nav_over'], ['exp', 'list', 'nav_exp'], ...(own ? [['appr', 'check', 'nav_appr', waitN], ['team', 'users', 'nav_team']] : []), ['ph', 'camera', 'nav_ph'], ['stmt', 'file', 'nav_stmt']];
+  const deltaP = st.spentPrev > 0 ? Math.round((st.spent - st.spentPrev) / st.spentPrev * 100) : null;
+  const delta = deltaP === null ? '' : t('vs_prev', { p: `<span class="num">${deltaP > 0 ? '+' : ''}${deltaP}%</span>` });
+  return `<div class="shell">
+  <aside class="side">
+    <div class="brand"><div class="lg">ت</div><div><b>Tamam</b><small>${own ? t('owner') : t('engineer')}</small></div></div>
+    ${navs.map(([id, ic, k, c]) => `<a class="nav-i" href="#${id}" data-a="nav">${I(ic)}<span class="lb">${t(k)}</span>${c ? `<span class="cnt num">${c}</span>` : ''}</a>`).join('')}
+    <div class="foot">${esc(S.profile.full_name || '')}<br>${esc(S.session.user.email)}</div>
+  </aside>
+  <main class="main">
+    <div class="top">
+      <div><h1>${own ? t('title_owner') : t('title_eng')}</h1><div class="sub">${own ? t('sub_owner') : t('sub_eng')} · ${S.busy ? '…' : t('updated', { t: `<span class="num">${S.updated}</span>` })}</div></div>
+      <div class="sp"></div>
+      <div class="seg" role="group" aria-label="period">${['today', 'd7', 'd30', 'all'].map(p => `<button class="${S.period === p ? 'on' : ''}" data-a="period" data-v="${p}">${t(p)}</button>`).join('')}</div>
+      ${own ? `<label class="sr" for="engsel">${t('c_eng')}</label><select id="engsel" class="pill" data-a="eng"><option value="all">${t('all_eng')}</option>${S.team.map(x => `<option value="${x.engineer_id}" ${S.eng === x.engineer_id ? 'selected' : ''}>${esc(x.full_name || x.email)}</option>`).join('')}</select>` : ''}
+      ${own ? `<a class="pill ib" href="#appr" data-a="nav" aria-label="${t('bell')}">${I('bell')}${waitN ? `<span class="dot num">${waitN}</span>` : ''}</a>` : ''}
+      <button class="pill ib" data-a="refresh" aria-label="${t('refresh')}">${I('refresh')}</button>
+      <button class="pill ib" data-a="theme" aria-label="${t('theme')}">${I('moon')}</button>
+      <button class="pill" data-a="lang">${t('lang')}</button>
+      <button class="pill" data-a="signout">${I('out', 16)} ${t('sign_out')}</button>
+    </div>
+
+    <section id="over">
+      <div class="insights" aria-label="${t('ins_t')}">${insights(st).map(([c, ic, a, b]) => `<div class="ins ${c}"><div class="ii">${I(ic, 16)}</div><div><b>${a}</b>${b}</div></div>`).join('')}</div>
+      <div class="grid kpis">
+        <div class="card kpi hero"><div class="lbl"><span class="ico">${I('wallet', 16)}</span>${own ? t('cash_team') : t('cash_me')}</div><div class="v"><span class="num">${fmt2(st.cash)}</span><small>${t('sar')}</small></div><div class="s">${own ? t('engs_n', { n: st.team.length }) : (S.wallet && Number(S.wallet.requested) ? t('requested') + ': <span class="num">' + fmt(S.wallet.requested) + '</span>' : '&nbsp;')}</div></div>
+        <div class="card kpi"><div class="lbl"><span class="ico">${I('trend', 16)}</span>${t('spent')}</div><div class="v"><span class="num">${fmt(st.spent)}</span><small>${t('sar')}</small></div><div class="s">${delta || t('items_n', { n: st.cur.length })}</div></div>
+        <div class="card kpi"><div class="lbl"><span class="ico" style="background:var(--amber-bg);color:var(--warn)">${I('clock', 16)}</span>${t('awaiting')}</div><div class="v"><span class="num">${fmt(st.pend.reduce((s, e) => s + Number(e.amount), 0))}</span><small>${t('sar')}</small></div><div class="s">${t('items_n', { n: st.pend.length + st.tpPend.length })}</div></div>
+        <div class="card kpi"><div class="lbl"><span class="ico">${I('shield', 16)}</span>${t('vat_rec')}</div><div class="v"><span class="num">${fmt2(st.vat)}</span><small>${t('sar')}</small></div><div class="s">${t('valid_vat', { n: st.vatN })}</div></div>
+        <div class="card kpi"><div class="lbl"><span class="ico">${I('receipt', 16)}</span>${t('entries')}</div><div class="v"><span class="num">${st.cur.length}</span></div><div class="s">${t(S.period)}</div></div>
+      </div>
+      <div class="grid row2">
+        <div class="card"><div class="ch"><h2>${t('daily')}</h2><span class="hint">${t('daily_hint')}</span></div><div class="chart" id="daily">${dailyChart()}<div class="tip" id="tip"></div></div></div>
+        <div class="card"><div class="ch"><h2>${t('breakdown')}</h2><span class="hint">${t(S.period)}</span></div>${donut(st.cur)}</div>
+      </div>
+      <div class="grid row3">
+        ${own ? `<div class="card" style="grid-column:span 2" id="appr"><div class="ch"><h2>${t('appr_t')}</h2><span class="hint num">${waitN}</span></div>${apprList(st)}</div>` : `<div class="card" style="grid-column:span 2">${reportsBlock(4)}</div>`}
+        <div class="card"><div class="ch"><h2>${t('top_m')}</h2><span class="hint">${t(S.period)}</span></div>${merchBars(st.cur)}</div>
+      </div>
+    </section>
+
+    ${own ? `<section id="team" class="card" style="margin-bottom:14px"><div class="ch"><h2>${t('team_t')}</h2><span class="hint num">${S.team.length}</span></div>
+      <div class="grid team">${S.team.map(teamCard).join('') || `<div class="emp">${t('no_team')}</div>`}</div></section>` : ''}
+
+    <section id="exp" class="card" style="margin-bottom:14px">${expenseTable()}</section>
+
+    <section id="ph" class="grid row2">
+      <div class="card"><div class="ch"><h2>${t('photos_t')}</h2></div>${photoWall()}</div>
+      <div class="card">${reportsBlock(5)}</div>
+    </section>
+
+    <section id="stmt" class="card" style="margin-top:14px"><div class="ch"><h2>${t('stmt_t')}</h2>
+      ${own ? '' : `<button class="btn s" data-a="stmt" data-id="${S.profile.id}">${I('file', 15)} ${t('stmt_btn')}</button>`}</div>
+      ${own ? `<div class="grid team">${S.team.map(x => `<button class="btn o" style="justify-content:space-between" data-a="stmt" data-id="${x.engineer_id}"><span>${esc(x.full_name || x.email)}</span><span class="num">${fmt(x.balance)}</span></button>`).join('') || `<div class="emp">${t('no_team')}</div>`}</div>` : `<p style="color:var(--muted)">${t('f3')}</p>`}
+    </section>
+  </main></div>${modalView()}${S.toast ? `<div class="toast" role="status">${esc(S.toast)}</div>` : ''}`;
+}
+
+function apprList(st) {
+  const items = [...st.pend.map(e => ({ type: 'e', id: e.id, who: e._who, title: e.title, sub: `${t('k_' + e.kind)} · ${t(catOf(e))} · ${e.vat_no ? 'VAT ' + e.vat_no : '—'}`, amt: e.amount, d: e._d, tm: e._tm, photo: e.photo_path })),
+    ...st.tpPend.map(x => ({ type: 't', id: x.id, who: x._who, title: t('topup'), sub: x.reason || '', amt: x.amount, d: x._d, tm: x._tm, plus: true }))];
+  if (!items.length) return `<div class="emp">${t('no_appr')}</div>`;
+  return `<div class="appr">${items.map(a => `<div class="ap">
+    <div class="th">${a.photo && S.urls[a.photo] ? `<button data-a="img" data-src="${esc(S.urls[a.photo])}" style="width:100%;height:100%"><img src="${esc(S.urls[a.photo])}" alt="${esc(a.title)}"></button>` : I(a.type === 't' ? 'wallet' : 'receipt', 20)}</div>
+    <div class="t"><b>${esc(a.title)}</b><small>${esc(a.who)} · <span class="num">${a.d.slice(5)} ${a.tm}</span> · ${esc(a.sub)}</small></div>
+    <div class="amt num">${a.plus ? '+' : ''}${fmt2(a.amt)}</div>
+    <div class="acts"><button class="btn d" data-a="decide" data-t="${a.type}" data-id="${a.id}" data-ok="0" aria-label="${t('reject')}">${I('x', 15)}</button><button class="btn p" data-a="decide" data-t="${a.type}" data-id="${a.id}" data-ok="1">${I('check', 15)} ${t('approve')}</button></div>
+  </div>`).join('')}</div>`;
+}
+function merchBars(list) {
+  const top = topMerchants(list); if (!top.length) return `<div class="emp">—</div>`;
+  const max = top[0][1];
+  return `<div class="bars-h">${top.map(([m, v]) => `<div class="it"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(m)}</span><b class="num">${fmt(v)}</b><div class="tr"><div class="fl" style="width:${Math.max(3, v / max * 100)}%"></div></div></div>`).join('')}</div>`;
+}
+function teamCard(x) {
+  const low = Number(x.balance) < 500;
+  return `<div class="card eng" style="box-shadow:inset 0 0 0 1px var(--line)">
+    <div class="hd"><div class="av">${esc(Array.from(x.full_name || x.email || '?')[0])}</div><div style="min-width:0"><b>${esc(x.full_name || x.email)}</b><small>${esc(x.email || '')}</small></div></div>
+    <div><span class="bal num">${fmt2(x.balance)}</span> <small style="color:var(--muted)">${t('sar')}</small></div>
+    <div class="meta"><span>${t('spent_today')}: <b class="num">${fmt(x.spent_today)}</b></span>${Number(x.awaiting) ? `<span>${t('pending')}: <b class="num">${fmt(x.awaiting)}</b></span>` : ''}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center">${low ? `<span class="flag warn">${I('alert', 13)} ${t('low_cash')}</span>` : `<span class="flag ok">${I('check', 13)} ${t('healthy')}</span>`}
+    <button class="btn s" data-a="stmt" data-id="${x.engineer_id}">${I('file', 14)} ${t('stmt_btn')}</button></div>
+  </div>`;
+}
+function filteredRows() {
+  const q = S.q.trim().toLowerCase();
+  return scoped().filter(e => inPeriod(e)).filter(e => (S.kind === 'all' || e.kind === S.kind) && (S.status === 'all' || e.status === S.status) &&
+    (!q || [e.title, e._who, e.voucher_no, e.vat_no].some(v => String(v || '').toLowerCase().includes(q))));
+}
+function expenseTable() {
+  const rows = filteredRows(); const per = 25, pages = Math.max(1, Math.ceil(rows.length / per)); S.page = Math.min(S.page, pages);
+  const slice = rows.slice((S.page - 1) * per, S.page * per); const own = isOwner();
+  const kc = { receipt: 'var(--s1)', labor: 'var(--s2)', video: 'var(--s4)' };
+  return `<div class="ch"><h2>${t('exp_t')}</h2><button class="btn o" data-a="csv">${I('down', 15)} ${t('csv')}</button></div>
+  <div class="tools">
+    <label class="sr" for="q">${t('search')}</label><input id="q" type="search" placeholder="${esc(t('search'))}" value="${esc(S.q)}">
+    <label class="sr" for="fk">${t('f_kind')}</label><select id="fk" class="pill" data-a="fkind"><option value="all">${t('f_kind')}: ${t('all')}</option>${['receipt', 'labor', 'video'].map(k => `<option value="${k}" ${S.kind === k ? 'selected' : ''}>${t('k_' + k)}</option>`).join('')}</select>
+    <label class="sr" for="fs">${t('f_status')}</label><select id="fs" class="pill" data-a="fstatus"><option value="all">${t('f_status')}: ${t('all')}</option>${['ok', 'pend', 'rejected', 'done'].map(k => `<option value="${k}" ${S.status === k ? 'selected' : ''}>${t('st_' + k)}</option>`).join('')}</select>
+  </div>
+  <div class="tbl-wrap"><table><thead><tr><th>${t('c_date')}</th>${own ? `<th>${t('c_eng')}</th>` : ''}<th>${t('c_title')}</th><th>${t('c_kind')}</th><th>${t('c_stage')}</th><th>${t('c_pay')}</th><th>${t('c_vat')}</th><th>${t('c_amt')}</th><th>${t('c_st')}</th><th>${t('c_photo')}</th></tr></thead>
+  <tbody>${slice.map(e => { const f = e.photo_path || e.voucher_path; return `<tr>
+    <td><span class="num">${e._d}</span> <span class="num" style="color:var(--muted)">${e._tm}</span></td>${own ? `<td>${esc(e._who)}</td>` : ''}
+    <td><b>${esc(e.title)}</b>${e.voucher_no ? `<div class="num" style="color:var(--muted);font-size:11.5px">${esc(e.voucher_no)}</div>` : ''}</td>
+    <td><span class="kind"><i style="background:${kc[e.kind]}"></i>${t('k_' + e.kind)}</span></td><td>${e.kind === 'video' ? '—' : t(catOf(e))}</td><td>${e.kind === 'video' ? '—' : t(e.pay)}</td>
+    <td class="num">${Number(e.vat) ? fmt2(e.vat) : '—'}</td><td><b class="num" style="${e.is_refund ? 'color:var(--ok)' : ''}">${e.amount ? (e.is_refund ? '+' : '') + fmt2(e.amount) : '—'}</b></td>
+    <td><span class="st ${e.status}">${t('st_' + e.status)}</span></td>
+    <td>${f && S.urls[f] ? `<button class="btn o" style="height:32px" data-a="img" data-src="${esc(S.urls[f])}">${I(e.voucher_path ? 'file' : 'camera', 15)} ${t('view')}</button>` : '—'}</td></tr>`; }).join('') || `<tr><td colspan="10"><div class="emp">—</div></td></tr>`}</tbody></table></div>
+  <div class="pager"><span>${t('showing', { n: rows.length })}</span><span><button class="btn o" data-a="pg" data-v="-1" ${S.page <= 1 ? 'disabled' : ''}>${t('prev')}</button> <span class="num">${t('page', { a: S.page, b: pages })}</span> <button class="btn o" data-a="pg" data-v="1" ${S.page >= pages ? 'disabled' : ''}>${t('next')}</button></span></div>`;
+}
+function photoWall() {
+  const ph = scoped().filter(e => e.photo_path && S.urls[e.photo_path]).slice(0, 12);
+  if (!ph.length) return `<div class="emp">${t('no_photos')}</div>`;
+  return `<div class="photos">${ph.map(e => `<button class="ph" data-a="img" data-src="${esc(S.urls[e.photo_path])}"><img src="${esc(S.urls[e.photo_path])}" alt="${esc(e.title)}" loading="lazy"><div class="cap"><span>${esc(e.title).slice(0, 26)}</span><span class="num">${e._d.slice(5)}</span></div></button>`).join('')}</div>`;
+}
+function reportsBlock(n) {
+  const reps = scoped().filter(e => e.kind === 'video' && e.details && e.details.report).slice(0, n);
+  return `<div class="ch"><h2>${t('reports_t')}</h2></div>` + (reps.length ? `<div class="reports">${reps.map(e => { const r = e.details.report; return `<div class="rep">
+    <div class="hd"><span>${esc(e._who)} · ${t('stage_' + ({ excavation: 'exc', foundation: 'fnd', finishing: 'fin' }[r.stage] || 'gen'))}</span><span class="num">${e._d} ${e._tm}</span></div>
+    ${esc(r.summary)}${(r.safety_issues || []).length ? `<div class="safety">${I('alert', 14)} ${r.safety_issues.map(esc).join(' · ')}</div>` : ''}</div>`; }).join('')}</div>` : `<div class="emp">${t('no_reports')}</div>`);
+}
+function modalView() {
+  const m = S.modal; if (!m) return '';
+  if (m.type === 'img') return `<div class="scrim" data-a="close"><div class="modal" role="dialog" aria-modal="true"><div class="mh"><span></span><button class="btn o" data-a="close">${I('x', 15)} ${t('close')}</button></div><img class="full" src="${esc(m.src)}" alt=""></div></div>`;
+  if (m.type === 'stmt') {
+    const id = m.id; const name = engName(id) || '';
+    let run = 0; const rows = S.moves.filter(x => x.engineer_id === id).map(x => { run += Number(x.amount); return { ...x, run, r: ryd(x.created_at) }; });
+    const lbl = { opening: 'opening', topup: 's_topup', expense: 's_expense', labor: 's_labor', refund: 's_refund' };
+    return `<div class="scrim" data-a="close"><div class="modal stmt" role="dialog" aria-modal="true" data-stop="1">
+      <div class="mh"><div><h2 style="font-size:19px">${t('stmt_t')}</h2><div style="color:var(--muted);font-size:13px">${esc(name)} · <span class="num">${todayKey()}</span></div></div>
+      <div class="no-print" style="display:flex;gap:8px"><button class="btn s" data-a="print">${I('down', 15)} ${t('print')}</button><button class="btn o" data-a="close">${t('close')}</button></div></div>
+      <div class="tbl-wrap"><table><thead><tr><th>${t('c_date')}</th><th>${t('c_kind')}</th><th>${t('s_note')}</th><th>${t('s_in')}</th><th>${t('s_out')}</th><th>${t('s_run')}</th></tr></thead><tbody>
+      ${rows.map(x => `<tr><td class="num">${x.r.d} ${x.r.tm}</td><td>${t(lbl[x.kind] || x.kind)}</td><td>${esc(x.note)}</td><td class="num" style="color:var(--ok)">${Number(x.amount) > 0 ? fmt2(x.amount) : ''}</td><td class="num">${Number(x.amount) < 0 ? fmt2(-x.amount) : ''}</td><td><b class="num">${fmt2(x.run)}</b></td></tr>`).join('') || `<tr><td colspan="6"><div class="emp">—</div></td></tr>`}
+      </tbody></table></div>
+      <p style="margin-top:12px;font-weight:700">${t('s_run')}: <span class="num">${fmt2(run)}</span> ${t('sar')}</p></div></div>`;
+  }
+  return '';
+}
+
+/* ============ RENDER & EVENTS ============ */
+function render() {
+  document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  const app = document.getElementById('app');
+  const focusId = document.activeElement && document.activeElement.id; const caret = focusId === 'q' ? document.activeElement.selectionStart : null;
+  app.innerHTML = S.session ? (S.profile ? shellView() : `<div class="emp" style="padding:80px">…</div>`) : authView();
+  if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus(); if (caret !== null) try { el.setSelectionRange(caret, caret); } catch (_) {} } }
+  bindChart();
+}
+function bindChart() {
+  const box = document.getElementById('daily'), tip = document.getElementById('tip'); if (!box || !tip) return;
+  box.querySelectorAll('[data-tip]').forEach(r => {
+    r.addEventListener('mouseenter', () => { const [d, v, a] = r.dataset.tip.split('|'); tip.innerHTML = `<b class="num">${d}</b><br>${t('spent')}: <b class="num">${v}</b> ${t('sar')}<br><span style="opacity:.75">7d avg: <span class="num">${a}</span></span>`;
+      const bb = r.getBoundingClientRect(), cb = box.getBoundingClientRect(); tip.style.left = (bb.left - cb.left + bb.width / 2) + 'px'; tip.style.top = '30px'; tip.classList.add('on'); });
+    r.addEventListener('mouseleave', () => tip.classList.remove('on'));
+  });
+}
+function toast(m) { S.toast = m; render(); clearTimeout(toast.t); toast.t = setTimeout(() => { S.toast = ''; render(); }, 2800); }
+function exportCsv() {
+  const rows = [['Date', 'Time', 'Engineer', 'Type', 'Voucher', 'Description', 'Stage', 'Paid by', 'VAT No', 'VAT SAR', 'Amount SAR', 'Refund', 'Status']];
+  filteredRows().forEach(e => rows.push([e._d, e._tm, e._who, e.kind, e.voucher_no || '', e.title, e.stage || '', e.pay, e.vat_no || '', (+e.vat || 0).toFixed(2), (+e.amount || 0).toFixed(2), e.is_refund ? 'yes' : '', e.status]));
+  const csv = '﻿' + rows.map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = `tamam-expenses-${todayKey()}.csv`; a.click();
+}
+const A = {
+  lang() { lang = lang === 'ar' ? 'en' : 'ar'; localStorage.setItem('tamam-dash-lang', lang); render(); },
+  theme() { const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.documentElement.dataset.theme = cur === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('tamam-dash-theme', document.documentElement.dataset.theme); } catch (_) {} },
+  period(d) { S.period = d.v; S.page = 1; localStorage.setItem('tamam-dash-period', d.v); render(); },
+  refresh() { load(); },
+  async signout() { await sb.auth.signOut(); S.session = null; S.profile = null; render(); },
+  nav(d, el, ev) { ev.preventDefault(); const id = el.getAttribute('href').slice(1); const tg = document.getElementById(id); if (tg) tg.scrollIntoView({ behavior: 'smooth', block: 'start' }); document.querySelectorAll('.nav-i').forEach(n => n.classList.toggle('on', n === el)); },
+  img(d) { S.modal = { type: 'img', src: d.src }; render(); },
+  stmt(d) { S.modal = { type: 'stmt', id: d.id }; render(); },
+  close(d, el, ev) { if (ev.target.closest('[data-stop]') && !ev.target.closest('[data-a="close"]')) return; S.modal = null; render(); },
+  print() { window.print(); },
+  csv() { exportCsv(); },
+  pg(d) { S.page += Number(d.v); render(); document.getElementById('exp').scrollIntoView({ block: 'start' }); },
+  async decide(d) {
+    const fn = d.t === 'e' ? 'decide_entry' : 'decide_topup';
+    const { error } = await sb.rpc(fn, { p_id: d.id, p_approve: d.ok === '1' });
+    if (error) { toast(error.message); return; }
+    toast(d.ok === '1' ? t('approved') : t('rejected')); load();
+  }
+};
+document.addEventListener('click', ev => { const el = ev.target.closest('[data-a]'); if (!el || el.tagName === 'SELECT') return; const f = A[el.dataset.a]; if (f) f(el.dataset, el, ev); });
+document.addEventListener('change', ev => {
+  const el = ev.target;
+  if (el.id === 'engsel') { S.eng = el.value; S.page = 1; render(); }
+  if (el.id === 'fk') { S.kind = el.value; S.page = 1; render(); }
+  if (el.id === 'fs') { S.status = el.value; S.page = 1; render(); }
+});
+document.addEventListener('input', ev => { if (ev.target.id === 'q') { S.q = ev.target.value; S.page = 1; render(); } });
+document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && S.modal) { S.modal = null; render(); } });
+document.addEventListener('submit', async ev => {
+  if (ev.target.id !== 'auth-form') return; ev.preventDefault();
+  const em = document.getElementById('em').value.trim(), pw = document.getElementById('pw').value;
+  const { data, error } = await sb.auth.signInWithPassword({ email: em, password: pw });
+  if (error) { S.authErr = t('auth_err', { m: error.message }); render(); return; }
+  S.authErr = ''; S.session = data.session; load();
+});
+
+/* ============ BOOT ============ */
+try { const th = localStorage.getItem('tamam-dash-theme'); if (th) document.documentElement.dataset.theme = th; } catch (_) {}
+render();
+sb.auth.getSession().then(({ data }) => { S.session = data.session; if (S.session) load(); else render(); });
+sb.auth.onAuthStateChange((_e, session) => { if (!session && S.session) { S.session = null; S.profile = null; render(); } });
+setInterval(() => { if (S.session && !document.hidden && !S.modal) load(); }, 90000);
+</script>
+</body>
+</html>

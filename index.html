@@ -763,7 +763,7 @@ const D = {
     fresh: "Start fresh", fresh_s: "Clear everything and set your opening custody", fresh_q: "Opening custody balance (SAR)", fresh_go: "Clear and start",
     fresh_done: "Started fresh", export: "Export to Excel (CSV)", export_s: "All entries as a spreadsheet file",
     work_seen: "Work seen", equipment: "Equipment", ppe_ok: "Everyone visible wears helmet and vest", conf: "Confidence", frames_lbl: "Frames analysed",
-    video_title: "Site video · {s}", decided_ok: "Decision saved"
+    video_title: "Site video · {s}", decided_ok: "Decision saved", web_dash: "Web dashboard", web_dash_s: "Charts, statements and approvals on a big screen"
   },
   ar: {
     brand: "تمام", gm: "صباح الخير", wName: "خالد", role_w: "مهندس موقع",
@@ -872,7 +872,7 @@ const D = {
     fresh: "البدء من جديد", fresh_s: "مسح كل البيانات وتحديد رصيد العهدة الافتتاحي", fresh_q: "رصيد العهدة الافتتاحي (ر.س)", fresh_go: "مسح والبدء",
     fresh_done: "تم البدء من جديد", export: "تصدير إلى Excel (CSV)", export_s: "كل العمليات في ملف جدول",
     work_seen: "الأعمال المرصودة", equipment: "المعدات", ppe_ok: "كل من يظهر يرتدي الخوذة والسترة", conf: "الثقة", frames_lbl: "اللقطات المحللة",
-    video_title: "فيديو الموقع · {s}", decided_ok: "تم حفظ القرار"
+    video_title: "فيديو الموقع · {s}", decided_ok: "تم حفظ القرار", web_dash: "لوحة التحكم على الويب", web_dash_s: "الرسوم وكشوف العهدة والموافقات على شاشة كبيرة"
   }
 };
 
@@ -1430,6 +1430,12 @@ function meScreen() {
         <span class="mut flip">${I('chev')}</span>
       </button>
     </div>
+
+    ${isCloud() ? `<div class="list" style="margin-top:12px"><a class="mrow" href="dashboard.html" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+      <div class="ico b">${I('trend', 18)}</div>
+      <div class="t"><b>${t('web_dash')}</b><span>${t('web_dash_s')}</span></div>
+      <span class="mut flip">${I('chev')}</span>
+    </a></div>` : ''}
 
     <div class="mh">${t('adv')}</div>
     <div class="list">
