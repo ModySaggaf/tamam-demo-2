@@ -2955,11 +2955,24 @@ function readQrFromCanvas(canvas) {
   } catch (_) { return null; }
 }
 
+// Google's models are sometimes busy ("high demand"); retry a few times before giving up.
+async function invokeWithRetry(name, body, tries = 4) {
+  let last = { data: null, error: new Error('AI request failed') };
+  for (let i = 0; i < tries; i++) {
+    last = await sb.functions.invoke(name, { body });
+    if (!last.error) return last;
+    const status = last.error.context && last.error.context.status;
+    if (status && ![429, 500, 502, 503, 504].includes(status)) return last;
+    await new Promise(r => setTimeout(r, 1200 * (i + 1)));
+  }
+  return last;
+}
+
 async function aiReadReceipt(f, dataUrl) {
   if (!canReachCloud()) return;
   f.aiBusy = true; f.aiErr = ''; render();
   try {
-    const { data, error } = await sb.functions.invoke('analyze-receipt', { body: { image_base64: dataUrl, media_type: 'image/jpeg' } });
+    const { data, error } = await invokeWithRetry('analyze-receipt', { image_base64: dataUrl, media_type: 'image/jpeg' });
     if (error) throw error;
     const r = data && data.receipt;
     if (r) {
@@ -3018,7 +3031,7 @@ async function aiSiteReport(f) {
   if (!canReachCloud()) { f.aiErr = t('ai_offline'); render(); return; }
   f.aiBusy = true; f.aiErr = ''; render();
   try {
-    const { data, error } = await sb.functions.invoke('site-report', { body: { frames: f.frames, duration_sec: f.sec || 0, lang } });
+    const { data, error } = await invokeWithRetry('site-report', { frames: f.frames, duration_sec: f.sec || 0, lang });
     if (error) throw error;
     f.report = data.report; f.reportModel = data.model;
   } catch (e) {
