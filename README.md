@@ -1,66 +1,68 @@
-# Tamam (تمام) — Standalone Site Engineer Field Accounting App (iOS & Android)
+# Tamam (تمام) v2.0 — Site Engineer Field App (iOS & Android)
 
-**Tamam (تمام)** is a Saudi-first construction field accounting mobile application built for **Site Engineers (`مهندس الموقع`)**. It runs as an offline-first progressive mobile web application, an installable iOS WebClip Configuration Profile (`Tamam.mobileconfig`), and native Capacitor 6 iOS (`Tamam-unsigned.ipa`) & Android (`Tamam.apk`) packages.
+**Tamam (تمام)** is a Saudi-first construction field accounting app for **site engineers (`مهندس الموقع`)**: petty cash custody (`العهدة`), ZATCA receipt scanning with duplicate blocking, signed cash labor vouchers, and site video reports. It works offline and installs on iPhone and Android for $0.
 
----
-
-## 🌐 Live App & Direct $0 Installation Links
-
-- **Live Mobile App (GitHub Pages)**: [https://modysaggaf.github.io/tamam-demo-2/](https://modysaggaf.github.io/tamam-demo-2/)
-- **Full-Screen iOS Mode**: [https://modysaggaf.github.io/tamam-demo-2/?ios=1](https://modysaggaf.github.io/tamam-demo-2/?ios=1)
-- **iOS Settings Configuration Profile (`Tamam.mobileconfig`)**:
-  - Direct Pages Link: [https://modysaggaf.github.io/tamam-demo-2/Tamam.mobileconfig](https://modysaggaf.github.io/tamam-demo-2/Tamam.mobileconfig)
-  - GitHub Release Link: [https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam.mobileconfig](https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam.mobileconfig)
-- **iOS Native Unsigned Package (`Tamam-unsigned.ipa`)**: [https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam-unsigned.ipa](https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam-unsigned.ipa)
-- **Android Native Package (`Tamam.apk`)**: [https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam.apk](https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam.apk)
+**v2.0** is a full redesign of the field UI: clearer screens for outdoor use, a new **Me** tab with a large English / العربية switch, and automatic offline mode.
 
 ---
 
-## 🍎 Step 1: How to Install on iPhone (iOS) for $0
+## 🌐 Live App & Install Links
 
-### Method A — iOS Settings Configuration Profile (`Tamam.mobileconfig`) *(Recommended — No Computer Needed)*
-1. Open **[https://modysaggaf.github.io/tamam-demo-2/](https://modysaggaf.github.io/tamam-demo-2/)** in **Safari** on your iPhone and tap **📲 Install on iPhone (iOS) & Android → Download Tamam.mobileconfig** (or open `https://modysaggaf.github.io/tamam-demo-2/Tamam.mobileconfig` directly).
-2. Safari will prompt: *"This website is trying to download a configuration profile. Do you want to allow this?"* → Tap **Allow (السماح)**.
-3. Open the **iPhone Settings (الإعدادات)** app → tap **Profile Downloaded (تم تنزيل ملف التعريف)** near the top.
-4. Tap **Install (تثبيت)** in the top-right corner, enter your iPhone passcode, and confirm **Install** on the *"Unverified Profile / Unknown Source"* prompt.
-5. **Tamam (تمام)** is now installed on your iPhone Home Screen and launches **100% full-screen** (`FullScreen: true`) without any Safari browser bars!
-
-### Method B — Native Capacitor iOS `.ipa` via Sideloadly / AltStore
-1. Download **`Tamam-unsigned.ipa`** from [GitHub Releases](https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam-unsigned.ipa).
-2. Open **Sideloadly** or **AltStore** on macOS/Windows and sign in with any free personal Apple ID (`$0`).
-3. Drag `Tamam-unsigned.ipa` into Sideloadly and click **Start**.
-4. On your iPhone, navigate to **Settings → General → VPN & Device Management → Developer App → Trust** to verify and launch the native iOS binary.
+- **Web app (GitHub Pages)**: [https://modysaggaf.github.io/tamam-demo-2/](https://modysaggaf.github.io/tamam-demo-2/)
+- **Full-screen iOS mode**: [https://modysaggaf.github.io/tamam-demo-2/?ios=1](https://modysaggaf.github.io/tamam-demo-2/?ios=1)
+- **iPhone profile (`Tamam.mobileconfig`)**: [Pages link](https://modysaggaf.github.io/tamam-demo-2/Tamam.mobileconfig) · [Release link](https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam.mobileconfig)
+- **iPhone app (`Tamam-unsigned.ipa`)**: [Download](https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam-unsigned.ipa)
+- **Android app (`Tamam.apk`)**: [Download](https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam.apk)
 
 ---
 
-## 🤖 Step 2: How to Install on Android (`.apk`) for $0
+## 🍎 Install on iPhone
 
-1. On your Android phone, download **`Tamam.apk`** from [GitHub Releases](https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam.apk) (or tap **Download Android APK** inside the app's Installer sheet).
-2. Tap **Open** on the downloaded `Tamam.apk` file.
-3. When prompted by Android, enable **Allow from this source (تثبيت التطبيقات غير المعروفة)** and tap **Install**.
+### Method A — Settings profile (recommended, no computer needed)
+1. Open [https://modysaggaf.github.io/tamam-demo-2/](https://modysaggaf.github.io/tamam-demo-2/) in **Safari**, go to the **Me** tab → **Install Tamam**, and tap **Download Tamam.mobileconfig** (or open the profile link above directly).
+2. Tap **Allow (السماح)** when Safari asks to download a configuration profile.
+3. Open **Settings (الإعدادات)** → **Profile Downloaded (تم تنزيل ملف التعريف)**.
+4. Tap **Install (تثبيت)**, enter your passcode, and confirm.
+5. **Tamam** appears on your Home Screen and opens full-screen.
+
+### Method B — Native `.ipa` via Sideloadly / AltStore
+1. Download **`Tamam-unsigned.ipa`** from the link above.
+2. Open **Sideloadly** or **AltStore** on a Mac or PC and sign in with a free Apple ID.
+3. Drag the `.ipa` in and click **Start**.
+4. On the iPhone: **Settings → General → VPN & Device Management → Developer App → Trust**.
+   Free Apple ID signing expires after 7 days; re-sideload to renew.
 
 ---
 
-## ✨ Core Features (Site Engineer Edition)
+## 🤖 Install on Android
 
-1. **Standalone Mobile Shell**: Full-screen `100vw × 100dvh` layout on mobile devices with native iOS notch & home-indicator safe areas (`env(safe-area-inset-top)` / `env(safe-area-inset-bottom)`), and a centered single-phone frame on desktop screens.
-2. **4 Tabs (`Home`, `Activity`, `Wallet / العهدة`, `Me`) + `+` Action Sheet**:
-   - **Activity**: Filter chips (`All`, `Receipts`, `Labor`, `Videos`) and tap-to-inspect detail sheet (displaying ZATCA TLV tags, SHA-256 digest, composite key, or Tafqeet).
-   - **Wallet (`العهدة`)**: Live custody balance, inflow/outflow/refund ledger, and custom Top-Up Request (`[data-a="topupReq"]`).
-3. **Flow 1 — Real Receipt Scanner (`Scan receipt`)**:
-   - Rear camera live stream (`getUserMedia`) + `<input type="file" accept="image/*" capture="environment">` + 4 ZATCA sample presets.
-   - UTF-8 safe **Saudi ZATCA QR TLV Base64 Decoder** (Tags 1–5: Seller, 15-digit Tax Number `3...3`, Timestamp, Invoice Total, 15% VAT).
-   - **SHA-256 + Composite Key Duplicate Shield** persisted in `localStorage`, blocking duplicate receipts with `#dup-shield-alert`.
-   - **Live VAT Enforcement Rule**: Validates Tax ID against `/^3\d{13}3$/`; automatically forces VAT to `0.00 SAR` if invalid or missing.
-   - Editable Merchant, Tax #, Total, Stage chips (`Excavation`, `Foundation`, `Finishing`, `General`), Payment Method (`Cash`, `Card`), **Refund Toggle (`فاتورة رجيع`)**, and automatic `> 500 SAR` manager approval vs `≤ 500 SAR` auto-approval routing.
-4. **Flow 2 — Real Cash Labor Voucher Studio (`Pay a worker`)**:
-   - Pick an existing worker or add a **Custom Worker** (Name, Trade, Work Description).
-   - 7-digit keypad (`0` to `9,999,999` SAR) with **live Arabic & English Tafqeet** on both the keypad screen and issued voucher.
-   - **Finger Signature Canvas** (`#sig`) with stroke validation.
-   - Generates a high-resolution **`1200×900` PNG Official Voucher** (`CHA-2611-XXXX`) with 1-tap PNG download and native `navigator.share`, deducting from the engineer's cash wallet.
-5. **Flow 3 — Real Site Video Recorder (`Site video`)**:
-   - Live camera video capture (`MediaRecorder`) + file upload + simulated site walk-through with live timer (`#vt`), generating a structured **AI Site Report** (Detected Stage, Progress %, Materials seen, Safety/PPE check) and saving to Activity.
-6. **Settings (`Me` Tab) & Offline Persistence**:
-   - Instant **English (LTR) ↔ العربية (RTL)** toggle (`document.documentElement.dir`).
-   - Full `localStorage` persistence (`tamam_engineer_state_v1`) + **Offline Queue Mode** + **Reset Demo Data**.
-   - Optional **Gemini API Key** field and in-app **iOS & Android Installer Sheet**.
+1. On the phone, download **`Tamam.apk`** from the link above (or from **Me → Install Tamam** in the app).
+2. Open the downloaded file.
+3. Allow **Install from this source (تثبيت التطبيقات غير المعروفة)** and tap **Install**.
+
+---
+
+## ✨ What's in v2.0
+
+1. **Home**: Online / Offline indicator, one-tap language button (ع / EN), project row, custody balance with *spent today* and *awaiting approval*, big shortcuts for Scan receipt, Pay a worker and Site video.
+2. **Scan receipt**: camera + photo capture, automatic ZATCA QR reading (Tags 1–5), Saudi Tax ID check (`^3\d{13}3$`, VAT forced to 0.00 if invalid), stage and cash/card selection, refund (`رجيع`) switch, **SHA-256 + composite-key duplicate blocking** with a clear "No duplicate found" check, and `> 500 SAR` manager approval vs `≤ 500 SAR` auto-approval.
+3. **Pay a worker**: worker search with pay rates, add a new worker, large keypad with live Arabic & English amount in words (تفقيط), finger signature, and a shareable `1200×900` PNG voucher (`CHA-2611-XXXX`).
+4. **Site video**: record or upload a walk-through and get an AI site report (stage, progress, materials, safety). Optional Gemini API key.
+5. **Activity**: search, filters (All, Pending, Receipts, Labor, Videos), entries grouped by day with daily totals, queued items shown while offline.
+6. **Wallet (العهدة)**: quick top-up amounts (1,000 / 2,500 / 5,000 / Other), reason, pending request status, and a money in / out ledger.
+7. **Me**: large **English / العربية** switch (full RTL), work offline, send saved items, install links, and an *Advanced & testing* section (testing tools for sample receipts and the QR decoder, Gemini key, reset demo data).
+8. **Offline-first**: detects signal loss automatically, saves entries on the phone, and sends them when the signal returns. Service worker cache `tamam-field-v2`.
+
+---
+
+## 🛠 Build
+
+The GitHub Actions workflow (`.github/workflows/build-mobile.yml`) runs on every push to `main` and publishes release **v2.0.0** with `Tamam.apk`, `Tamam-unsigned.ipa`, `Tamam.mobileconfig` and `manifest.plist`.
+
+Local build (Node 20+, JDK 17 and Android SDK for Android; macOS + Xcode for iOS):
+
+```bash
+npm install
+npm run sync:www && npx cap sync
+cd android && ./gradlew assembleDebug
+```

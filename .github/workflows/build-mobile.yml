@@ -126,7 +126,7 @@ jobs:
           path: Tamam.apk
 
   publish-release:
-    name: Publish GitHub Release (v1.0.0 / latest)
+    name: Publish GitHub Release (v2.0.0 / latest)
     needs: [build-ios, build-android]
     runs-on: ubuntu-latest
     steps:
@@ -144,12 +144,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if gh release view v1.0.0 -R "${{ github.repository }}" >/dev/null 2>&1; then
-            gh release upload v1.0.0 Tamam-unsigned.ipa Tamam.apk Tamam.mobileconfig manifest.plist --clobber -R "${{ github.repository }}"
+          if gh release view v2.0.0 -R "${{ github.repository }}" >/dev/null 2>&1; then
+            gh release upload v2.0.0 Tamam-unsigned.ipa Tamam.apk Tamam.mobileconfig manifest.plist --clobber -R "${{ github.repository }}"
           else
-            gh release create v1.0.0 Tamam-unsigned.ipa Tamam.apk Tamam.mobileconfig manifest.plist \
+            gh release create v2.0.0 Tamam-unsigned.ipa Tamam.apk Tamam.mobileconfig manifest.plist \
               --target "${{ github.sha }}" \
-              --title "Tamam تمام v1.0.0 — Site Engineer App (iOS & Android)" \
+              --title "Tamam تمام v2.0.0 — Site Engineer App (iOS & Android)" \
               --notes "Pre-production build of Tamam (تمام) Site Engineer Field Accounting App for iOS (.mobileconfig & unsigned .ipa) and Android (.apk)." \
               --latest \
               -R "${{ github.repository }}"
