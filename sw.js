@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tamam-field-v2';
+const CACHE_NAME = 'tamam-field-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,7 +8,9 @@ const APP_SHELL = [
   './icon-512.png',
   './icon-120.png',
   './Tamam.mobileconfig',
-  './manifest.plist'
+  './manifest.plist',
+  './vendor/supabase-2.118.0.js',
+  './vendor/jsQR-1.4.0.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -29,6 +31,8 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // only the app's own files are cached; Supabase and other APIs always go to the network
+  if (new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const networkFetch = fetch(event.request)

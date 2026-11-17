@@ -1,10 +1,10 @@
 {
   "name": "tamam-field",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
-  "description": "Tamam (تمام) Site Engineer Field Accounting App",
+  "description": "Tamam (\u062a\u0645\u0627\u0645) Site Engineer Field Accounting App",
   "scripts": {
-    "sync:www": "mkdir -p www && cp -f index.html manifest.webmanifest sw.js apple-touch-icon.png icon-192.png icon-512.png icon-120.png Tamam.mobileconfig manifest.plist www/",
+    "sync:www": "mkdir -p www/vendor && cp -f index.html manifest.webmanifest sw.js apple-touch-icon.png icon-192.png icon-512.png icon-120.png Tamam.mobileconfig manifest.plist www/ && cp -f vendor/*.js www/vendor/",
     "cap:sync": "npm run sync:www && npx cap sync"
   },
   "dependencies": {

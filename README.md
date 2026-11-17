@@ -1,8 +1,8 @@
-# Tamam (تمام) v2.0 — Site Engineer Field App (iOS & Android)
+# Tamam (تمام) v2.1 — Site Engineer Field App (iOS & Android)
 
 **Tamam (تمام)** is a Saudi-first construction field accounting app for **site engineers (`مهندس الموقع`)**: petty cash custody (`العهدة`), ZATCA receipt scanning with duplicate blocking, signed cash labor vouchers, and site video reports. It works offline and installs on iPhone and Android for $0.
 
-**v2.0** is a full redesign of the field UI: clearer screens for outdoor use, a new **Me** tab with a large English / العربية switch, and automatic offline mode.
+**v2.1** adds accounts (engineer / owner), cloud sync with Supabase, owner approvals, and Gemini receipt reading and site video reports. **v2.0** was a full redesign of the field UI: clearer screens for outdoor use, a new **Me** tab with a large English / العربية switch, and automatic offline mode.
 
 ---
 
@@ -57,7 +57,7 @@
 
 ## 🛠 Build
 
-The GitHub Actions workflow (`.github/workflows/build-mobile.yml`) runs on every push to `main` and publishes release **v2.0.0** with `Tamam.apk`, `Tamam-unsigned.ipa`, `Tamam.mobileconfig` and `manifest.plist`.
+The GitHub Actions workflow (`.github/workflows/build-mobile.yml`) runs on every push to `main` and publishes release **v2.1.0** with `Tamam.apk`, `Tamam-unsigned.ipa`, `Tamam.mobileconfig` and `manifest.plist`.
 
 Local build (Node 20+, JDK 17 and Android SDK for Android; macOS + Xcode for iOS):
 

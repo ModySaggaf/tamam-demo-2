@@ -255,6 +255,8 @@ body.is-standalone .nav{height:calc(74px + var(--safe-bottom));padding-bottom:va
   <div id="pw"></div>
 </main>
 
+<script src="vendor/supabase-2.118.0.js"></script>
+<script src="vendor/jsQR-1.4.0.js"></script>
 <script>
 /* =============================== 1. STANDALONE & PWA SETUP =============================== */
 (function initStandaloneMode() {
@@ -694,8 +696,8 @@ const D = {
     sync_now: "Sync Queued Items", synced: "Offline queue synced!",
     reset_demo: "Reset Demo Data", reset_done: "Demo data reset to defaults",
     gemini_key: "Optional Gemini API Key (Vision OCR)", save_key: "Save Key", key_saved: "Gemini API Key saved",
-    install_btn: "Install Tamam on your phone",
-    version: "Tamam 2.0 · Site Engineer Edition · Riyadh",
+    install_btn: "📲 Install on iPhone (iOS) & Android",
+    version: "Tamam 2.1 · Site Engineer Edition · Riyadh",
     sar: "SAR",
     offline_active: "Offline Mode Active",
     queued_items: "{n} item(s) queued in localStorage",
@@ -744,7 +746,24 @@ const D = {
     take_photo: "Take photo of receipt", qr_ok: "ZATCA QR read", qr_manual: "Check the details",
     no_dup: "No duplicate found", no_dup_s: "Checked against {n} earlier receipts on this phone.",
     review_t: "Review receipt", search_w: "Search workers", add_worker: "Add a new worker",
-    per_day: "/day", back: "Back", send_btn: "Send"
+    per_day: "/day", back: "Back", send_btn: "Send",
+    auth_sub: "Field accounting for site engineers", sign_in: "Sign in", sign_up: "Create account", your_name: "Your name",
+    email: "Email", password: "Password", please_wait: "Please wait…", try_demo: "Try the demo without an account",
+    demo_hint: "Demo mode keeps sample data on this phone only.", auth_fail: "Could not sign in: {m}", pw_short: "Password must be at least 8 characters",
+    team_cash: "Team cash in hand", to_approve: "Review approvals ({n})", engineers: "Engineers", refresh: "Refresh", syncing: "Syncing…",
+    entries_n: "{n} today", awaiting_s: "waiting", no_engineers: "No engineers yet. Ask them to create an account.",
+    approvals: "Approvals", t_appr: "Approvals", rc_over: "Receipts over 500 SAR", topups_t: "Top-up requests", nothing_appr: "Nothing waiting for approval",
+    approve: "Approve", reject: "Reject", view_photo: "View photo", view_voucher: "View voucher", approved_msg: "Approved", rejected_msg: "Rejected",
+    st_rej: "Rejected", dup_srv: "Duplicate receipt", dup_srv_s: "{n} item(s) were already recorded and were not added again",
+    ai_reading: "Reading receipt with AI…", ai_filled: "Filled by AI ({c} confidence) — check before submitting", ai_fail: "AI could not read it — type the details",
+    ai_offline: "AI report needs signal — you can still post the video", no_frames: "No video frames to analyse", ai_thinking: "AI is reviewing the video…",
+    retry: "Try again", need_fields: "Enter the merchant and total first", point_cam: "Take a clear photo of the whole receipt",
+    sync_status: "Cloud sync", last_sync: "Last synced {t}", never_sync: "Not synced yet", sync_err: "Sync problem: {m}",
+    sign_out: "Sign out", role_owner: "Owner", role_engineer: "Site engineer", demo_mode: "Demo mode (not saved online)",
+    fresh: "Start fresh", fresh_s: "Clear everything and set your opening custody", fresh_q: "Opening custody balance (SAR)", fresh_go: "Clear and start",
+    fresh_done: "Started fresh", export: "Export to Excel (CSV)", export_s: "All entries as a spreadsheet file",
+    work_seen: "Work seen", equipment: "Equipment", ppe_ok: "Everyone visible wears helmet and vest", conf: "Confidence", frames_lbl: "Frames analysed",
+    video_title: "Site video · {s}", decided_ok: "Decision saved"
   },
   ar: {
     brand: "تمام", gm: "صباح الخير", wName: "خالد", role_w: "مهندس موقع",
@@ -786,8 +805,8 @@ const D = {
     sync_now: "مزامنة العمليات المعلقة", synced: "تمت مزامنة العمليات المحفوظة!",
     reset_demo: "إعادة ضبط البيانات التجريبية", reset_done: "تمت إعادة ضبط البيانات للوضع الافتراضي",
     gemini_key: "مفتاح Gemini API الاختياري (لتحليل الصور والفيديو)", save_key: "حفظ المفتاح", key_saved: "تم حفظ مفتاح Gemini",
-    install_btn: "تثبيت تمام على جوالك",
-    version: "تمام 2.0 · نسخة مهندس الموقع · الرياض",
+    install_btn: "📲 تثبيت التطبيق على آيفون (iOS) وأندرويد",
+    version: "تمام 2.1 · نسخة مهندس الموقع · الرياض",
     sar: "ر.س",
     offline_active: "وضع عدم الاتصال مفعّل",
     queued_items: "{n} عملية محفوظة في قائمة الانتظار",
@@ -836,7 +855,24 @@ const D = {
     take_photo: "صوّر الفاتورة", qr_ok: "تمت قراءة باركود الزكاة", qr_manual: "راجع البيانات",
     no_dup: "لا يوجد تكرار", no_dup_s: "تمت المقارنة مع {n} فاتورة سابقة على هذا الجوال.",
     review_t: "مراجعة الفاتورة", search_w: "ابحث عن عامل", add_worker: "إضافة عامل جديد",
-    per_day: "/يوم", back: "رجوع", send_btn: "إرسال"
+    per_day: "/يوم", back: "رجوع", send_btn: "إرسال",
+    auth_sub: "محاسبة ميدانية لمهندسي المواقع", sign_in: "تسجيل الدخول", sign_up: "إنشاء حساب", your_name: "اسمك",
+    email: "البريد الإلكتروني", password: "كلمة المرور", please_wait: "يرجى الانتظار…", try_demo: "جرّب النسخة التجريبية بدون حساب",
+    demo_hint: "الوضع التجريبي يحفظ بيانات نموذجية على هذا الجوال فقط.", auth_fail: "تعذّر الدخول: {m}", pw_short: "كلمة المرور 8 أحرف على الأقل",
+    team_cash: "عهدة الفريق النقدية", to_approve: "مراجعة الموافقات ({n})", engineers: "المهندسون", refresh: "تحديث", syncing: "جارٍ المزامنة…",
+    entries_n: "{n} اليوم", awaiting_s: "معلّق", no_engineers: "لا يوجد مهندسون بعد. اطلب منهم إنشاء حساب.",
+    approvals: "الموافقات", t_appr: "الموافقات", rc_over: "فواتير أكثر من 500 ر.س", topups_t: "طلبات تغذية العهدة", nothing_appr: "لا يوجد شيء بانتظار الموافقة",
+    approve: "موافقة", reject: "رفض", view_photo: "عرض الصورة", view_voucher: "عرض السند", approved_msg: "تمت الموافقة", rejected_msg: "تم الرفض",
+    st_rej: "مرفوض", dup_srv: "فاتورة مكررة", dup_srv_s: "{n} عملية مسجلة مسبقاً ولم تُضف مرة أخرى",
+    ai_reading: "جارٍ قراءة الفاتورة بالذكاء الاصطناعي…", ai_filled: "عبّأها الذكاء الاصطناعي (ثقة {c}) — راجعها قبل الإرسال", ai_fail: "تعذّرت القراءة — أدخل البيانات يدوياً",
+    ai_offline: "التقرير يحتاج إنترنت — يمكنك نشر الفيديو الآن", no_frames: "لا توجد لقطات لتحليلها", ai_thinking: "الذكاء الاصطناعي يراجع الفيديو…",
+    retry: "إعادة المحاولة", need_fields: "أدخل اسم المورد والإجمالي أولاً", point_cam: "صوّر الفاتورة كاملة بوضوح",
+    sync_status: "المزامنة السحابية", last_sync: "آخر مزامنة {t}", never_sync: "لم تتم المزامنة بعد", sync_err: "مشكلة في المزامنة: {m}",
+    sign_out: "تسجيل الخروج", role_owner: "المالك", role_engineer: "مهندس موقع", demo_mode: "الوضع التجريبي (غير محفوظ سحابياً)",
+    fresh: "البدء من جديد", fresh_s: "مسح كل البيانات وتحديد رصيد العهدة الافتتاحي", fresh_q: "رصيد العهدة الافتتاحي (ر.س)", fresh_go: "مسح والبدء",
+    fresh_done: "تم البدء من جديد", export: "تصدير إلى Excel (CSV)", export_s: "كل العمليات في ملف جدول",
+    work_seen: "الأعمال المرصودة", equipment: "المعدات", ppe_ok: "كل من يظهر يرتدي الخوذة والسترة", conf: "الثقة", frames_lbl: "اللقطات المحللة",
+    video_title: "فيديو الموقع · {s}", decided_ok: "تم حفظ القرار"
   }
 };
 
@@ -1216,6 +1252,7 @@ function statusText(a) {
   if (a.isRefund) return `<span class="stt ref">${t('st_ref')}</span>`;
   if (a.st === 'ok') return `<span class="stt ok">${t('st_ok')}</span>`;
   if (a.st === 'pend') return `<span class="stt pend">${t('st_pend')}</span>`;
+  if (a.st === 'rejected') return `<span class="stt" style="color:var(--red)">${t('st_rej')}</span>`;
   return `<span class="stt ok">${t('st_done')}</span>`;
 }
 
@@ -1227,17 +1264,19 @@ function actRow(a) {
     : `<span class="num">${escHtml(a.dur || '')}</span>`;
   return `<div class="row" style="cursor:pointer" data-a="openAct" data-id="${escAttr(a.id || '')}">
     <div class="ico ${ic[1]}">${I(ic[0])}</div>
-    <div class="t"><b>${escHtml(L(a.ti))}</b><span>${escHtml(sub)} · <span class="num">${escHtml(a.tm)}</span></span></div>
+    <div class="t"><b>${escHtml(L(a.ti))}</b><span>${a.who && isOwner() ? escHtml(a.who) + ' · ' : ''}${escHtml(sub)} · <span class="num">${escHtml(a.tm)}</span></span></div>
     <div class="amt">${amtHtml}${statusText(a)}</div>
   </div>`;
 }
+
+const meName = () => (isCloud() && CLOUD.profile && CLOUD.profile.full_name) || t('wName');
 
 function topHeader() {
   const off = S.offline;
   return `<div class="h">
       <div style="display:flex;gap:11px;align-items:center">
-        <div class="av">${initial(t('wName'))}</div>
-        <div class="hello"><small>${t('gm')}</small><b>${t('wName')}</b></div>
+        <div class="av">${escHtml(Array.from(meName())[0] || 'K')}</div>
+        <div class="hello"><small>${t('gm')}</small><b>${escHtml(meName())}</b></div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
         <button class="st-pill ${off ? 'off' : ''}" data-a="wtab" data-t="me" data-tab="me"><i></i>${off ? t('offline_short') : t('online')}</button>
@@ -1259,7 +1298,7 @@ function wHome() {
       <div class="big"><span class="num" id="home-wallet-bal">${Number(S.wallet).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><small>${t('sar')}</small></div>
       <div class="stats">
         <div class="stat"><small>${t('spent_today')}</small><b class="num" id="home-spent-today">${fmt(S.spentToday)}</b></div>
-        <div class="stat"><small>${t('awaiting')}</small><b class="num">${fmt(pendingTotal())}</b></div>
+        <div class="stat"><small>${t('awaiting')}</small><b class="num">${fmt(awaitingAmt())}</b></div>
       </div>
       <button class="btn amber w" style="margin-top:12px" data-a="reqtop">${I('plus', 16)} ${t('req_topup')}</button>
     </div>
@@ -1304,9 +1343,10 @@ function wAct() {
 }
 
 function wWallet() {
-  const lastReq = S.walletMoves.find(m => m.ty === 'req');
+  const lastReq = lastTopup();
+  const reqTm = lastReq ? lastReq.tm : '';
   const reqAmt = PH.w.topAmt ?? 5000;
-  const moves = [
+  const moves = isCloud() ? (S.ledger || []).map(m => ({ kind: Number(m.amount) >= 0 ? 'in' : 'out', ti: m.note || m.kind, sub: `${m.dt.slice(8, 10)}/${m.dt.slice(5, 7)} · ${m.tm}`, amt: Math.abs(Number(m.amount)) })) : [
     ...S.walletMoves.filter(m => m.ty === 'in').map(m => ({ kind: 'in', ti: L(m.ti), sub: m.tm, amt: m.amt, dt: m.dt || '' })),
     ...S.acts.filter(a => a.amt > 0 && a.st !== 'pend').map(a => ({ kind: a.isRefund ? 'in' : 'out', ti: L(a.ti), sub: `${a.tm} · ${a.pay === 'card' ? t('p_card') : t('p_cash')}`, amt: a.amt }))
   ];
@@ -1322,8 +1362,8 @@ function wWallet() {
       <div class="big"><span class="num" id="wallet-tab-bal">${Number(S.wallet).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><small>${t('sar')}</small></div>
       <div class="stats three">
         <div class="stat"><small>${t('spent_today')}</small><b class="num">${fmt(S.spentToday)}</b></div>
-        <div class="stat"><small>${t('awaiting')}</small><b class="num">${fmt(pendingTotal())}</b></div>
-        <div class="stat"><small>${t('requested')}</small><b class="num">${lastReq ? fmt(lastReq.amt) : '0'}</b></div>
+        <div class="stat"><small>${t('awaiting')}</small><b class="num">${fmt(awaitingAmt())}</b></div>
+        <div class="stat"><small>${t('requested')}</small><b class="num">${lastReq ? fmt(lastReq.amt ?? lastReq.amount) : '0'}</b></div>
       </div>
     </div>
     <div class="card" style="margin-top:12px" id="topup-card">
@@ -1338,7 +1378,7 @@ function wWallet() {
       </div>
       <label class="lbl-f" for="topup-reason" style="margin-top:10px">${t('reason')}</label>
       <input id="topup-reason" class="inp" type="text" value="${escAttr(PH.w.topReason ?? t('reason_def'))}">
-      ${lastReq ? `<div class="note warn" style="margin:10px 0 0;font-size:12px">${I('clock', 16)}<span>${t('req_wait', { a: fmt(lastReq.amt), t: lastReq.tm })}</span></div>` : ''}
+      ${lastReq ? `<div class="note warn" style="margin:10px 0 0;font-size:12px">${I('clock', 16)}<span>${t('req_wait', { a: fmt(lastReq.amt ?? lastReq.amount), t: reqTm })}</span></div>` : ''}
       <button class="btn p w" style="margin-top:10px" data-a="topupReq">${I('send', 15)} ${t('send_req')}</button>
     </div>
     <div class="sec"><span>${t('money_inout')}</span></div>
@@ -1349,9 +1389,15 @@ function meScreen() {
   const q = S.offlineQueue.length;
   return `<div class="h"><b style="font-size:24px;color:var(--g9)">${t('me_t')}</b></div>
     <div class="card" style="display:flex;gap:14px;align-items:center">
-      <div class="av" style="width:52px;height:52px;font-size:20px">${initial(t('wName'))}</div>
-      <div style="flex:1"><b style="font-size:16.5px">${t('wName')}</b><div class="mut sm-t">${t('role_w')} · ${t('project_name')}</div></div>
+      <div class="av" style="width:52px;height:52px;font-size:20px">${escHtml(Array.from(meName())[0] || 'K')}</div>
+      <div style="flex:1;min-width:0"><b style="font-size:16.5px">${escHtml(meName())}</b><div class="mut sm-t">${isCloud() ? `${isOwner() ? t('role_owner') : t('role_engineer')} · ${escHtml((CLOUD.session && CLOUD.session.user.email) || '')}` : t('demo_mode')}</div></div>
+      <button class="btn o sm" data-a="signOut">${isCloud() ? t('sign_out') : t('sign_in')}</button>
     </div>
+    ${isCloud() ? `<div class="list" style="margin-top:12px"><div class="mrow">
+      <div class="ico g">${I('refresh', 18)}</div>
+      <div class="t"><b>${t('sync_status')}</b><span style="white-space:normal">${CLOUD.error ? `<span style="color:var(--red)">${escHtml(t('sync_err', { m: CLOUD.error }))}</span>` : CLOUD.lastSync ? t('last_sync', { t: CLOUD.lastSync }) : t('never_sync')} · ${t('queued_short', { n: S.offlineQueue.length })}</span></div>
+      <button class="btn s sm" data-a="syncNow">${CLOUD.syncing ? t('syncing') : t('refresh')}</button>
+    </div></div>` : ''}
 
     <div class="mh">${t('language')}</div>
     <div class="card">
@@ -1392,14 +1438,19 @@ function meScreen() {
         <div class="t"><b>${t('dev_mode')}</b><span style="white-space:normal">${t('dev_mode_s')}</span></div>
         <button class="sw ${S.devMode ? 'on' : ''}" data-a="devMode" aria-label="${escAttr(t('dev_mode'))}" aria-pressed="${!!S.devMode}"></button>
       </div>
-      <div class="mrow" style="flex-wrap:wrap">
-        <label class="lbl-f" for="gemini-key-input" style="width:100%">${t('gemini_key')}</label>
-        <input id="gemini-key-input" class="inp" type="password" placeholder="AIzaSy..." value="${escAttr(S.geminiKey || '')}" style="flex:1">
-        <button class="btn s sm" style="height:40px" data-a="saveGeminiKey">${t('save_key')}</button>
-      </div>
+      <button class="mrow" data-a="exportCsv">
+        <div class="ico g">${I('download', 18)}</div>
+        <div class="t"><b>${t('export')}</b><span>${t('export_s')}</span></div>
+        <span class="mut flip">${I('chev')}</span>
+      </button>
+      ${isOwner() ? '' : `<button class="mrow" data-a="freshOpen">
+        <div class="ico r">${I('refresh', 18)}</div>
+        <div class="t"><b>${t('fresh')}</b><span>${t('fresh_s')}</span></div>
+        <span class="mut flip">${I('chev')}</span>
+      </button>`}
     </div>
 
-    <button class="btn d w" style="margin-top:14px" data-a="resetDemo">${I('refresh', 16)} ${t('reset_demo')}</button>
+    ${isCloud() ? '' : `<button class="btn d w" style="margin-top:14px" data-a="resetDemo">${I('refresh', 16)} ${t('reset_demo')}</button>`}
     <div class="mut sm-t" style="text-align:center;margin-top:14px">${t('version')}</div>`;
 }
 
@@ -1449,6 +1500,23 @@ function sheetUI() {
         <button class="btn o w sm" data-a="wclose">${t('done')}</button>
       </div>`;
   }
+  if (s === 'fresh') {
+    return `<div class="scrim" data-a="wclose"></div>
+      <div class="sheet"><div class="grab"></div><h3>${t('fresh')}</h3>
+        <p class="mut sm-t" style="margin-bottom:10px">${t('fresh_s')}</p>
+        <label class="lbl-f" for="fresh-amt">${t('fresh_q')}</label>
+        <input id="fresh-amt" class="inp num" type="number" inputmode="numeric" value="5000" min="0" step="100" style="height:48px;font-size:18px">
+        <button class="btn d w big" style="margin-top:12px" data-a="freshGo">${I('refresh', 16)} ${t('fresh_go')}</button>
+        <button class="btn o w" style="margin-top:8px" data-a="wclose">${t('back')}</button>
+      </div>`;
+  }
+  if (s === 'file') {
+    return `<div class="scrim" data-a="wclose"></div>
+      <div class="sheet"><div class="grab"></div>
+        <img src="${PH.w.fileSrc}" alt="" style="width:100%;border-radius:14px;display:block">
+        <button class="btn p w" style="margin-top:12px" data-a="wclose">${t('done')}</button>
+      </div>`;
+  }
   if (s === 'actDetail') {
     const a = S.acts.find(x => x.id === PH.w.actDetailId) || S.acts[0];
     if (!a) return '';
@@ -1466,6 +1534,12 @@ function sheetUI() {
           ${a.compKey ? `<div class="kv"><span>${t('comp_key_lbl')}</span><b class="num" style="font-size:10.5px">${escHtml(a.compKey)}</b></div>` : ''}
           ${a.tafqeetAr ? `<div class="kv"><span>${t('tafqeet_ar_lbl')}</span><b>${escHtml(a.tafqeetAr)}</b></div>` : ''}
           ${a.tafqeetEn ? `<div class="kv"><span>${t('tafqeet_en_lbl')}</span><b>${escHtml(a.tafqeetEn)}</b></div>` : ''}
+        </div>
+        ${a.report ? `<div class="card" style="margin-top:10px"><b>${t('ai_report')}</b><p style="margin-top:6px;line-height:1.55">${escHtml(a.report.summary || '')}</p>${(a.report.safety_issues || []).length ? `<p style="color:var(--warn);margin-top:6px">${a.report.safety_issues.map(escHtml).join(' · ')}</p>` : ''}</div>` : ''}
+        ${a.note ? `<div class="note warn" style="margin-top:10px">${escHtml(a.note)}</div>` : ''}
+        <div style="display:flex;gap:8px;margin-top:12px">
+          ${a.k !== 'labor' ? `<button class="btn o" style="flex:1" data-a="viewFile" data-path="${escAttr(a.photoPath || '')}" data-key="photo:${escAttr(a.id)}">${I('camera', 15)} ${t('view_photo')}</button>` : ''}
+          ${a.k === 'labor' ? `<button class="btn o" style="flex:1" data-a="viewFile" data-path="${escAttr(a.voucherPath || '')}" data-key="voucher:${escAttr(a.id)}">${I('file', 15)} ${t('view_voucher')}</button>` : ''}
         </div>
         <button class="btn p w" style="margin-top:12px" data-a="wclose">${t('done')}</button>
       </div>`;
@@ -1530,7 +1604,8 @@ function fReceipt(f) {
     <div class="fb">
       <div class="cam-box">
         <video id="rcpt-video" autoplay playsinline muted></video>
-        <div class="paper">
+        ${S.devMode ? '' : `<div style="position:absolute;bottom:12px;left:12px;right:12px;text-align:center;font-size:12px;background:rgba(0,0,0,.5);padding:6px 10px;border-radius:10px;z-index:3">${t('point_cam')}</div>`}
+        <div class="paper" style="display:${S.devMode ? 'block' : 'none'}">
           <b id="cam-paper-merchant" style="font-size:10px">${escHtml(f.merchant || 'Al-Fanar Electrical')}</b>
           <div class="num" id="cam-paper-tax">VAT: ${escHtml(f.taxNo || t('none_lbl'))}</div>
           <hr>
@@ -1558,9 +1633,9 @@ function fReceipt(f) {
 
       <div class="card" style="padding:12px 14px">
         <div class="rc-head">
-          <div class="rc-thumb"><i></i></div>
+          <div class="rc-thumb">${f.photo ? `<img src="${f.photo}" alt="" style="width:100%;height:100%;object-fit:cover">` : '<i></i>'}</div>
           <div style="flex:1;min-width:0">
-            <span class="pill ${qrRead ? 'g' : 'a'}">${I(qrRead ? 'check' : 'alert', 12)} ${qrRead ? t('qr_ok') : t('qr_manual')}</span>
+            ${f.aiBusy ? `<span class="pill b">${I('spark', 12)} ${t('ai_reading')}</span>` : f.aiConf ? `<span class="pill b" style="white-space:normal">${I('spark', 12)} ${t('ai_filled', { c: escHtml(f.aiConf) })}</span>` : f.aiErr ? `<span class="pill a" style="white-space:normal">${escHtml(f.aiErr)}</span>` : `<span class="pill ${qrRead ? 'g' : 'a'}">${I(qrRead ? 'check' : 'alert', 12)} ${qrRead ? t('qr_ok') : t('qr_manual')}</span>`}
             <div style="margin-top:6px"><label class="lbl-f" for="rcpt-merchant" style="margin:0">${t('merchant')}</label>
             <input id="rcpt-merchant" class="inp" type="text" value="${escAttr(f.merchant || '')}" style="height:38px;font-size:15px"></div>
           </div>
@@ -1787,6 +1862,30 @@ function fVideo(f) {
     </div>`;
   }
 
+  const r = f.report;
+  const list = a => (a && a.length ? a.map(x => escHtml(x)).join(' · ') : '—');
+  if (isCloud() || f.frames) return `<div class="flow">${fhead(t('ai_report'), f)}
+    <div class="fb">
+      ${f.frames && f.frames.length ? `<div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:10px">${f.frames.map(x => `<img src="${x}" alt="" style="height:64px;border-radius:8px;flex:none">`).join('')}</div>` : ''}
+      ${f.aiBusy ? `<div class="note ok">${I('spark', 18)}<span>${t('ai_thinking')}</span></div>` : ''}
+      ${f.aiErr ? `<div class="note warn" style="justify-content:space-between"><span>${escHtml(f.aiErr)}</span>${f.frames && f.frames.length ? `<button class="btn s sm" data-a="aiRetry">${t('retry')}</button>` : ''}</div>` : ''}
+      ${r ? `<div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="pill b">${I('spark', 12)} AI · ${escHtml(f.reportModel || 'Gemini')}</span>
+          <span class="mut sm-t">${t('conf')}: ${escHtml(r.confidence)}</span>
+        </div>
+        <p style="margin:12px 0;line-height:1.6;font-weight:500">${escHtml(r.summary)}</p>
+        <div class="kv"><span>${t('detected')}</span><b>${escHtml(r.stage)}</b></div>
+        <div class="kv"><span>${t('progress')}</span><b style="text-align:end;max-width:62%">${escHtml(r.progress_note)}</b></div>
+        <div class="kv"><span>${t('work_seen')}</span><b style="text-align:end;max-width:62%">${list(r.work_seen)}</b></div>
+        <div class="kv"><span>${t('materials')}</span><b style="text-align:end;max-width:62%">${list(r.materials)}</b></div>
+        <div class="kv"><span>${t('equipment')}</span><b style="text-align:end;max-width:62%">${list(r.equipment)}</b></div>
+        <div class="kv"><span>${t('safety')}</span><b style="text-align:end;max-width:62%;color:${r.ppe_ok && !(r.safety_issues || []).length ? 'var(--g7)' : 'var(--warn)'}">${r.ppe_ok && !(r.safety_issues || []).length ? t('ppe_ok') : list(r.safety_issues)}</b></div>
+      </div>` : ''}
+    </div>
+    <div class="ff"><button class="btn p w big" data-a="subVid" ${f.aiBusy ? 'disabled' : ''}>${t('post_report')}</button></div>
+  </div>`;
+
   return `<div class="flow">${fhead(t('ai_report'), f)}
     <div class="fb">
       <div class="card">
@@ -1814,6 +1913,13 @@ function flowUI() {
 
 function workerUI() {
   const w = PH.w;
+  if (!S.mode) return frame(`${bannerHTML()}${authUI()}`, false);
+  if (isOwner()) {
+    const nPend = (CLOUD.pendEntries || []).length + (CLOUD.pendTopups || []).length;
+    const onav = `<nav class="nav">${nb('home', 'home', 't_home')}${nb('appr', 'check', 't_appr', nPend || '')}${nb('act', 'list', 't_act')}${nb('me', 'user', 't_me')}</nav>`;
+    const om = w.tab === 'appr' ? approvalsUI() : w.tab === 'act' ? wAct() : w.tab === 'me' ? meScreen() : ownerHome();
+    return frame(`${bannerHTML()}<div class="body">${om}</div>${onav}${sheetUI()}`, false);
+  }
   const nav = `<nav class="nav">
     ${nb('home', 'home', 't_home')}
     ${nb('act', 'list', 't_act')}
@@ -1882,8 +1988,12 @@ const A = {
       dark: type === 'video'
     };
     if (type === 'receipt') {
-      const idx = S.rcIdx % 3;
-      await loadReceiptPresetIntoFlow(f, idx);
+      if (S.devMode) {
+        await loadReceiptPresetIntoFlow(f, S.rcIdx % 3);
+      } else {
+        Object.assign(f, { idx: -1, merchant: '', taxNo: '', total: 0, rawTlv: '', dateStr: todayKey(), edited: true });
+        await evaluateReceiptState(f);
+      }
     }
     PH.w.flow = f;
     render();
@@ -1974,6 +2084,7 @@ const A = {
       render();
       return;
     }
+    if (!String(f.merchant || '').trim() || !(Number(f.total) > 0)) { banner('alert', t('need_fields'), ''); return; }
     const total = Math.max(0, +(Number(f.total) || 0).toFixed(2));
     const vat = computeReceiptVat(f.taxNo, total);
     const over = !f.isRefund && total > 500;
@@ -2000,11 +2111,14 @@ const A = {
       stage: f.stage,
       sha256: f.sha256,
       compKey: f.compKey,
+      ai: f.ai || null,
       dt: todayKey(),
       tm: nowT()
     };
     S.acts.unshift(actItem);
-    if (S.offline) S.offlineQueue.push(actItem);
+    if (f.photo) await IDB.put('photo:' + actItem.id, f.photo);
+    actItem.at = new Date().toISOString();
+    enqueue('entry', actItem);
 
     if (f.isRefund) {
       if (f.pay === 'cash') S.wallet = +(S.wallet + total).toFixed(2);
@@ -2133,10 +2247,12 @@ const A = {
       tafqeetAr: arWords(amt),
       tafqeetEn: enWords(amt),
       job: wJobStr,
-      voucherPngUrl: f.voucherPngUrl
+      voucherPngUrl: isCloud() ? undefined : f.voucherPngUrl
     };
     S.acts.unshift(actItem);
-    if (S.offline) S.offlineQueue.push(actItem);
+    IDB.put('voucher:' + actItem.id, f.voucherPngUrl);
+    actItem.at = new Date().toISOString();
+    enqueue('entry', actItem);
     S.wallet = +(S.wallet - amt).toFixed(2);
     S.spentToday = +(S.spentToday + amt).toFixed(2);
     saveState();
@@ -2204,47 +2320,54 @@ const A = {
     }, 500);
   },
 
-  vstop() {
+  async vstop() {
     const f = PH.w.flow;
     if (!f || f.type !== 'video') return;
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      await new Promise(res => { mediaRecorder.onstop = res; try { mediaRecorder.stop(); } catch (_) { res(); } setTimeout(res, 1500); });
+    }
+    const blob = f.videoBlob || (recordedChunks.length ? new Blob(recordedChunks, { type: recordedChunks[0].type || 'video/webm' }) : null);
     stopActiveMedia();
-    f.sec = Math.max(2, f.sec || 8);
     f.step = 3;
     f.dark = false;
-    f.aiStage = t('stage_fnd');
-    f.aiProgress = '+3%';
-    f.aiMaterials = t('mat_list');
-    f.aiSafety = t('all_safe');
-    f.aiSummary = t('ai_sum');
+    f.aiBusy = Boolean(blob);
     render();
-    tryGeminiVisionForVideo(f);
+    if (blob) {
+      try {
+        const { frames, duration } = await extractFrames(blob, 5);
+        f.frames = frames;
+        if (!f.sec || f.videoBlob) f.sec = Math.round(duration);
+      } catch (_) { f.frames = []; }
+      f.aiBusy = false;
+      await aiSiteReport(f);
+    } else {
+      f.aiBusy = false; f.aiErr = t('no_frames'); render();
+    }
   },
+  aiRetry() { const f = PH.w.flow; if (f && f.type === 'video') aiSiteReport(f); },
 
   subVid() {
     const f = PH.w.flow;
-    const dur = '0:' + String(Math.max(2, (f && f.sec) || 8)).padStart(2, '0');
+    const secs = Math.max(1, (f && f.sec) || 1);
+    const dur = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
+    const rep = (f && f.report) || null;
+    const stg = rep ? ({ excavation: 'exc', foundation: 'fnd', structure: 'fnd', finishing: 'fin' }[rep.stage] || 'gen') : 'gen';
     const actItem = {
       id: 'act-' + Date.now(),
       k: 'video',
-      ti: { en: 'Villa 3 roof slab (' + dur + ')', ar: 'سقف الفيلا 3 (' + dur + ')' },
+      ti: { en: D.en.video_title.replace('{s}', D.en[STAGES[stg]]) + ' (' + dur + ')', ar: D.ar.video_title.replace('{s}', D.ar[STAGES[stg]]) + ' (' + dur + ')' },
       amt: 0,
       st: 'done',
       dt: todayKey(),
       tm: nowT(),
-      stage: 'fnd',
-      dur
-    };
-    S.acts.unshift(actItem);
-    if (S.offline) S.offlineQueue.push(actItem);
-    S.progressBoost = (S.progressBoost || 0) + 3;
-    S.feed.unshift({
-      ti: 'Villa 3 roof slab pour',
+      stage: stg,
       dur,
-      st: 'fnd',
-      progress: '+3%',
-      materials: t('mat_list'),
-      safety: t('all_safe')
-    });
+      report: rep
+    };
+    if (f && f.frames && f.frames[0]) IDB.put('photo:' + actItem.id, f.frames[0]);
+    S.acts.unshift(actItem);
+    actItem.at = new Date().toISOString();
+    enqueue('entry', actItem);
     saveState();
     A.fclose();
   },
@@ -2255,6 +2378,13 @@ const A = {
     const raw = PH.w.topOther && inp ? Number(inp.value) : (PH.w.topAmt ?? (inp ? Number(inp.value) : 5000));
     const reqAmt = Math.max(100, raw || 5000);
     PH.w.topReason = rsn ? rsn.value : PH.w.topReason;
+    if (isCloud()) {
+      const tid = 'tp-' + Date.now();
+      S.topups = [{ id: tid, client_id: tid, amount: reqAmt, reason: PH.w.topReason || '', status: 'pend', tm: nowT() }, ...(S.topups || [])];
+      enqueue('topup', { id: tid, amt: reqAmt, reason: PH.w.topReason || t('reason_def') });
+      banner('send', t('sent'), `${fmt(reqAmt)} ${t('sar')}`);
+      return;
+    }
     S.walletMoves.unshift({
       id: 'wm-' + Date.now(),
       ty: 'req',
@@ -2280,7 +2410,8 @@ const A = {
   offline() {
     S.offline = !S.offline;
     S.autoOff = false;
-    if (!S.offline && S.offlineQueue.length > 0) {
+    if (!S.offline && isCloud()) setTimeout(() => syncNow(), 50);
+    else if (!S.offline && S.offlineQueue.length > 0) {
       S.offlineQueue = [];
     }
     saveState();
@@ -2288,6 +2419,7 @@ const A = {
   },
 
   syncQueue() {
+    if (isCloud()) { S.offline = false; saveState(); syncNow(); return; }
     const count = S.offlineQueue.length;
     S.offlineQueue = [];
     S.offline = false;
@@ -2305,7 +2437,86 @@ const A = {
   resetDemo() {
     resetTamamDemo();
     banner('refresh', t('reset_done'), '');
-  }
+  },
+
+  authTab(p, d) { PH.w.authTab = d.v; PH.w.authErr = ''; render(); },
+  async doAuth() {
+    initCloud();
+    const email = (document.getElementById('auth-email') || {}).value || '';
+    const pass = (document.getElementById('auth-pass') || {}).value || '';
+    const nameEl = document.getElementById('auth-name');
+    const name = nameEl ? nameEl.value.trim() : '';
+    if (!sb) { PH.w.authErr = t('auth_fail', { m: 'offline' }); render(); return; }
+    if (pass.length < 8) { PH.w.authErr = t('pw_short'); render(); return; }
+    PH.w.authBusy = true; PH.w.authErr = ''; render();
+    try {
+      const up = PH.w.authTab === 'up';
+      const res = up
+        ? await sb.auth.signUp({ email: email.trim(), password: pass, options: { data: { full_name: name || email.split('@')[0] } } })
+        : await sb.auth.signInWithPassword({ email: email.trim(), password: pass });
+      if (res.error) throw res.error;
+      if (!res.data.session) throw new Error('check your email to confirm the account');
+      CLOUD.session = res.data.session;
+      const keepLang = lang;
+      S = createDefaultState();
+      Object.assign(S, { mode: 'cloud', lang: keepLang, acts: [], walletMoves: [], feed: [], wallet: 0, spentToday: 0, seenHashes: [], seenKeys: [] });
+      PH.w.tab = 'home';
+      saveState();
+      await syncNow();
+    } catch (e) {
+      PH.w.authErr = t('auth_fail', { m: e.message || String(e) });
+    } finally {
+      PH.w.authBusy = false; render();
+    }
+  },
+  demoMode() { S.mode = 'demo'; saveState(); render(); },
+  async signOut() {
+    try { if (sb) await sb.auth.signOut(); } catch (_) {}
+    const keepLang = lang;
+    S = createDefaultState(); S.lang = keepLang; S.mode = undefined;
+    CLOUD.profile = null; CLOUD.session = null; CLOUD.team = []; CLOUD.pendEntries = []; CLOUD.pendTopups = [];
+    PH.w.tab = 'home'; saveState(); render();
+  },
+  syncNow() { syncNow(); },
+  async decideEntry(p, d) {
+    const { error } = await sb.rpc('decide_entry', { p_id: d.id, p_approve: d.ok === '1' });
+    if (error) { banner('alert', error.message, ''); return; }
+    banner('check', d.ok === '1' ? t('approved_msg') : t('rejected_msg'), '');
+    syncNow(true);
+  },
+  async decideTopup(p, d) {
+    const { error } = await sb.rpc('decide_topup', { p_id: d.id, p_approve: d.ok === '1' });
+    if (error) { banner('alert', error.message, ''); return; }
+    banner('check', d.ok === '1' ? t('approved_msg') : t('rejected_msg'), '');
+    syncNow(true);
+  },
+  async viewFile(p, d) {
+    let src = d.path ? await signedUrl(d.path) : null;
+    if (!src && d.key) src = await IDB.get(d.key);
+    if (!src) { banner('alert', t('act_empty'), ''); return; }
+    PH.w.fileSrc = src; PH.w.sheet = 'file'; render();
+  },
+  freshOpen() { PH.w.sheet = 'fresh'; render(); },
+  async freshGo() {
+    const inp = document.getElementById('fresh-amt');
+    const amt = Math.max(0, Number(inp && inp.value) || 0);
+    if (isCloud()) {
+      if (!canReachCloud()) { banner('wifioff', t('ai_offline'), ''); return; }
+      const { error } = await sb.rpc('reset_my_data', { p_opening: amt });
+      if (error) { banner('alert', error.message, ''); return; }
+      S.offlineQueue = [];
+      PH.w.sheet = null;
+      await syncNow();
+    } else {
+      const keepLang = lang;
+      S = createDefaultState();
+      Object.assign(S, { mode: 'demo', lang: keepLang, acts: [], feed: [], seenHashes: [], seenKeys: [], wallet: amt, spentToday: 0,
+        walletMoves: amt ? [{ id: 'wm-open', ty: 'in', ti: { en: 'Opening custody balance', ar: 'رصيد العهدة الافتتاحي' }, amt, dt: todayKey(), tm: nowT() }] : [] });
+      PH.w.sheet = null; saveState(); render();
+    }
+    banner('check', t('fresh_done'), `${fmt(amt)} ${t('sar')}`);
+  },
+  exportCsv() { exportCsv(); }
 };
 
 async function tryGeminiVisionForVideo(f) {
@@ -2486,6 +2697,19 @@ document.addEventListener('change', async e => {
     f.rawTlv = '';
     f.fileSha256 = hash;
     f.sha256 = hash;
+    const shrunk = await shrinkImage(file);
+    f.photo = shrunk ? shrunk.dataUrl : null;
+    f.aiConf = null; f.aiErr = '';
+    if (shrunk && !('BarcodeDetector' in window)) {
+      const raw = readQrFromCanvas(shrunk.canvas);
+      if (raw) {
+        const dec = decodeZatcaTLV(raw);
+        if (dec.valid) {
+          f.rawTlv = raw; f.merchant = dec.seller || f.merchant; f.taxNo = dec.vatNo || ''; f.total = dec.total;
+          if (dec.timestamp) f.dateStr = dec.timestamp.slice(0, 10);
+        }
+      }
+    }
     if ('BarcodeDetector' in window) {
       try {
         const bmp = await createImageBitmap(file);
@@ -2505,13 +2729,404 @@ document.addEventListener('change', async e => {
     }
     await evaluateReceiptState(f);
     render();
-    tryGeminiVisionForReceipt(f, file);
+    if (!f.rawTlv && f.photo) aiReadReceipt(f, f.photo);
   }
 
   if (tEl.id === 'video-file' && tEl.files && tEl.files[0]) {
+    f.videoBlob = tEl.files[0];
     A.vstop();
   }
 });
+
+/* =============================== 14. CLOUD (SUPABASE) + CLAUDE AI =============================== */
+const SUPA_URL = 'https://ebqnnkbuxjqxixzjszkb.supabase.co';
+const SUPA_KEY = 'sb_publishable_vkaDtrpm7F18WM1riRYZcA_cFAZAhpr';
+let sb = null;
+const CLOUD = { session: null, profile: null, syncing: false, lastSync: '', error: '', team: [], pendEntries: [], pendTopups: [] };
+
+function initCloud() {
+  if (sb || !window.supabase || !window.supabase.createClient) return;
+  try {
+    sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: 'tamam-auth' }
+    });
+    sb.auth.onAuthStateChange((_ev, session) => { CLOUD.session = session; });
+  } catch (_) { sb = null; }
+}
+const isCloud = () => S.mode === 'cloud';
+const isOwner = () => isCloud() && CLOUD.profile && CLOUD.profile.role === 'owner';
+const canReachCloud = () => isCloud() && sb && !S.offline && navigator.onLine !== false;
+const awaitingAmt = () => isCloud() ? (S.awaiting || 0) : pendingTotal();
+const lastTopup = () => isCloud()
+  ? (S.topups || []).find(x => x.status === 'pend')
+  : S.walletMoves.find(m => m.ty === 'req');
+
+/* ---- small IndexedDB store for photos and voucher images (too big for localStorage) ---- */
+const IDB = {
+  db: null,
+  open() {
+    if (this.db) return Promise.resolve(this.db);
+    return new Promise((res, rej) => {
+      const r = indexedDB.open('tamam-files', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('f');
+      r.onsuccess = () => { this.db = r.result; res(this.db); };
+      r.onerror = () => rej(r.error);
+    });
+  },
+  async put(k, v) {
+    try {
+      const db = await this.open();
+      await new Promise((res, rej) => { const tx = db.transaction('f', 'readwrite'); tx.objectStore('f').put(v, k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); });
+    } catch (_) {}
+  },
+  async get(k) {
+    try {
+      const db = await this.open();
+      return await new Promise((res, rej) => { const rq = db.transaction('f').objectStore('f').get(k); rq.onsuccess = () => res(rq.result || null); rq.onerror = () => rej(rq.error); });
+    } catch (_) { return null; }
+  },
+  async del(k) {
+    try {
+      const db = await this.open();
+      await new Promise(res => { const tx = db.transaction('f', 'readwrite'); tx.objectStore('f').delete(k); tx.oncomplete = res; tx.onerror = res; });
+    } catch (_) {}
+  }
+};
+
+/* ---- outbox: everything recorded on the phone goes here first ---- */
+function enqueue(qtype, item) {
+  if (isCloud()) {
+    S.offlineQueue.push({ ...item, qtype });
+    saveState();
+    setTimeout(() => syncNow(true), 50);
+  } else if (S.offline) {
+    S.offlineQueue.push({ ...item, qtype });
+  }
+}
+
+async function uploadDataUrl(path, dataUrl, contentType) {
+  const blob = await (await fetch(dataUrl)).blob();
+  const { error } = await sb.storage.from('tamam').upload(path, blob, { contentType, upsert: false });
+  if (error && !/exists|duplicate/i.test(error.message || '')) throw new Error(error.message);
+  return path;
+}
+
+async function pushItem(q, uid) {
+  if (q.qtype === 'topup') {
+    const { error } = await sb.from('topup_requests').insert({ client_id: q.id, amount: q.amt, reason: q.reason || '' });
+    if (error && error.code !== '23505') throw new Error(error.message);
+    return;
+  }
+  let photo_path = null, voucher_path = null;
+  const photo = await IDB.get('photo:' + q.id);
+  if (photo) photo_path = await uploadDataUrl(`${uid}/${q.id}-photo.jpg`, photo, 'image/jpeg');
+  const vpng = await IDB.get('voucher:' + q.id);
+  if (vpng) voucher_path = await uploadDataUrl(`${uid}/${q.id}-voucher.png`, vpng, 'image/png');
+  const row = {
+    client_id: q.id, kind: q.k, voucher_no: q.no || null, title: L(q.ti),
+    amount: Number(q.amt) || 0, vat: Number(q.vat) || 0, vat_no: q.vatNo || null,
+    pay: q.pay || 'cash', stage: q.stage || null, is_refund: Boolean(q.isRefund),
+    sha256: q.sha256 || null, comp_key: q.compKey || null,
+    details: { tafqeetAr: q.tafqeetAr || null, tafqeetEn: q.tafqeetEn || null, job: q.job || null, report: q.report || null, dur: q.dur || null, ai: q.ai || null, tiAr: q.ti && q.ti.ar },
+    photo_path, voucher_path, happened_at: q.at || new Date().toISOString()
+  };
+  const { error } = await sb.from('entries').insert(row);
+  if (error) {
+    if (error.code === '23505' && /client_id/.test(error.message || '')) return; // already uploaded earlier
+    if (error.code === '23505') { const e = new Error('duplicate'); e.dup = true; throw e; }
+    throw new Error(error.message);
+  }
+}
+
+const riyadhParts = iso => {
+  const d = new Date(iso);
+  const p = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Riyadh', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(d);
+  const g = k => (p.find(x => x.type === k) || {}).value || '';
+  return { dt: `${g('year')}-${g('month')}-${g('day')}`, tm: `${g('hour') === '24' ? '00' : g('hour')}:${g('minute')}` };
+};
+
+function rowToAct(r) {
+  const { dt, tm } = riyadhParts(r.happened_at);
+  const d = r.details || {};
+  return {
+    id: r.client_id, srvId: r.id, k: r.kind, no: r.voucher_no || '', ti: { en: r.title, ar: d.tiAr || r.title },
+    amt: Number(r.amount) || 0, vat: Number(r.vat) || 0, vatNo: r.vat_no || '', st: r.status, isRefund: r.is_refund,
+    pay: r.pay, stage: r.stage, sha256: r.sha256, compKey: r.comp_key, dt, tm,
+    tafqeetAr: d.tafqeetAr, tafqeetEn: d.tafqeetEn, job: d.job, report: d.report, dur: d.dur,
+    photoPath: r.photo_path, voucherPath: r.voucher_path, who: r.profiles ? r.profiles.full_name : '', note: r.decision_note || ''
+  };
+}
+
+async function pull() {
+  const uid = CLOUD.session.user.id;
+  const prof = await sb.from('profiles').select('*').eq('id', uid).maybeSingle();
+  if (prof.data) CLOUD.profile = prof.data;
+  const ws = await sb.rpc('wallet_summary');
+  if (!ws.error && ws.data && ws.data[0]) {
+    const w = ws.data[0];
+    S.wallet = Number(w.balance) || 0; S.spentToday = Number(w.spent_today) || 0;
+    S.awaiting = Number(w.awaiting) || 0; S.requested = Number(w.requested) || 0;
+  }
+  const owner = CLOUD.profile && CLOUD.profile.role === 'owner';
+  let q = sb.from('entries').select('*, profiles!entries_engineer_id_fkey(full_name)').order('happened_at', { ascending: false }).limit(300);
+  if (!owner) q = q.eq('engineer_id', uid);
+  const en = await q;
+  if (en.error) throw new Error(en.error.message);
+  const srv = (en.data || []).map(rowToAct);
+  const queued = S.offlineQueue.filter(x => x.qtype === 'entry' && !srv.some(s => s.id === x.id));
+  S.acts = [...queued, ...srv];
+  S.seenHashes = srv.filter(a => a.sha256 && a.st !== 'rejected').map(a => a.sha256);
+  S.seenKeys = srv.filter(a => a.compKey && a.st !== 'rejected').map(a => a.compKey);
+  const tp = await sb.from('topup_requests').select('*').eq('engineer_id', uid).order('created_at', { ascending: false }).limit(50);
+  if (!tp.error) S.topups = (tp.data || []).map(x => ({ ...x, tm: riyadhParts(x.created_at).tm }));
+  const mv = await sb.from('custody_movements').select('*').eq('engineer_id', uid).order('created_at', { ascending: false }).limit(100);
+  if (!mv.error) S.ledger = (mv.data || []).map(m => ({ ...m, ...riyadhParts(m.created_at) }));
+  if (owner) {
+    const tm = await sb.rpc('team_summary');
+    CLOUD.team = tm.error ? [] : (tm.data || []);
+    CLOUD.pendEntries = S.acts.filter(a => a.st === 'pend');
+    const pt = await sb.from('topup_requests').select('*, profiles!topup_requests_engineer_id_fkey(full_name)').eq('status', 'pend').order('created_at');
+    CLOUD.pendTopups = pt.error ? [] : (pt.data || []).map(x => ({ ...x, who: x.profiles ? x.profiles.full_name : '', tm: riyadhParts(x.created_at).tm }));
+  }
+}
+
+async function syncNow(silent) {
+  if (!canReachCloud()) return;
+  if (CLOUD.syncing) { CLOUD.again = true; return; }
+  CLOUD.again = false;
+  CLOUD.syncing = true; CLOUD.error = '';
+  if (!silent) render();
+  try {
+    const { data } = await sb.auth.getSession();
+    CLOUD.session = data.session;
+    if (!data.session) { S.mode = undefined; saveState(); return; }
+    const uid = data.session.user.id;
+    const keep = [];
+    let dups = 0;
+    for (const q of S.offlineQueue) {
+      try { await pushItem(q, uid); await IDB.del('photo:' + q.id); }
+      catch (e) { if (e.dup) dups++; else { keep.push(q); CLOUD.error = e.message || 'sync failed'; } }
+    }
+    S.offlineQueue = keep;
+    await pull();
+    CLOUD.lastSync = nowT();
+    if (dups) banner('alert', t('dup_srv'), t('dup_srv_s', { n: dups }));
+  } catch (e) {
+    CLOUD.error = (e && e.message) || 'sync failed';
+  } finally {
+    CLOUD.syncing = false;
+    saveState();
+    render();
+    if (CLOUD.again) setTimeout(() => syncNow(true), 100);
+  }
+}
+
+async function signedUrl(path) {
+  if (!path || !sb) return null;
+  const { data, error } = await sb.storage.from('tamam').createSignedUrl(path, 600);
+  return error ? null : data.signedUrl;
+}
+
+/* ---- images: shrink before saving / sending ---- */
+function shrinkImage(file, max = 1600, q = 0.82) {
+  return new Promise(res => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      res({ dataUrl: c.toDataURL('image/jpeg', q), canvas: c });
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); res(null); };
+    img.src = url;
+  });
+}
+
+function readQrFromCanvas(canvas) {
+  try {
+    if (typeof jsQR !== 'function') return null;
+    const ctx = canvas.getContext('2d');
+    const d = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(d.data, d.width, d.height, { inversionAttempts: 'attemptBoth' });
+    return code && code.data ? code.data : null;
+  } catch (_) { return null; }
+}
+
+async function aiReadReceipt(f, dataUrl) {
+  if (!canReachCloud()) return;
+  f.aiBusy = true; f.aiErr = ''; render();
+  try {
+    const { data, error } = await sb.functions.invoke('analyze-receipt', { body: { image_base64: dataUrl, media_type: 'image/jpeg' } });
+    if (error) throw error;
+    const r = data && data.receipt;
+    if (r) {
+      if (r.merchant) f.merchant = r.merchant;
+      f.taxNo = String(r.vat_number || '').replace(/\D/g, '');
+      if (r.total > 0) f.total = Number(r.total);
+      if (r.date) f.dateStr = r.date;
+      f.isRefund = Boolean(r.is_refund);
+      f.aiConf = r.confidence; f.aiNote = r.notes || '';
+      f.ai = { model: data.model, confidence: r.confidence, items: r.items };
+      f.edited = true;
+      await evaluateReceiptState(f);
+    }
+  } catch (e) {
+    f.aiErr = t('ai_fail');
+  } finally {
+    f.aiBusy = false;
+    if (PH.w.flow === f) render();
+  }
+}
+
+function seekVideo(v, t) {
+  return new Promise(res => {
+    const done = () => { v.removeEventListener('seeked', done); res(); };
+    v.addEventListener('seeked', done);
+    setTimeout(done, 2500);
+    try { v.currentTime = t; } catch (_) { done(); }
+  });
+}
+
+async function extractFrames(blob, n = 5) {
+  const url = URL.createObjectURL(blob);
+  const v = document.createElement('video');
+  v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = url;
+  await new Promise(res => { v.onloadeddata = res; v.onerror = res; setTimeout(res, 5000); });
+  let dur = v.duration;
+  if (!isFinite(dur) || !dur) { await seekVideo(v, 1e7); dur = v.duration; }
+  if (!isFinite(dur) || !dur) dur = 1;
+  const frames = [];
+  const c = document.createElement('canvas');
+  for (let i = 0; i < n; i++) {
+    await seekVideo(v, Math.min(dur - 0.05, (dur * (i + 0.5)) / n));
+    const vw = v.videoWidth || 0, vh = v.videoHeight || 0;
+    if (!vw || !vh) continue;
+    const w = Math.min(768, vw), h = Math.round((w * vh) / vw);
+    c.width = w; c.height = h;
+    c.getContext('2d').drawImage(v, 0, 0, w, h);
+    frames.push(c.toDataURL('image/jpeg', 0.72));
+  }
+  URL.revokeObjectURL(url);
+  return { frames, duration: dur };
+}
+
+async function aiSiteReport(f) {
+  if (!f.frames || !f.frames.length) { f.aiErr = t('no_frames'); render(); return; }
+  if (!canReachCloud()) { f.aiErr = t('ai_offline'); render(); return; }
+  f.aiBusy = true; f.aiErr = ''; render();
+  try {
+    const { data, error } = await sb.functions.invoke('site-report', { body: { frames: f.frames, duration_sec: f.sec || 0, lang } });
+    if (error) throw error;
+    f.report = data.report; f.reportModel = data.model;
+  } catch (e) {
+    f.aiErr = t('ai_fail');
+  } finally {
+    f.aiBusy = false;
+    if (PH.w.flow === f) render();
+  }
+}
+
+function exportCsv() {
+  const rows = [['Date', 'Time', 'Type', 'Voucher', 'Title', 'Amount SAR', 'VAT SAR', 'VAT No', 'Paid by', 'Stage', 'Refund', 'Status', 'Engineer']];
+  S.acts.forEach(a => rows.push([a.dt || '', a.tm || '', a.k, a.no || '', L(a.ti), (Number(a.amt) || 0).toFixed(2), (Number(a.vat) || 0).toFixed(2), a.vatNo || '', a.pay || '', a.stage || '', a.isRefund ? 'yes' : '', a.st || '', a.who || '']));
+  const csv = '﻿' + rows.map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const name = `tamam-${todayKey()}.csv`;
+  const file = typeof File !== 'undefined' ? new File([blob], name, { type: 'text/csv' }) : null;
+  if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({ files: [file], title: name }).catch(() => {});
+    return;
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* ---- screens: sign in, owner home, approvals ---- */
+function authUI() {
+  const mode = PH.w.authTab || 'in';
+  return `<div class="body" style="padding-bottom:30px">
+    <div style="display:flex;justify-content:flex-end;padding-top:6px">
+      <button class="lang-btn" data-a="lang" data-l="${lang === 'ar' ? 'en' : 'ar'}" aria-label="${lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'}">${lang === 'ar' ? 'EN' : 'ع'}</button>
+    </div>
+    <div style="text-align:center;margin:18px 0 22px">
+      <div class="av" style="width:72px;height:72px;border-radius:22px;margin:0 auto;font-size:30px;background:var(--g9);color:var(--amber)">ت</div>
+      <h1 style="font-size:28px;margin-top:12px;color:var(--g9)">${t('brand')} <span style="font-family:'IBM Plex Sans Arabic',sans-serif">تمام</span></h1>
+      <p class="mut" style="margin-top:4px">${t('auth_sub')}</p>
+    </div>
+    <div class="seg w big" style="margin-bottom:14px">
+      <button class="${mode === 'in' ? 'on' : ''}" data-a="authTab" data-v="in">${t('sign_in')}</button>
+      <button class="${mode === 'up' ? 'on' : ''}" data-a="authTab" data-v="up">${t('sign_up')}</button>
+    </div>
+    <div class="card">
+      ${mode === 'up' ? `<label class="lbl-f" for="auth-name">${t('your_name')}</label><input id="auth-name" class="inp" type="text" autocomplete="name" style="height:46px;margin-bottom:10px">` : ''}
+      <label class="lbl-f" for="auth-email">${t('email')}</label>
+      <input id="auth-email" class="inp" type="email" inputmode="email" autocomplete="email" style="height:46px;margin-bottom:10px">
+      <label class="lbl-f" for="auth-pass">${t('password')}</label>
+      <input id="auth-pass" class="inp" type="password" autocomplete="${mode === 'up' ? 'new-password' : 'current-password'}" style="height:46px">
+      ${PH.w.authErr ? `<div class="note bad" style="margin:10px 0 0;font-size:12.5px">${escHtml(PH.w.authErr)}</div>` : ''}
+      <button class="btn p w big" style="margin-top:14px" data-a="doAuth" ${PH.w.authBusy ? 'disabled' : ''}>${PH.w.authBusy ? t('please_wait') : mode === 'up' ? t('sign_up') : t('sign_in')}</button>
+    </div>
+    <button class="btn o w" style="margin-top:14px" data-a="demoMode">${t('try_demo')}</button>
+    <p class="mut sm-t" style="text-align:center;margin-top:8px">${t('demo_hint')}</p>
+  </div>`;
+}
+
+function ownerHome() {
+  const team = CLOUD.team || [];
+  const tot = k => team.reduce((s, r) => s + (Number(r[k]) || 0), 0);
+  const nPend = (CLOUD.pendEntries || []).length + (CLOUD.pendTopups || []).length;
+  return `${topHeader()}
+    <div class="hero">
+      <div class="lbl">${t('team_cash')}</div>
+      <div class="big"><span class="num">${tot('balance').toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><small>${t('sar')}</small></div>
+      <div class="stats">
+        <div class="stat"><small>${t('spent_today')}</small><b class="num">${fmt(tot('spent_today'))}</b></div>
+        <div class="stat"><small>${t('awaiting')}</small><b class="num">${fmt(tot('awaiting'))}</b></div>
+      </div>
+      <button class="btn amber w" style="margin-top:12px" data-a="wtab" data-t="appr" data-tab="appr">${I('check', 16)} ${t('to_approve', { n: nPend })}</button>
+    </div>
+    <div class="sec"><span>${t('engineers')}</span><button data-a="syncNow">${CLOUD.syncing ? t('syncing') : t('refresh')}</button></div>
+    <div class="list">${team.map(r => `<div class="row">
+        <div class="av">${escHtml(Array.from(r.full_name || r.email || '?')[0] || '?')}</div>
+        <div class="t"><b>${escHtml(r.full_name || r.email)}</b><span>${t('spent_today')} <span class="num">${fmt(r.spent_today)}</span> · ${t('entries_n', { n: r.entries_today })}</span></div>
+        <div class="amt"><span class="num">${fmt(r.balance)}</span><span class="stt ${Number(r.awaiting) > 0 ? 'pend' : 'ok'}">${Number(r.awaiting) > 0 ? `${fmt(r.awaiting)} ${t('awaiting_s')}` : t('sar')}</span></div>
+      </div>`).join('') || `<div class="emp">${t('no_engineers')}</div>`}</div>`;
+}
+
+function approvalsUI() {
+  const es = CLOUD.pendEntries || [], ts = CLOUD.pendTopups || [];
+  const eCard = a => `<div class="card" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+        <div style="min-width:0"><b style="font-size:15px">${escHtml(L(a.ti))}</b><div class="mut sm-t">${escHtml(a.who || '')} · ${stageName(a.stage)} · <span class="num">${escHtml(a.dt || '')} ${escHtml(a.tm)}</span></div>
+        <div class="mut sm-t">${t('tax_id_lbl')}: <span class="num">${escHtml(a.vatNo || t('none_lbl'))}</span> · ${t('vat')}: <span class="num">${(Number(a.vat) || 0).toFixed(2)}</span> · ${a.pay === 'card' ? t('p_card') : t('p_cash')}</div></div>
+        <b class="num" style="font-size:17px;white-space:nowrap">${fmt(a.amt)} ${t('sar')}</b>
+      </div>
+      ${a.photoPath ? `<button class="btn o sm" style="margin-top:10px" data-a="viewFile" data-path="${escAttr(a.photoPath)}">${I('camera', 15)} ${t('view_photo')}</button>` : ''}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        <button class="btn d" data-a="decideEntry" data-id="${escAttr(a.srvId)}" data-ok="0">${I('x', 16)} ${t('reject')}</button>
+        <button class="btn p" data-a="decideEntry" data-id="${escAttr(a.srvId)}" data-ok="1">${I('check', 16)} ${t('approve')}</button>
+      </div>
+    </div>`;
+  const tCard = x => `<div class="card" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;gap:10px">
+        <div><b style="font-size:15px">${escHtml(x.who || '')}</b><div class="mut sm-t">${escHtml(x.reason || '')} · <span class="num">${escHtml(x.tm)}</span></div></div>
+        <b class="num" style="font-size:17px">+${fmt(x.amount)} ${t('sar')}</b>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        <button class="btn d" data-a="decideTopup" data-id="${escAttr(x.id)}" data-ok="0">${I('x', 16)} ${t('reject')}</button>
+        <button class="btn p" data-a="decideTopup" data-id="${escAttr(x.id)}" data-ok="1">${I('check', 16)} ${t('approve')}</button>
+      </div>
+    </div>`;
+  return `<div class="h"><b style="font-size:24px;color:var(--g9)">${t('approvals')}</b><button class="btn s sm" data-a="syncNow">${CLOUD.syncing ? t('syncing') : t('refresh')}</button></div>
+    <div class="mh">${t('rc_over')}</div>
+    ${es.map(eCard).join('') || `<div class="list"><div class="emp">${t('nothing_appr')}</div></div>`}
+    <div class="mh">${t('topups_t')}</div>
+    ${ts.map(tCard).join('') || `<div class="list"><div class="emp">${t('nothing_appr')}</div></div>`}`;
+}
 
 // Real network detection: go offline automatically when the phone loses signal, send saved items when it returns
 window.addEventListener('offline', () => {
@@ -2519,6 +3134,7 @@ window.addEventListener('offline', () => {
 });
 window.addEventListener('online', () => {
   if (S.offline && S.autoOff) { S.autoOff = false; A.syncQueue(); }
+  else if (isCloud()) syncNow(true);
 });
 
 /* =============================== 12. SIGNATURE CANVAS BINDING =============================== */
@@ -2611,7 +3227,16 @@ function afterRender(host) {
 /* =============================== 13. BOOT =============================== */
 loadState();
 if (navigator.onLine === false && !S.offline) { S.offline = true; S.autoOff = true; }
+initCloud();
 render();
+if (isCloud() && sb) {
+  sb.auth.getSession().then(({ data }) => {
+    CLOUD.session = data.session;
+    if (!data.session) { S.mode = undefined; saveState(); render(); return; }
+    syncNow(true);
+  });
+  setInterval(() => { if (isCloud() && !document.hidden) syncNow(true); }, 60000);
+}
 </script>
 </body>
 </html>
