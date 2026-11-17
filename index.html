@@ -1,0 +1,2617 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Tamam تمام — Site Engineer Field App</title>
+<meta name="description" content="Tamam (تمام): Saudi construction field accounting app for site engineers — ZATCA receipt scanner, cash labor voucher studio, site video AI report, and custody wallet.">
+<meta name="theme-color" content="#0A3A2D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tamam تمام">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{
+  --bg:#F4F1EA; --surface:#FFFFFF; --ink:#1B1A17; --muted:#5C5A52; --line:#E4DED1; --line2:#D9D3C4;
+  --ok:#1B6B47; --warn:#8A5300; --warn-bg:#FBEBD2;
+  --g9:#0A3A2D; --g7:#0E5B47; --g5:#1C8A6B; --g1:#E3F2EC;
+  --amber:#E9A23B; --amber-bg:#FFF3DD; --red:#D2453F; --red-bg:#FCE9E7; --blue:#2F6FDE; --blue-bg:#E6EEFC;
+  --r:18px; --shadow:0 1px 2px rgba(15,34,25,.05),0 8px 24px -12px rgba(15,34,25,.18);
+  --safe-top:env(safe-area-inset-top, 0px);
+  --safe-bottom:env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:"IBM Plex Sans Arabic","Noto Sans Arabic","Segoe UI",system-ui,-apple-system,Tahoma,sans-serif;background:radial-gradient(1200px 600px at 50% -10%,#fff 0%,var(--bg) 60%);color:var(--ink);font-size:14px;overflow-x:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;display:inline-block}
+
+/* ---------- standalone app shell ---------- */
+.app-stage{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+.phone{width:390px;height:820px;border-radius:48px;background:#0b0f0d;padding:9px;box-shadow:0 30px 60px -25px rgba(15,34,25,.55),0 0 0 1.5px #2a3330 inset;position:relative;flex:none;display:flex;flex-direction:column}
+.screen{position:relative;width:100%;height:100%;border-radius:40px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+.sb{height:42px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px 26px 0;font-size:13px;font-weight:700;position:relative;z-index:35}
+.sb.dark{color:#fff;background:#0c1410}
+.notch{position:absolute;left:50%;top:8px;width:96px;height:24px;border-radius:20px;background:#000;transform:translateX(-50%)}
+.sb .r{display:flex;gap:5px;align-items:center}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;padding:6px 18px calc(98px + var(--safe-bottom));scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.hi{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:120px;height:4px;border-radius:4px;background:rgba(15,34,25,.35);z-index:30;pointer-events:none}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+[dir=rtl] .flip{transform:scaleX(-1)}
+
+/* Mobile & Standalone Full-Screen Mode */
+@media (max-width: 640px), (display-mode: standalone) {
+  .app-stage{padding:0;min-height:100dvh;height:100dvh;justify-content:stretch}
+  .phone{width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;border-radius:0;padding:0;box-shadow:none;background:var(--bg)}
+  .screen{border-radius:0;width:100vw;height:100dvh}
+  .sb,.hi{display:none !important}
+  .body{padding-top:max(14px, var(--safe-top));padding-bottom:calc(90px + var(--safe-bottom))}
+  .flow{padding-top:max(10px, var(--safe-top)) !important}
+  .nav{height:calc(74px + var(--safe-bottom));padding-bottom:var(--safe-bottom)}
+}
+body.is-standalone .app-stage{padding:0;min-height:100dvh;height:100dvh;justify-content:stretch}
+body.is-standalone .phone{width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;border-radius:0;padding:0;box-shadow:none;background:var(--bg)}
+body.is-standalone .screen{border-radius:0;width:100vw;height:100dvh}
+body.is-standalone .sb,body.is-standalone .hi{display:none !important}
+body.is-standalone .body{padding-top:max(14px, var(--safe-top));padding-bottom:calc(90px + var(--safe-bottom))}
+body.is-standalone .flow{padding-top:max(10px, var(--safe-top)) !important}
+body.is-standalone .nav{height:calc(74px + var(--safe-bottom));padding-bottom:var(--safe-bottom)}
+
+/* ---------- nav ---------- */
+.nav{position:absolute;left:0;right:0;bottom:0;height:82px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-around;padding:9px 6px 0;z-index:20}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:#93A099;position:relative;padding-top:2px}
+.nav button.on{color:var(--g7)}
+.nav button.on::before{content:"";position:absolute;top:-9px;width:22px;height:3px;border-radius:0 0 4px 4px;background:var(--g7)}
+.nav .fab{flex:none;width:56px;height:56px;border-radius:20px;margin-top:-20px;background:linear-gradient(145deg,var(--g5),var(--g9));color:#fff;display:grid;place-items:center;box-shadow:0 10px 22px -6px rgba(10,58,45,.6);transition:transform .15s}
+.nav .fab:active{transform:scale(.94)}
+.nav .fab::before{display:none}
+.badge{position:absolute;top:-3px;inset-inline-start:calc(50% + 6px);min-width:16px;height:16px;border-radius:9px;background:var(--red);color:#fff;font-size:10px;display:grid;place-items:center;padding:0 4px}
+
+/* ---------- atoms ---------- */
+.h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0 12px}
+.hello small{display:block;color:var(--muted);font-size:12px}
+.hello b{font-size:19px;letter-spacing:-.01em}
+.av{width:40px;height:40px;border-radius:14px;background:var(--g1);color:var(--g7);display:grid;place-items:center;font-weight:800;flex:none}
+.av.sm{width:34px;height:34px;border-radius:11px;font-size:13px}
+.ib{width:38px;height:38px;border-radius:13px;background:var(--surface);display:grid;place-items:center;box-shadow:var(--shadow);position:relative;flex:none}
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:15px}
+.hero{background:var(--g9);color:#fff;border-radius:24px;padding:18px;position:relative;overflow:hidden;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.07' stroke-width='1'%3E%3Crect x='11' y='11' width='22' height='22'/%3E%3Crect x='11' y='11' width='22' height='22' transform='rotate(45 22 22)'/%3E%3C/g%3E%3C/svg%3E"),linear-gradient(150deg,#0E5B47,#0A3A2D 70%)}
+.hero .lbl{font-size:12px;opacity:.78}
+.hero .big{font-size:31px;font-weight:800;letter-spacing:-.02em;margin:2px 0}
+.hero .sub{display:flex;gap:14px;font-size:12px;opacity:.88;margin-top:8px;flex-wrap:wrap}
+.sec{display:flex;justify-content:space-between;align-items:center;margin:18px 0 9px;font-weight:700;font-size:14.5px}
+.sec a,.sec button{font-size:12px;color:var(--g7);font-weight:600;cursor:pointer}
+.row{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .t span{font-size:11.5px;color:var(--muted)}
+.row .amt{font-weight:700;text-align:end;font-size:13.5px}
+.row .amt small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+.ico{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none}
+.ico.g{background:var(--g1);color:var(--g7)} .ico.a{background:var(--amber-bg);color:#B87414} .ico.r{background:var(--red-bg);color:var(--red)} .ico.b{background:var(--blue-bg);color:var(--blue)}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.pill.g{background:var(--g1);color:var(--g7)} .pill.a{background:var(--amber-bg);color:#A66A0E} .pill.r{background:var(--red-bg);color:var(--red)} .pill.b{background:var(--blue-bg);color:var(--blue)}
+.btn{height:44px;border-radius:14px;padding:0 18px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s,opacity .2s;font-size:13.5px}
+.btn:active{transform:scale(.97)}
+.btn.p{background:var(--g7);color:#fff;box-shadow:0 8px 18px -8px rgba(14,91,71,.7)}
+.btn.s{background:var(--g1);color:var(--g7)}
+.btn.o{background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.d{background:var(--red-bg);color:var(--red)}
+.btn.w{width:100%}
+.btn.sm{height:34px;border-radius:11px;padding:0 12px;font-size:12.5px}
+.btn.dis,.btn:disabled{opacity:.4;pointer-events:none}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{padding:7px 12px;border-radius:11px;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:600;font-size:12.5px}
+.chip.on{background:var(--g1);box-shadow:inset 0 0 0 1.5px var(--g5);color:var(--g7)}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.quick button{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:13px 8px 11px;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:12px;font-weight:700;text-align:center;line-height:1.25}
+.mut{color:var(--muted)} .sm-t{font-size:12px}
+.inp{width:100%;height:40px;border-radius:11px;border:1.5px solid var(--line);background:#FAF8F3;padding:0 12px;font-size:13.5px;font-weight:600;color:var(--ink);outline:none}
+.inp:focus{border-color:var(--g5);background:#fff}
+.lbl-f{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.seg{display:inline-flex;background:#E9E5DA;border-radius:11px;padding:3px;gap:2px}
+.seg button{padding:6px 12px;border-radius:8px;font-weight:700;font-size:12.5px;color:#5B665F}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+.banner{position:absolute;top:16px;inset-inline:14px;background:var(--ink);color:#fff;border-radius:16px;padding:11px 14px;display:flex;gap:10px;align-items:center;z-index:60;box-shadow:0 14px 30px -10px rgba(0,0,0,.5);animation:drop .28s cubic-bezier(.2,.9,.3,1.2)}
+.banner b{display:block;font-size:13px} .banner span{font-size:11.5px;opacity:.8}
+@keyframes drop{from{transform:translateY(-24px);opacity:0}to{transform:none;opacity:1}}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes scan{0%{top:10%}100%{top:86%}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ---------- sheet & flow ---------- */
+.scrim{position:absolute;inset:0;background:rgba(10,20,15,.48);z-index:40;animation:fade .18s}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:26px 26px 0 0;padding:10px 18px calc(26px + var(--safe-bottom));z-index:41;animation:up .25s cubic-bezier(.2,.8,.2,1);max-height:90%;overflow-y:auto}
+.sheet .grab{width:40px;height:4px;border-radius:4px;background:#CFCABC;margin:0 auto 12px}
+.sheet h3{font-size:17px;margin-bottom:10px;letter-spacing:-.01em}
+.flow{position:absolute;inset:0;background:var(--bg);z-index:30;display:flex;flex-direction:column;padding-top:38px}
+.flow.dark{background:#0c1410;color:#fff}
+.fh{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 8px;gap:8px;flex:none}
+.fh .ti{font-weight:700;font-size:15.5px}
+.fh .ib.d{background:rgba(255,255,255,.12);box-shadow:none;color:#fff}
+.dots{display:flex;gap:5px;justify-content:center;padding-bottom:8px;flex:none}
+.dots i{width:22px;height:4px;border-radius:4px;background:#D9D4C6}.dots i.on{background:var(--g7)}
+.fb{flex:1;overflow-y:auto;padding:6px 16px 18px;scrollbar-width:none}
+.fb::-webkit-scrollbar{display:none}
+.ff{padding:10px 16px calc(18px + var(--safe-bottom));background:linear-gradient(transparent,var(--bg) 25%);flex:none}
+.flow.dark .ff{background:linear-gradient(transparent,#0c1410 25%)}
+
+/* camera & scanner */
+.cam-box{position:relative;height:185px;border-radius:20px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#2b3a33,#0c1410 75%);color:#fff;margin-bottom:10px}
+.cam-box video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cam-box .paper{position:absolute;left:50%;top:48%;width:58%;transform:translate(-50%,-50%) rotate(-2deg);background:#fbfaf6;border-radius:6px;padding:10px 12px;color:#333;font-size:8.5px;line-height:1.5;box-shadow:0 12px 28px rgba(0,0,0,.45);pointer-events:none}
+.cam-box .paper hr{border:0;border-top:1px dashed #bbb;margin:4px 0}
+.cam-box .paper .ln{display:flex;justify-content:space-between}
+.cam-box .corner{position:absolute;width:26px;height:26px;border:3px solid var(--amber);opacity:.95;pointer-events:none}
+.cam-box .c1{top:12px;left:12px;border-right:0;border-bottom:0;border-radius:10px 0 0 0}
+.cam-box .c2{top:12px;right:12px;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
+.cam-box .c3{bottom:12px;left:12px;border-right:0;border-top:0;border-radius:0 0 0 10px}
+.cam-box .c4{bottom:12px;right:12px;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.cam-box .scanline{position:absolute;left:10%;right:10%;height:2px;background:var(--amber);box-shadow:0 0 14px 3px rgba(233,162,59,.7);animation:scan 1.2s ease-in-out infinite alternate;pointer-events:none}
+.shutter{width:54px;height:54px;border-radius:50%;border:3.5px solid var(--g7);display:grid;place-items:center;background:#fff;box-shadow:var(--shadow)}
+.shutter i{width:40px;height:40px;border-radius:50%;background:var(--g7);transition:transform .15s}
+.shutter:active i{transform:scale(.88)}
+.shutter.rec{border-color:var(--red)}
+.shutter.rec i{background:var(--red);border-radius:10px;width:22px;height:22px}
+
+/* keypad */
+.amount{text-align:center;padding:8px 0 6px}
+.amount .v{font-size:40px;font-weight:800;letter-spacing:-.03em}
+.amount .v small{font-size:15px;font-weight:600;color:var(--muted);margin-inline-start:6px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.pad button{height:48px;border-radius:14px;background:var(--surface);box-shadow:var(--shadow);font-size:20px;font-weight:700}
+.pad button:active{background:var(--g1)}
+
+/* signature & voucher */
+.sigbox{background:#fff;border-radius:18px;box-shadow:inset 0 0 0 1.5px var(--line);position:relative;height:180px}
+.sigbox canvas{width:100%;height:100%;touch-action:none;border-radius:18px;display:block}
+.sigbox .ph{position:absolute;inset:0;display:grid;place-items:center;color:#B9B4A6;pointer-events:none;font-size:13px}
+.sigbox .base{position:absolute;left:24px;right:24px;bottom:40px;border-top:1.5px dashed #D9D4C6;pointer-events:none}
+.voucher{background:var(--g9);color:#fff;border-radius:22px;padding:16px;position:relative;overflow:hidden;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23E9A23B' stroke-opacity='.12'%3E%3Crect x='11' y='11' width='22' height='22'/%3E%3Crect x='11' y='11' width='22' height='22' transform='rotate(45 22 22)'/%3E%3C/g%3E%3C/svg%3E")}
+.voucher .no{font-size:11.5px;color:var(--amber);letter-spacing:.08em;font-weight:700}
+.voucher .tq{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,.25);font-size:13.5px;line-height:1.55;font-weight:600}
+.okc{width:64px;height:64px;border-radius:50%;background:var(--g1);color:var(--g7);display:grid;place-items:center;margin:10px auto;animation:pop .4s}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;font-size:12.5px;border-bottom:1px solid var(--line)}.kv:last-child{border:0}.kv span:first-child{color:var(--muted)}
+.rec-dot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 1s infinite;display:inline-block}
+.sw{width:46px;height:28px;border-radius:20px;background:#CFCABC;position:relative;transition:.2s;flex:none}
+.sw::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.2s}
+.sw.on{background:var(--g5)}.sw.on::after{inset-inline-start:21px}
+.emp{text-align:center;color:var(--muted);padding:24px 10px;font-size:13px}
+.dup-alert{background:var(--red-bg);color:var(--red);border:1.5px solid var(--red);border-radius:14px;padding:11px 12px;margin-bottom:12px;font-size:12.5px;font-weight:700;display:flex;gap:10px;align-items:flex-start}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--g9);color:var(--amber);font-size:11.5px;font-weight:800;display:inline-grid;place-items:center;flex:none}
+
+/* ---------- v2 design ---------- */
+.dots{padding:0 16px 10px;gap:6px}
+.dots i{flex:1;width:auto}
+.ib{width:44px;height:44px;border-radius:13px;box-shadow:inset 0 0 0 1px var(--line2)}
+.btn{height:48px}
+.btn.big{height:56px;border-radius:16px;font-size:16px}
+.btn.amber{background:var(--amber);color:#1B1A17}
+.st-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700;background:var(--g1);color:var(--g9)}
+.st-pill i{width:8px;height:8px;border-radius:50%;background:#1F8A5B;display:block}
+.st-pill.off{background:var(--warn-bg);color:#5A3604}.st-pill.off i{background:var(--amber)}
+.lang-btn{width:44px;height:44px;border-radius:13px;background:#fff;box-shadow:inset 0 0 0 1px var(--line2);font-weight:800;color:var(--g9);font-size:15px}
+.proj{width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1px var(--line2);text-align:start;margin-bottom:12px}
+.proj small{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em}
+.proj b{font-size:15px}
+.hero .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.hero .stats.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hero .stat{background:rgba(255,255,255,.1);border-radius:12px;padding:9px 11px}
+.hero .stat small{display:block;font-size:11px;opacity:.85}
+.hero .stat b{font-size:16px;font-weight:800}
+.hero .big small{font-size:15px;font-weight:600;opacity:.8;margin-inline-start:6px}
+.quick button{min-height:96px;box-shadow:inset 0 0 0 1px var(--line2)}
+.card{box-shadow:inset 0 0 0 1px var(--line2)}
+.list{background:#fff;border-radius:16px;box-shadow:inset 0 0 0 1px var(--line2);padding:0 14px}
+.row .amt .stt{display:block;font-size:11px;font-weight:700;margin-top:2px}
+.stt.ok{color:var(--ok)}.stt.pend{color:var(--warn)}.stt.q{color:#3D3B35}.stt.ref{color:var(--blue)}
+.grp-h{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--muted);margin:14px 2px 7px}
+.note{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:13px;font-size:13px;font-weight:600;margin-bottom:12px}
+.note.warn{background:var(--warn-bg);color:#5A3604}
+.note.ok{background:var(--g1);color:var(--g9)}
+.note.bad{background:var(--red-bg);color:#8E2A25;border:1.5px solid var(--red)}
+.search{position:relative;margin-bottom:10px}
+.search input{padding-inline-start:38px;height:44px;background:#fff}
+.search .ic{position:absolute;top:12px;inset-inline-start:12px;color:var(--muted)}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chip{min-height:40px;display:inline-flex;align-items:center;white-space:nowrap}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.grid4 .chip{justify-content:center;padding:7px 4px;font-size:12px}
+.chip.sel{background:var(--g9);color:#fff;box-shadow:none}
+.seg.w{display:grid;grid-template-columns:1fr 1fr;width:100%}
+.seg.w button{height:40px}
+.seg.big button{height:48px;font-size:15px}
+.mrow{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);width:100%;text-align:start}
+.mrow:last-child{border:0}
+.mrow .t{flex:1;min-width:0}.mrow .t b{display:block;font-size:14px}.mrow .t span{font-size:12px;color:var(--muted)}
+.mh{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:18px 2px 8px;text-transform:uppercase}
+.fld{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.fld:last-child{border:0}
+.fld label,.fld>span{font-size:13px;color:var(--muted);flex:none}
+.fld input{border:0;background:transparent;text-align:end;font-weight:700;font-size:15px;min-width:0;flex:1;outline:none;color:var(--ink)}
+.fld input:focus{background:#FAF8F3;border-radius:8px}
+.rc-head{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.rc-thumb{width:64px;height:80px;border-radius:10px;background:#1B1A17;display:grid;place-items:center;flex:none;overflow:hidden}
+.rc-thumb i{width:42px;height:58px;background:#F4F1EA;border-radius:3px;display:block}
+.cam-box{height:170px}
+.pad button{height:54px;box-shadow:none;background:#fff}
+.dev{border:1.5px dashed var(--line2);border-radius:14px;padding:10px;margin-bottom:10px;background:#FAF8F3}
+.dev .lbl-f{display:flex;align-items:center;gap:6px}
+.wk-rate{font-size:12.5px;font-weight:700;color:var(--g7);white-space:nowrap}
+</style>
+</head>
+<body>
+<main class="app-stage" id="stage">
+  <div id="pw"></div>
+</main>
+
+<script>
+/* =============================== 1. STANDALONE & PWA SETUP =============================== */
+(function initStandaloneMode() {
+  const params = new URLSearchParams(window.location.search);
+  const isStandalone = params.get('ios') === '1' || params.get('mode') === 'standalone' ||
+    window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if (isStandalone) document.body.classList.add('is-standalone');
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+})();
+
+/* =============================== 2. CORE ALGORITHMS & WINDOW HOOKS =============================== */
+function encodeZatcaTLV({ seller, vatNo, timestamp, total, vat }) {
+  const enc = new TextEncoder();
+  const fields = [
+    [1, String(seller ?? '')],
+    [2, String(vatNo ?? '')],
+    [3, String(timestamp || '2026-11-16T08:30:00Z')],
+    [4, Number(total || 0).toFixed(2)],
+    [5, Number(vat || 0).toFixed(2)]
+  ];
+  const chunks = [];
+  let totalLen = 0;
+  for (const [tag, val] of fields) {
+    const valBytes = enc.encode(val);
+    const len = Math.min(255, valBytes.length);
+    const chunk = new Uint8Array(2 + len);
+    chunk[0] = tag;
+    chunk[1] = len;
+    chunk.set(valBytes.subarray(0, len), 2);
+    chunks.push(chunk);
+    totalLen += chunk.length;
+  }
+  const out = new Uint8Array(totalLen);
+  let offset = 0;
+  for (const c of chunks) {
+    out.set(c, offset);
+    offset += c.length;
+  }
+  let bin = '';
+  for (let i = 0; i < out.length; i++) bin += String.fromCharCode(out[i]);
+  return btoa(bin);
+}
+
+function decodeZatcaTLV(base64Str) {
+  try {
+    const cleaned = String(base64Str || '').trim().replace(/\s+/g, '');
+    if (!cleaned) return { valid: false, seller: '', vatNo: '', timestamp: '', total: 0, vat: 0, rawTags: {}, error: 'Empty QR payload' };
+    const bin = atob(cleaned);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    if (bytes.length < 2) return { valid: false, seller: '', vatNo: '', timestamp: '', total: 0, vat: 0, rawTags: {}, error: 'TLV too short' };
+    const dec = new TextDecoder('utf-8', { fatal: false });
+    const tags = {};
+    let i = 0;
+    while (i < bytes.length) {
+      if (i + 2 > bytes.length) return { valid: false, seller: '', vatNo: '', timestamp: '', total: 0, vat: 0, rawTags: {}, error: 'Truncated TLV header' };
+      const tag = bytes[i];
+      const len = bytes[i + 1];
+      if (tag < 1 || tag > 9 || i + 2 + len > bytes.length) {
+        return { valid: false, seller: '', vatNo: '', timestamp: '', total: 0, vat: 0, rawTags: {}, error: `Invalid TLV tag ${tag} or length ${len}` };
+      }
+      const valBytes = bytes.subarray(i + 2, i + 2 + len);
+      tags[tag] = tag <= 5 ? dec.decode(valBytes) : Array.from(valBytes, b => b.toString(16).padStart(2, '0')).join('');
+      i += 2 + len;
+    }
+    if (tags[1] === undefined && tags[2] === undefined && tags[4] === undefined) {
+      return { valid: false, seller: '', vatNo: '', timestamp: '', total: 0, vat: 0, rawTags: {}, error: 'Missing required ZATCA tags' };
+    }
+    const rawVatNo = String(tags[2] || '').trim();
+    const totalVal = parseFloat(tags[4] || '0') || 0;
+    const rawVatVal = parseFloat(tags[5] || '0') || 0;
+    const validTax = /^3\d{13}3$/.test(rawVatNo);
+    const enforcedVat = validTax ? (rawVatVal > 0 ? +rawVatVal.toFixed(2) : +(totalVal - totalVal / 1.15).toFixed(2)) : 0;
+    return {
+      valid: true,
+      seller: tags[1] || '',
+      vatNo: rawVatNo,
+      timestamp: tags[3] || '',
+      total: +totalVal.toFixed(2),
+      vat: enforcedVat,
+      rawTags: tags,
+      error: null
+    };
+  } catch (err) {
+    return { valid: false, seller: '', vatNo: '', timestamp: '', total: 0, vat: 0, rawTags: {}, error: 'Invalid Base64 or TLV structure' };
+  }
+}
+
+async function sha256Hex(strOrBuffer) {
+  let bytes;
+  if (strOrBuffer instanceof Uint8Array) {
+    bytes = strOrBuffer;
+  } else if (strOrBuffer instanceof ArrayBuffer) {
+    bytes = new Uint8Array(strOrBuffer);
+  } else if (typeof Blob !== 'undefined' && strOrBuffer instanceof Blob) {
+    const ab = await strOrBuffer.arrayBuffer();
+    bytes = new Uint8Array(ab);
+  } else {
+    bytes = new TextEncoder().encode(String(strOrBuffer ?? ''));
+  }
+  if (window.crypto && window.crypto.subtle) {
+    try {
+      const buf = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(buf), b => b.toString(16).padStart(2, '0')).join('');
+    } catch (_) {}
+  }
+  const K = [
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+  ];
+  const rotr = (n, x) => (x >>> n) | (x << (32 - n));
+  let H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const l = bytes.length * 8;
+  const padLen = ((bytes.length + 9 + 63) & ~63);
+  const padded = new Uint8Array(padLen);
+  padded.set(bytes);
+  padded[bytes.length] = 0x80;
+  const dv = new DataView(padded.buffer);
+  dv.setUint32(padLen - 4, l >>> 0, false);
+  dv.setUint32(padLen - 8, Math.floor(l / 0x100000000), false);
+  const W = new Uint32Array(64);
+  for (let i = 0; i < padLen; i += 64) {
+    for (let t = 0; t < 16; t++) W[t] = dv.getUint32(i + t * 4, false);
+    for (let t = 16; t < 64; t++) {
+      const s0 = rotr(7, W[t-15]) ^ rotr(18, W[t-15]) ^ (W[t-15] >>> 3);
+      const s1 = rotr(17, W[t-2]) ^ rotr(19, W[t-2]) ^ (W[t-2] >>> 10);
+      W[t] = (W[t-16] + s0 + W[t-7] + s1) >>> 0;
+    }
+    let [a,b,c,d,e,f,g,h] = H;
+    for (let t = 0; t < 64; t++) {
+      const S1 = rotr(6, e) ^ rotr(11, e) ^ rotr(25, e);
+      const ch = (e & f) ^ (~e & g);
+      const temp1 = (h + S1 + ch + K[t] + W[t]) >>> 0;
+      const S0 = rotr(2, a) ^ rotr(13, a) ^ rotr(22, a);
+      const maj = (a & b) ^ (a & c) ^ (b & c);
+      const temp2 = (S0 + maj) >>> 0;
+      h = g; g = f; f = e; e = (d + temp1) >>> 0;
+      d = c; c = b; b = a; a = (temp1 + temp2) >>> 0;
+    }
+    H = [(H[0]+a)>>>0,(H[1]+b)>>>0,(H[2]+c)>>>0,(H[3]+d)>>>0,(H[4]+e)>>>0,(H[5]+f)>>>0,(H[6]+g)>>>0,(H[7]+h)>>>0];
+  }
+  return H.map(x => x.toString(16).padStart(8, '0')).join('');
+}
+
+function buildCompositeKey({ merchant, vatNo, total, dateStr, isRefund }) {
+  const cleanVat = String(vatNo || '').trim();
+  const normId = /^3\d{13}3$/.test(cleanVat)
+    ? cleanVat
+    : String(merchant || 'unknown').trim().toLowerCase().replace(/\s+/g, '_');
+  const normAmt = Number(total || 0).toFixed(2);
+  const normDate = String(dateStr || '2026-11-16').slice(0, 10);
+  return `${normId}|${normAmt}|${normDate}|${isRefund ? 'REFUND' : 'SALE'}`;
+}
+
+function arWords(n) {
+  const num = Math.max(0, Math.round(Number(n) || 0));
+  if (num === 0) return 'فقط صفر ريال سعودي لا غير';
+  const o = ['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة'],
+        te = ['عشرة','أحد عشر','اثنا عشر','ثلاثة عشر','أربعة عشر','خمسة عشر','ستة عشر','سبعة عشر','ثمانية عشر','تسعة عشر'],
+        tn = ['','','عشرون','ثلاثون','أربعون','خمسون','ستون','سبعون','ثمانون','تسعون'],
+        h = ['','مائة','مئتان','ثلاثمائة','أربعمائة','خمسمائة','ستمائة','سبعمائة','ثمانمائة','تسعمائة'];
+  const group3 = x => {
+    const p = [];
+    const a = Math.floor(x / 100), r = x % 100;
+    if (a) p.push(h[a]);
+    if (r) {
+      if (r < 10) p.push(o[r]);
+      else if (r < 20) p.push(te[r - 10]);
+      else {
+        const u = r % 10, d = Math.floor(r / 10);
+        p.push(u ? o[u] + ' و' + tn[d] : tn[d]);
+      }
+    }
+    return p.join(' و');
+  };
+  const bil = Math.floor(num / 1000000000);
+  const mil = Math.floor((num % 1000000000) / 1000000);
+  const th = Math.floor((num % 1000000) / 1000);
+  const rem = num % 1000;
+  const parts = [];
+  if (bil) {
+    parts.push(bil === 1 ? 'مليار' : bil === 2 ? 'ملياران' : group3(bil) + ' مليار');
+  }
+  if (mil) {
+    const mRem = mil % 100;
+    parts.push(mil === 1 ? 'مليون' : mil === 2 ? 'مليونان' : (mRem >= 3 && mRem <= 10) ? group3(mil) + ' ملايين' : group3(mil) + ' مليون');
+  }
+  if (th) {
+    const tRem = th % 100;
+    parts.push(th === 1 ? 'ألف' : th === 2 ? 'ألفان' : (tRem >= 3 && tRem <= 10) ? group3(th) + ' آلاف' : group3(th) + ' ألف');
+  }
+  if (rem) parts.push(group3(rem));
+  return 'فقط ' + parts.join(' و') + ' ريال سعودي لا غير';
+}
+
+function enWords(n) {
+  const num = Math.max(0, Math.round(Number(n) || 0));
+  if (num === 0) return 'Only Zero Saudi riyals';
+  const a = ['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'],
+        b = ['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+  const group3 = x => {
+    let s = '';
+    if (x >= 100) { s += a[Math.floor(x / 100)] + ' hundred'; x %= 100; if (x) s += ' and '; }
+    if (x < 20) s += a[x];
+    else s += b[Math.floor(x / 10)] + (x % 10 ? '-' + a[x % 10] : '');
+    return s;
+  };
+  const bil = Math.floor(num / 1000000000);
+  const mil = Math.floor((num % 1000000000) / 1000000);
+  const th = Math.floor((num % 1000000) / 1000);
+  const rem = num % 1000;
+  const parts = [];
+  if (bil) parts.push(group3(bil) + ' billion');
+  if (mil) parts.push(group3(mil) + ' million');
+  if (th) parts.push(group3(th) + ' thousand');
+  if (rem) parts.push(group3(rem));
+  let s = parts.join(' ');
+  s = s.charAt(0).toUpperCase() + s.slice(1);
+  return 'Only ' + s + ' Saudi riyals';
+}
+
+function generateVoucherPng(voucherObj = {}) {
+  const vno = voucherObj.no || voucherObj.voucherNo || 'CHA-2611-0009';
+  const workerName = voucherObj.workerName || voucherObj.worker || 'Ahmed · Plumber';
+  const trade = voucherObj.trade || 'Site Labor';
+  const job = voucherObj.job || 'Villa 2 — Site construction work';
+  const amt = Number(voucherObj.amt ?? voucherObj.amount ?? 350);
+  const nowD = new Date();
+  const fallbackDate = `${String(nowD.getDate()).padStart(2, '0')} / ${String(nowD.getMonth() + 1).padStart(2, '0')} / ${nowD.getFullYear()}`;
+  const dateStr = voucherObj.date || fallbackDate;
+  const project = voucherObj.project || 'Al Narjis Villas · فلل النرجس';
+  const tqAr = voucherObj.tafqeetAr || arWords(amt);
+  const tqEn = voucherObj.tafqeetEn || enWords(amt);
+  const strokes = voucherObj.sigStrokes || (window._lastSigStrokes || []);
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200;
+  canvas.height = 900;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#F4F1EA';
+  ctx.fillRect(0, 0, 1200, 900);
+
+  // Outer card border
+  ctx.fillStyle = '#FFFFFF';
+  ctx.strokeStyle = '#E7E3D9';
+  ctx.lineWidth = 3;
+  ctx.fillRect(40, 40, 1120, 820);
+  ctx.strokeRect(40, 40, 1120, 820);
+
+  // Deep emerald header (#0A3A2D)
+  ctx.fillStyle = '#0A3A2D';
+  ctx.fillRect(40, 40, 1120, 170);
+
+  // Saffron accent bar (#E9A23B)
+  ctx.fillStyle = '#E9A23B';
+  ctx.fillRect(40, 210, 1120, 8);
+
+  // Header Brand & Voucher Number
+  ctx.fillStyle = '#E9A23B';
+  ctx.font = 'bold 22px system-ui, sans-serif';
+  ctx.fillText('TAMAM تمام — OFFICIAL CASH LABOR VOUCHER · سند صرف عمالة نقدي', 80, 95, 680);
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 38px system-ui, sans-serif';
+  ctx.fillText(vno, 80, 152, 500);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#E3F2EC';
+  ctx.font = '600 22px system-ui, sans-serif';
+  ctx.fillText(`Date / التاريخ: ${dateStr}`, 1120, 100, 460);
+  ctx.fillText(`Project / المشروع: ${project}`, 1120, 148, 520);
+  ctx.textAlign = 'left';
+
+  // Amount Highlight Box
+  ctx.fillStyle = '#FFF3DD';
+  ctx.strokeStyle = '#E9A23B';
+  ctx.lineWidth = 2;
+  ctx.fillRect(80, 250, 1040, 140);
+  ctx.strokeRect(80, 250, 1040, 140);
+
+  ctx.fillStyle = '#76837C';
+  ctx.font = 'bold 20px system-ui, sans-serif';
+  ctx.fillText('AMOUNT PAID / المبلغ المصروف', 110, 292, 400);
+
+  ctx.fillStyle = '#0A3A2D';
+  ctx.font = 'bold 48px system-ui, sans-serif';
+  ctx.fillText(`${amt.toLocaleString('en-US')} SAR`, 110, 355, 360);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#0F2219';
+  ctx.font = 'bold 24px system-ui, sans-serif';
+  ctx.fillText(tqAr, 1090, 315, 620);
+  ctx.fillStyle = '#5B665F';
+  ctx.font = '600 19px system-ui, sans-serif';
+  ctx.fillText(tqEn, 1090, 358, 620);
+  ctx.textAlign = 'left';
+
+  // Details rows
+  const rows = [
+    ['Paid To (Worker) / المستلم', `${workerName} (${trade})`],
+    ['Work Description / بيان العمل', job],
+    ['Custody Engineer / مهندس الموقع', 'Eng. Khaled · م. خالد'],
+    ['Payment Method / طريقة الدفع', 'Cash Custody (العهدة النقدية) — ZATCA Non-VAT Labor']
+  ];
+  let y = 445;
+  for (const [label, val] of rows) {
+    ctx.fillStyle = '#76837C';
+    ctx.font = '600 20px system-ui, sans-serif';
+    ctx.fillText(label, 80, y, 360);
+    ctx.fillStyle = '#0F2219';
+    ctx.font = 'bold 23px system-ui, sans-serif';
+    ctx.fillText(String(val), 460, y, 650);
+    ctx.strokeStyle = '#E7E3D9';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(80, y + 18);
+    ctx.lineTo(1120, y + 18);
+    ctx.stroke();
+    y += 58;
+  }
+
+  // Signature Box
+  ctx.fillStyle = '#FAF8F3';
+  ctx.strokeStyle = '#CFCABC';
+  ctx.lineWidth = 2;
+  ctx.fillRect(80, 680, 520, 145);
+  ctx.strokeRect(80, 680, 520, 145);
+
+  ctx.fillStyle = '#76837C';
+  ctx.font = 'bold 17px system-ui, sans-serif';
+  ctx.fillText('WORKER FINGER SIGNATURE / توقيع المستلم', 100, 710);
+
+  // Draw signature from live #sig canvas or recorded strokes
+  const liveSig = document.getElementById('sig');
+  if (liveSig && liveSig.width > 0 && liveSig.height > 0) {
+    ctx.drawImage(liveSig, 100, 715, 460, 100);
+  } else if (strokes && strokes.length > 0) {
+    ctx.save();
+    ctx.strokeStyle = '#0F2219';
+    ctx.lineWidth = 3.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    for (const s of strokes) {
+      if (!s.length) continue;
+      ctx.beginPath();
+      ctx.moveTo(110 + s[0][0], 720 + s[0][1] * 0.55);
+      for (let i = 1; i < s.length; i++) {
+        ctx.lineTo(110 + s[i][0], 720 + s[i][1] * 0.55);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  } else {
+    ctx.strokeStyle = '#0E5B47';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(140, 785);
+    ctx.bezierCurveTo(190, 735, 250, 800, 320, 750);
+    ctx.bezierCurveTo(360, 730, 410, 790, 470, 760);
+    ctx.stroke();
+  }
+
+  // Official Stamp Box
+  ctx.fillStyle = '#E3F2EC';
+  ctx.strokeStyle = '#0E5B47';
+  ctx.lineWidth = 2;
+  ctx.fillRect(640, 680, 480, 145);
+  ctx.strokeRect(640, 680, 480, 145);
+  ctx.fillStyle = '#0A3A2D';
+  ctx.font = 'bold 21px system-ui, sans-serif';
+  ctx.fillText('VERIFIED BY TAMAM FIELD LEDGER', 670, 728);
+  ctx.fillStyle = '#0E5B47';
+  ctx.font = '600 18px system-ui, sans-serif';
+  ctx.fillText(`Voucher: ${vno} · Status: Approved`, 670, 765);
+  ctx.fillText('Deducted from Site Engineer Cash Custody', 670, 798);
+
+  return canvas.toDataURL('image/png');
+}
+
+window.encodeZatcaTLV = encodeZatcaTLV;
+window.decodeZatcaTLV = decodeZatcaTLV;
+window.sha256Hex = sha256Hex;
+window.buildCompositeKey = buildCompositeKey;
+window.arWords = arWords;
+window.enWords = enWords;
+window.generateVoucherPng = generateVoucherPng;
+
+/* =============================== 3. I18N DICTIONARY =============================== */
+const D = {
+  en: {
+    brand: "Tamam", gm: "Good morning", wName: "Khaled", role_w: "Site engineer",
+    t_home: "Home", t_act: "Activity", t_wallet: "Wallet", t_me: "Me",
+    cash_hand: "Cash in your hand (العهدة)", spent_today: "Spent today", req_topup: "Ask for top-up", sent: "Top-up request sent",
+    q_receipt: "Scan receipt", q_labor: "Pay a worker", q_video: "Site video",
+    s_receipt: "Camera, ZATCA QR & duplicate shield", s_labor: "Cash voucher, Tafqeet & signature", s_video: "Walk the site, AI writes the report",
+    add_title: "What would you like to add?", today: "Today", see_all: "See all",
+    streak: "Daily site video", streak_s: "Record one short walk-through every day", record_now: "Record",
+    stage_exc: "Excavation", stage_fnd: "Foundation", stage_fin: "Finishing", stage_gen: "General",
+    cam_hint: "Rear camera active — scan receipt QR or try a sample below",
+    merchant: "Merchant", tax_no: "Saudi Tax ID (15 digits: 3...3)", total: "Total (SAR)", vat: "VAT 15%",
+    no_vat: "No valid 15-digit Tax ID — VAT forced to 0.00 SAR", zatca_ok: "ZATCA Verified (3...3)",
+    stage: "Stage", pay_by: "Paid by", p_cash: "Cash", p_card: "Card",
+    refund_lbl: "Refund / Return Receipt (فاتورة رجيع)", refund_hint: "Credits cash back to your custody wallet",
+    over_limit: "Over 500 SAR — requires manager approval (Pending).",
+    auto_ok: "500 SAR or under — approved automatically.",
+    refund_ok: "Refund receipt — credits back to your custody wallet.",
+    dup_blocked: "Duplicate Receipt Blocked! Matches an already recorded SHA-256 hash or Composite Key.",
+    submit: "Submit Receipt", done: "Done", saved: "Receipt Recorded", voucher: "Voucher",
+    sent_mgr: "Routed to manager (> 500 SAR)", recorded: "Recorded in custody books",
+    pick_worker: "Who did you pay?", custom_worker_t: "Or add a custom worker",
+    cw_name: "Worker name", cw_trade: "Trade (e.g. Carpenter)", cw_job: "Work description", add_cw: "Use Custom Worker",
+    enter_amount: "How much (SAR)?", sign_here: "Worker signs here", sign_hint: "Sign with finger on canvas", clear: "Clear",
+    next: "Next: Worker Signature", issue: "Issue Official Voucher", job: "Work done", paid_to: "Paid to", amount: "Amount",
+    dl_png: "Download PNG", share: "Share Voucher", back_home: "Done",
+    tr_plumber: "Plumber", tr_painter: "Painter", tr_electrician: "Electrician", tr_mason: "Mason",
+    j_plumber: "Bathroom plumbing — Villa 2", j_painter: "Wall putty and primer — Villa 2", j_electrician: "Ceiling cables — Villa 1", j_mason: "Block work — Villa 3",
+    rec_hint: "Walk slowly. Show what was done today.", rec_tap: "Start recording", rec_stop: "Stop & Analyze",
+    ai_report: "AI Site Report", detected: "Detected stage", progress: "Progress", materials: "Materials seen", safety: "Safety / PPE",
+    all_safe: "Everyone wearing helmets and boots (100% PPE compliant)", post_report: "Post Report to Activity",
+    ai_sum: "Roof slab of Villa 3: rebar fixed and concrete pouring in progress. Two mixer trucks on site.",
+    mat_list: "2 mixer trucks · 16mm rebar · concrete pump",
+    act_empty: "No matching activity items", st_ok: "Approved", st_pend: "Pending Approval", st_done: "Posted", st_ref: "Refunded",
+    my_activity: "My Activity", wallet_t: "Custody Wallet (العهدة)", in_: "Custody Top-up", out_: "Expense", ref_: "Cash Refund",
+    flt_all: "All", flt_receipt: "Receipts", flt_labor: "Labor", flt_video: "Videos",
+    settings: "Settings (Me)", language: "Language", lang_en: "English", lang_ar: "العربية",
+    offline: "Offline Queue Mode", offline_s: "Queue transactions locally and sync when signal returns",
+    sync_now: "Sync Queued Items", synced: "Offline queue synced!",
+    reset_demo: "Reset Demo Data", reset_done: "Demo data reset to defaults",
+    gemini_key: "Optional Gemini API Key (Vision OCR)", save_key: "Save Key", key_saved: "Gemini API Key saved",
+    install_btn: "📲 Install on iPhone (iOS) & Android",
+    version: "Tamam 1.1 · Site Engineer Edition · Riyadh",
+    sar: "SAR",
+    offline_active: "Offline Mode Active",
+    queued_items: "{n} item(s) queued in localStorage",
+    queued_short: "{n} queued",
+    flush_queue: "Flush offline queue",
+    items_synced: "{n} item(s) synced",
+    type_lbl: "Type",
+    tax_id_lbl: "Tax ID",
+    comp_key_lbl: "Composite Key",
+    tafqeet_ar_lbl: "Tafqeet (AR)",
+    tafqeet_en_lbl: "Tafqeet (EN)",
+    none_lbl: "None",
+    upload_photo: "Upload / Camera Photo",
+    sample_rcpt_lbl: "Try Sample Receipt (ZATCA Presets):",
+    tlv_lbl: "ZATCA QR TLV Base64 Payload (Tags 1–5):",
+    tlv_ph: "Paste Base64 TLV QR...",
+    decode_tlv: "Decode TLV",
+    upload_video: "Upload Video",
+    key_lbl: "Key",
+    install_title: "📲 Install Tamam (تمام) — iOS & Android",
+    install_sub: "Pre-production $0 installation for Site Engineers on iPhone and Android.",
+    ios_step_title: "🍎 Step 1: iPhone (iOS Settings Profile)",
+    ios_rec_pill: "Recommended",
+    ios_s1: "Tap <b>Download iOS Profile (Tamam.mobileconfig)</b> below & tap <b>Allow</b> in Safari.",
+    ios_s2: "Open <b>iPhone Settings (الإعدادات) → Profile Downloaded (تم تنزيل ملف التعريف)</b>.",
+    ios_s3: "Tap <b>Install (تثبيت)</b> → Verify Unknown Source with passcode → <b>Tamam تمام</b> launches full-screen from your Home Screen!",
+    dl_profile: "Download Tamam.mobileconfig",
+    dl_ipa: "Download .IPA (Sideloadly)",
+    android_step_title: "🤖 Step 2: Android Native APK",
+    android_pill: "Direct APK",
+    android_desc: "Tap below to download <b>Tamam.apk</b>, allow installation from unknown sources, and open the native Android app.",
+    dl_apk: "Download Android APK (Tamam.apk)",
+    scan_another: "Scan Another Receipt",
+    online: "Online", offline_short: "Offline", project_lbl: "PROJECT", project_name: "Villa 3 · Al Narjis",
+    cash_hand2: "Cash in your hand", awaiting: "Awaiting approval", requested: "Requested",
+    st_queued: "Queued", earlier: "Earlier", flt_pend: "Pending", search_ph: "Search name or voucher no.",
+    off_note: "No signal · {n} item(s) saved, will send automatically", off_note0: "Working offline · new entries are saved on this phone",
+    ask_office: "Ask the office for cash", other: "Other", reason: "Reason", reason_def: "Labor wages for this week",
+    send_req: "Send request", req_wait: "{a} SAR request sent {t} · waiting for the office",
+    money_inout: "Money in and out", topup_in: "Top-up from office",
+    me_t: "Me", acct: "Account", lang_hint: "Changes the whole app instantly",
+    work_off: "Work offline", work_off_s: "Save entries on this phone and send when signal returns",
+    send_now: "Send saved items now", nothing_q: "Nothing waiting", app_sec: "App",
+    install_s: "iPhone profile, iPhone app or Android APK", adv: "Advanced & testing",
+    dev_mode: "Testing tools", dev_mode_s: "Show sample receipts and QR decoder in Scan receipt",
+    take_photo: "Take photo of receipt", qr_ok: "ZATCA QR read", qr_manual: "Check the details",
+    no_dup: "No duplicate found", no_dup_s: "Checked against {n} earlier receipts on this phone.",
+    review_t: "Review receipt", search_w: "Search workers", add_worker: "Add a new worker",
+    per_day: "/day", back: "Back", send_btn: "Send"
+  },
+  ar: {
+    brand: "تمام", gm: "صباح الخير", wName: "خالد", role_w: "مهندس موقع",
+    t_home: "الرئيسية", t_act: "نشاطي", t_wallet: "العهدة", t_me: "حسابي",
+    cash_hand: "العهدة النقدية معك", spent_today: "مصروف اليوم", req_topup: "طلب تغذية عهدة", sent: "تم إرسال طلب التغذية",
+    q_receipt: "مسح فاتورة", q_labor: "دفع لعامل", q_video: "فيديو الموقع",
+    s_receipt: "كاميرا وباركود الزكاة وحماية التكرار", s_labor: "سند صرف نقدي وتفقيط وتوقيع", s_video: "صوّر الموقع والذكاء الاصطناعي يكتب التقرير",
+    add_title: "ماذا تريد أن تضيف؟", today: "اليوم", see_all: "عرض الكل",
+    streak: "فيديو الموقع اليومي", streak_s: "صوّر جولة قصيرة لتوثيق الإنجاز يومياً", record_now: "سجّل",
+    stage_exc: "الحفر", stage_fnd: "التأسيس", stage_fin: "التشطيب", stage_gen: "عام",
+    cam_hint: "الكاميرا الخلفية جاهزة — امسح الفاتورة أو جرّب نموذجاً أدناه",
+    merchant: "المورد / المتجر", tax_no: "الرقم الضريبي السعودي (15 رقماً يبدأ وينتهي بـ 3)", total: "الإجمالي (ر.س)", vat: "ضريبة القيمة المضافة 15%",
+    no_vat: "لا يوجد رقم ضريبي صحيح — الضريبة 0.00 ر.س تلقائياً", zatca_ok: "موثّقة من الزكاة (3...3)",
+    stage: "المرحلة", pay_by: "طريقة الدفع", p_cash: "نقداً", p_card: "بطاقة",
+    refund_lbl: "فاتورة رجيع / استرداد", refund_hint: "تُضاف قيمة الفاتورة النقدية إلى رصيد عهدتك",
+    over_limit: "أكثر من 500 ر.س — تُحوّل لموافقة المدير أولاً.",
+    auto_ok: "500 ر.س أو أقل — اعتماد تلقائي فوري.",
+    refund_ok: "فاتورة رجيع — تعيد المبلغ إلى عهدتك النقدية.",
+    dup_blocked: "تم حظر فاتورة مكررة! تطابق بصمة SHA-256 أو المفتاح المركب لفاتورة مسجلة مسبقاً.",
+    submit: "حفظ وإرسال الفاتورة", done: "تم", saved: "تم تسجيل الفاتورة", voucher: "رقم السند",
+    sent_mgr: "أُرسلت لموافقة المدير (> 500 ر.س)", recorded: "سُجّلت في دفتر العهدة",
+    pick_worker: "لمن دفعت؟", custom_worker_t: "أو أضف عاملاً مخصصاً",
+    cw_name: "اسم العامل", cw_trade: "المهنة (مثل: نجار مسلح)", cw_job: "وصف العمل المنجز", add_cw: "اعتماد العامل المخصص",
+    enter_amount: "كم المبلغ (ر.س)؟", sign_here: "توقيع العامل المستلم", sign_hint: "وقّع بالإصبع داخل المربع", clear: "مسح التوقيع",
+    next: "التالي: توقيع العامل", issue: "إصدار السند الرسمي", job: "العمل المنجز", paid_to: "المستلم", amount: "المبلغ",
+    dl_png: "تنزيل صورة السند PNG", share: "مشاركة السند", back_home: "تم",
+    tr_plumber: "سبّاك", tr_painter: "نقّاش", tr_electrician: "كهربائي", tr_mason: "بنّاء",
+    j_plumber: "سباكة الحمامات — فيلا 2", j_painter: "معجون وأساس للجدران — فيلا 2", j_electrician: "كابلات السقف — فيلا 1", j_mason: "أعمال البلوك — فيلا 3",
+    rec_hint: "امشِ ببطء وأظهر الأعمال المنجزة اليوم", rec_tap: "بدء التسجيل", rec_stop: "إيقاف وتحليل الفيديو",
+    ai_report: "تقرير الموقع الذكي", detected: "المرحلة المرصودة", progress: "نسبة التقدم", materials: "المواد المرصودة", safety: "السلامة ومعدات الوقاية",
+    all_safe: "الجميع يرتدي الخوذ والأحذية (التزام كامل بالسلامة)", post_report: "نشر التقرير في النشاط",
+    ai_sum: "سقف الفيلا 3: تم تثبيت الحديد والصبّ جارٍ، وشاحنتا خلّاطة في الموقع.",
+    mat_list: "شاحنتا خلّاطة · حديد تسليح 16 مم · مضخة خرسانة",
+    act_empty: "لا توجد عمليات مطابقة", st_ok: "معتمد", st_pend: "بانتظار المدير", st_done: "منشور", st_ref: "رجيع",
+    my_activity: "نشاطي", wallet_t: "محفظة العهدة", in_: "تغذية عهدة", out_: "مصروف", ref_: "استرداد نقدي",
+    flt_all: "الكل", flt_receipt: "الفواتير", flt_labor: "العمالة", flt_video: "الفيديو",
+    settings: "الإعدادات (حسابي)", language: "اللغة", lang_en: "English", lang_ar: "العربية",
+    offline: "وضع العمل بدون إنترنت", offline_s: "حفظ العمليات محلياً ومزامنتها فور عودة الشبكة",
+    sync_now: "مزامنة العمليات المعلقة", synced: "تمت مزامنة العمليات المحفوظة!",
+    reset_demo: "إعادة ضبط البيانات التجريبية", reset_done: "تمت إعادة ضبط البيانات للوضع الافتراضي",
+    gemini_key: "مفتاح Gemini API الاختياري (لتحليل الصور والفيديو)", save_key: "حفظ المفتاح", key_saved: "تم حفظ مفتاح Gemini",
+    install_btn: "📲 تثبيت التطبيق على آيفون (iOS) وأندرويد",
+    version: "تمام 1.1 · نسخة مهندس الموقع · الرياض",
+    sar: "ر.س",
+    offline_active: "وضع عدم الاتصال مفعّل",
+    queued_items: "{n} عملية محفوظة في قائمة الانتظار",
+    queued_short: "{n} معلّقة",
+    flush_queue: "مزامنة وإرسال العمليات المعلقة",
+    items_synced: "تمت مزامنة {n} عملية",
+    type_lbl: "النوع",
+    tax_id_lbl: "الرقم الضريبي",
+    comp_key_lbl: "المفتاح المركب",
+    tafqeet_ar_lbl: "التفقيط (عربي)",
+    tafqeet_en_lbl: "التفقيط (إنجليزي)",
+    none_lbl: "لا يوجد",
+    upload_photo: "رفع صورة / كاميرا",
+    sample_rcpt_lbl: "جرّب نموذج فاتورة (باركود الزكاة):",
+    tlv_lbl: "بيانات باركود الزكاة Base64 TLV (الوسوم 1–5):",
+    tlv_ph: "الصق نص Base64 TLV هنا...",
+    decode_tlv: "فك تشفير TLV",
+    upload_video: "رفع فيديو",
+    key_lbl: "المفتاح",
+    install_title: "📲 تثبيت تمام (Tamam) — آيفون وأندرويد",
+    install_sub: "تثبيت تجريبي مجاني (0$) لمهندسي الموقع على iOS وأندرويد.",
+    ios_step_title: "🍎 الخطوة 1: آيفون (ملف تعريف الإعدادات iOS)",
+    ios_rec_pill: "موصى به",
+    ios_s1: "اضغط <b>تنزيل ملف التعريف (Tamam.mobileconfig)</b> أدناه ثم اضغط <b>سماح (Allow)</b> في سفاري.",
+    ios_s2: "افتح <b>إعدادات الآيفون (Settings) ← تم تنزيل ملف التعريف (Profile Downloaded)</b>.",
+    ios_s3: "اضغط <b>تثبيت (Install)</b> ← التحقق برمز الدخول ← يظهر تطبيق <b>تمام Tamam</b> على الشاشة الرئيسية!",
+    dl_profile: "تنزيل Tamam.mobileconfig",
+    dl_ipa: "تنزيل .IPA (Sideloadly)",
+    android_step_title: "🤖 الخطوة 2: أندرويد (حزمة APK مباشرة)",
+    android_pill: "APK مباشر",
+    android_desc: "اضغط أدناه لتنزيل <b>Tamam.apk</b>، واسمح بالتثبيت من مصادر غير معروفة لتشغيل التطبيق.",
+    dl_apk: "تنزيل تطبيق أندرويد (Tamam.apk)",
+    scan_another: "مسح فاتورة أخرى",
+    online: "متصل", offline_short: "غير متصل", project_lbl: "المشروع", project_name: "فيلا 3 · النرجس",
+    cash_hand2: "العهدة النقدية معك", awaiting: "بانتظار الموافقة", requested: "مطلوب",
+    st_queued: "محفوظة", earlier: "سابقاً", flt_pend: "المعلّقة", search_ph: "ابحث بالاسم أو رقم السند",
+    off_note: "لا توجد شبكة · {n} عملية محفوظة وسترسل تلقائياً", off_note0: "تعمل بدون إنترنت · تُحفظ العمليات على الجوال",
+    ask_office: "اطلب نقداً من المكتب", other: "مبلغ آخر", reason: "السبب", reason_def: "أجور العمالة لهذا الأسبوع",
+    send_req: "إرسال الطلب", req_wait: "طلب {a} ر.س أُرسل {t} · بانتظار المكتب",
+    money_inout: "الوارد والصادر", topup_in: "تغذية من المكتب",
+    me_t: "حسابي", acct: "الحساب", lang_hint: "يغيّر لغة التطبيق بالكامل فوراً",
+    work_off: "العمل بدون إنترنت", work_off_s: "احفظ العمليات على الجوال وأرسلها عند عودة الشبكة",
+    send_now: "إرسال المحفوظ الآن", nothing_q: "لا يوجد شيء معلّق", app_sec: "التطبيق",
+    install_s: "ملف آيفون أو تطبيق آيفون أو أندرويد APK", adv: "متقدم واختبار",
+    dev_mode: "أدوات الاختبار", dev_mode_s: "إظهار نماذج الفواتير ومحلل الباركود في مسح الفاتورة",
+    take_photo: "صوّر الفاتورة", qr_ok: "تمت قراءة باركود الزكاة", qr_manual: "راجع البيانات",
+    no_dup: "لا يوجد تكرار", no_dup_s: "تمت المقارنة مع {n} فاتورة سابقة على هذا الجوال.",
+    review_t: "مراجعة الفاتورة", search_w: "ابحث عن عامل", add_worker: "إضافة عامل جديد",
+    per_day: "/يوم", back: "رجوع", send_btn: "إرسال"
+  }
+};
+
+/* =============================== 4. ICONS (INCLUDING CLOCK) =============================== */
+const P = {
+  home: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
+  list: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+  plus: 'M12 5v14M5 12h14',
+  wallet: 'M3 7a2 2 0 0 1 2-2h13v4M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2zM16 14h.01',
+  user: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+  camera: 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+  users: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8',
+  video: 'M23 7l-7 5 7 5zM1 5h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H1z',
+  check: 'M20 6L9 17l-5-5',
+  x: 'M18 6L6 18M6 6l12 12',
+  chev: 'M9 18l6-6-6-6',
+  back: 'M15 18l-6-6 6-6',
+  bell: 'M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0',
+  globe: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18',
+  shield: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+  clock: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2',
+  card: 'M21 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM1 10h22',
+  file: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8',
+  spark: 'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z',
+  alert: 'M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01',
+  send: 'M22 2L11 13M22 2l-7 20-4-9-9-4z',
+  wifi: 'M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01',
+  trend: 'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6',
+  download: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3',
+  refresh: 'M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15',
+  search: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5',
+  up: 'M12 19V5M5 12l7-7 7 7',
+  down: 'M12 5v14M5 12l7 7 7-7',
+  chevd: 'M6 9l6 6 6-6',
+  wifioff: 'M2 2l20 20M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 5.2-2.8M19 13a10 10 0 0 0-2.3-1.6M12 20h.01',
+  receipt: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6',
+  scan: 'M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M8 8h8v8H8z',
+  tool: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z',
+  key: 'M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4'
+};
+const I = (n, s) => `<svg class="ic" viewBox="0 0 24 24"${s ? ` style="width:${s}px;height:${s}px"` : ''}><path d="${P[n] || P.check}"/></svg>`;
+
+/* =============================== 5. PRESET DATA & PERSISTENT STATE =============================== */
+const STORAGE_KEY = 'tamam_engineer_state_v1';
+const STAGES = { exc: 'stage_exc', fnd: 'stage_fnd', fin: 'stage_fin', gen: 'stage_gen' };
+
+const RECEIPTS = [
+  {
+    idx: 0,
+    m: { en: 'Al-Fanar Electrical', ar: 'الفنار للكهرباء' },
+    vatNo: '300123456700003',
+    timestamp: '2026-11-16T08:30:00Z',
+    total: 483,
+    vat: 63.00,
+    items: { en: '32A breakers, 4mm copper wire', ar: 'قواطع 32 أمبير، سلك نحاس 4 ملم' },
+    stage: 'fnd'
+  },
+  {
+    idx: 1,
+    m: { en: 'Saudi Readymix', ar: 'السعودية للخرسانة الجاهزة' },
+    vatNo: '310987654300003',
+    timestamp: '2026-11-16T09:15:00Z',
+    total: 4600,
+    vat: 600.00,
+    items: { en: '12 m³ concrete C35', ar: '12 م³ خرسانة C35' },
+    stage: 'fnd'
+  },
+  {
+    idx: 2,
+    m: { en: 'Madina Hardware', ar: 'مؤسسة المدينة للأدوات' },
+    vatNo: '',
+    timestamp: '2026-11-16T10:00:00Z',
+    total: 320,
+    vat: 0.00,
+    items: { en: 'Pool cover hinges (Non-Tax Store)', ar: 'مفصلات غطاء المسبح (بدون رقم ضريبي)' },
+    stage: 'fin'
+  },
+  {
+    idx: 3,
+    m: { en: 'Al-Fanar Electrical', ar: 'الفنار للكهرباء' },
+    vatNo: '300123456700003',
+    timestamp: '2026-11-16T08:30:00Z',
+    total: 483,
+    vat: 63.00,
+    items: { en: '32A breakers, 4mm copper wire (Duplicate Test)', ar: 'قواطع 32 أمبير، سلك نحاس 4 ملم (اختبار تكرار)' },
+    stage: 'fnd',
+    isDupPreset: true
+  }
+];
+for (const r of RECEIPTS) {
+  r.tlv = encodeZatcaTLV({
+    seller: r.m.en,
+    vatNo: r.vatNo,
+    timestamp: r.timestamp,
+    total: r.total,
+    vat: r.vat
+  });
+}
+
+const DEFAULT_WORKERS = [
+  { id: 'plumber', n: { en: 'Ahmed', ar: 'أحمد' }, tr: 'tr_plumber', j: 'j_plumber', amt: 350 },
+  { id: 'painter', n: { en: 'Saeed', ar: 'سعيد' }, tr: 'tr_painter', j: 'j_painter', amt: 480 },
+  { id: 'electrician', n: { en: 'Salem', ar: 'سالم' }, tr: 'tr_electrician', j: 'j_electrician', amt: 450 },
+  { id: 'mason', n: { en: 'Mahmoud', ar: 'محمود' }, tr: 'tr_mason', j: 'j_mason', amt: 600 }
+];
+
+function createDefaultState() {
+  return {
+    wallet: 11350,
+    spentToday: 1200,
+    vno: 9,
+    rcIdx: 0,
+    progressBoost: 0,
+    offline: false,
+    offlineQueue: [],
+    lang: 'en',
+    geminiKey: '',
+    devMode: false,
+    actFilter: 'all',
+    seenHashes: [],
+    seenKeys: [],
+    customWorkers: [],
+    acts: [
+      {
+        id: 'act-init-1',
+        k: 'labor',
+        no: 'CHA-2611-0008',
+        ti: { en: 'Mahmoud · Mason', ar: 'محمود · بنّاء' },
+        amt: 600,
+        st: 'ok',
+        tm: '09:12',
+        pay: 'cash',
+        stage: 'fnd',
+        tafqeetAr: arWords(600),
+        tafqeetEn: enWords(600),
+        job: 'Block work — Villa 3'
+      },
+      {
+        id: 'act-init-2',
+        k: 'receipt',
+        no: 'CHA-2611-0007',
+        ti: { en: 'Jotun Paints', ar: 'جوتن للدهانات' },
+        amt: 600,
+        vat: 78.26,
+        vatNo: '300555123400003',
+        st: 'ok',
+        tm: '08:40',
+        pay: 'card',
+        stage: 'fin'
+      }
+    ],
+    walletMoves: [
+      { id: 'wm-1', ty: 'in', ti: { en: 'Custody Top-up · Alinma', ar: 'تغذية عهدة · الإنماء' }, amt: 5000, tm: '08:05' },
+      { id: 'wm-2', ty: 'out', ti: { en: 'Mahmoud · Mason', ar: 'محمود · بنّاء' }, amt: 600, tm: '09:12' }
+    ],
+    feed: [
+      { ti: 'Villa 3 roof slab pour', dur: '0:52', st: 'fnd', progress: '+3%', materials: '2 mixer trucks · 16mm rebar · pump', safety: 'Everyone wearing helmets and boots' }
+    ]
+  };
+}
+
+let S = createDefaultState();
+let lang = 'en';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      S = Object.assign(createDefaultState(), parsed);
+      if (!Array.isArray(S.seenHashes)) S.seenHashes = [];
+      if (!Array.isArray(S.seenKeys)) S.seenKeys = [];
+      if (!Array.isArray(S.offlineQueue)) S.offlineQueue = [];
+      if (!Array.isArray(S.customWorkers)) S.customWorkers = [];
+      if (!Array.isArray(S.acts)) S.acts = createDefaultState().acts;
+      if (!Array.isArray(S.walletMoves)) S.walletMoves = createDefaultState().walletMoves;
+    }
+  } catch (_) {
+    S = createDefaultState();
+  }
+  lang = S.lang || 'en';
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+}
+
+function saveState() {
+  S.lang = lang;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(S));
+  } catch (_) {}
+}
+
+function resetTamamDemo() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (_) {}
+  S = createDefaultState();
+  lang = 'en';
+  document.documentElement.lang = 'en';
+  document.documentElement.dir = 'ltr';
+  PH.w.tab = 'home';
+  PH.w.flow = null;
+  PH.w.sheet = null;
+  saveState();
+  render('w');
+  return S;
+}
+
+Object.defineProperty(window, 'TAMAM_STATE', {
+  get: () => S,
+  configurable: true
+});
+window.resetTamamDemo = resetTamamDemo;
+
+const t = (k, v) => {
+  let s = (D[lang] && D[lang][k]) ?? D.en[k] ?? k;
+  if (v) for (const x in v) s = s.replace('{' + x + '}', v[x]);
+  return s;
+};
+const L = o => typeof o === 'string' ? o : (o && (o[lang] || o.en || '')) || '';
+const fmt = n => Math.round(Number(n) || 0).toLocaleString('en-US');
+const money = n => `<span class="num">${fmt(n)}</span> ${t('sar')}`;
+const moneyDec = n => `<span class="num">${Number(n || 0).toFixed(2)}</span> ${t('sar')}`;
+const initial = o => Array.from(L(o).replace(/^(Eng\.|م\.)\s*/, '').trim())[0] || 'K';
+const stageName = k => t(STAGES[k] || 'stage_fnd');
+const escAttr = s => String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const escHtml = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const todayDisplay = () => {
+  const d = new Date();
+  return `${String(d.getDate()).padStart(2, '0')} / ${String(d.getMonth() + 1).padStart(2, '0')} / ${d.getFullYear()}`;
+};
+const nowT = () => {
+  const d = new Date();
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+};
+
+const PH = {
+  w: { tab: 'home', flow: null, sheet: null, banner: null, actDetailId: null }
+};
+
+/* =============================== 6. CAMERA & MEDIA HELPERS =============================== */
+let activeStream = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+let vTimer = null;
+
+function stopActiveMedia() {
+  if (vTimer) { clearInterval(vTimer); vTimer = null; }
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    try { mediaRecorder.stop(); } catch (_) {}
+  }
+  mediaRecorder = null;
+  if (activeStream) {
+    try { activeStream.getTracks().forEach(tr => tr.stop()); } catch (_) {}
+    activeStream = null;
+  }
+}
+
+async function attachRearCamera(videoElId, withAudio = false) {
+  const videoEl = document.getElementById(videoElId);
+  if (!videoEl || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return null;
+  try {
+    if (!activeStream) {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } },
+        audio: withAudio
+      });
+      const currentVideoEl = document.getElementById(videoElId);
+      if (!PH.w.flow || !currentVideoEl) {
+        try { stream.getTracks().forEach(tr => tr.stop()); } catch (_) {}
+        return null;
+      }
+      activeStream = stream;
+    }
+    const targetEl = document.getElementById(videoElId);
+    if (!PH.w.flow || !targetEl) {
+      stopActiveMedia();
+      return null;
+    }
+    targetEl.srcObject = activeStream;
+    targetEl.play().catch(() => {});
+    return activeStream;
+  } catch (_) {
+    return null;
+  }
+}
+
+/* =============================== 7. RECEIPT LOGIC & DUPLICATE SHIELD =============================== */
+function computeReceiptVat(taxNo, total) {
+  const cleanTax = String(taxNo || '').trim();
+  const tot = Math.max(0, Number(total) || 0);
+  if (/^3\d{13}3$/.test(cleanTax)) {
+    return +(tot - tot / 1.15).toFixed(2);
+  }
+  return 0.00;
+}
+
+async function evaluateReceiptState(f, payloadSeed) {
+  f.vat = computeReceiptVat(f.taxNo, f.total);
+  f.validTax = /^3\d{13}3$/.test(String(f.taxNo || '').trim());
+  f.compKey = buildCompositeKey({
+    merchant: f.merchant,
+    vatNo: f.taxNo,
+    total: f.total,
+    dateStr: f.dateStr || '2026-11-16',
+    isRefund: f.isRefund
+  });
+  const seed = payloadSeed || (!f.edited && f.rawTlv) || `${f.merchant}|${f.taxNo}|${Number(f.total || 0).toFixed(2)}|${f.dateStr || '2026-11-16'}|${f.isRefund ? 'REFUND' : 'SALE'}`;
+  f.sha256 = (!payloadSeed && !f.edited && f.fileSha256) ? f.fileSha256 : await sha256Hex(seed);
+  const hashDup = S.seenHashes.includes(f.sha256);
+  const keyDup = S.seenKeys.includes(f.compKey);
+  f.isDuplicate = Boolean(f.forceDup || hashDup || keyDup);
+}
+
+async function loadReceiptPresetIntoFlow(f, idx) {
+  const preset = RECEIPTS[idx] || RECEIPTS[0];
+  f.idx = preset.idx;
+  f.merchant = L(preset.m);
+  f.merchantObj = preset.m;
+  f.taxNo = preset.vatNo;
+  f.total = preset.total;
+  f.dateStr = preset.timestamp.slice(0, 10);
+  f.stage = preset.stage || 'fnd';
+  f.rawTlv = preset.tlv;
+  f.edited = false;
+  f.fileSha256 = null;
+  f.forceDup = Boolean(preset.isDupPreset);
+  const decoded = decodeZatcaTLV(preset.tlv);
+  f.decodedTags = decoded.rawTags || {};
+  await evaluateReceiptState(f, preset.tlv);
+  if (preset.isDupPreset) {
+    if (!S.seenHashes.includes(f.sha256)) S.seenHashes.push(f.sha256);
+    if (!S.seenKeys.includes(f.compKey)) S.seenKeys.push(f.compKey);
+    f.isDuplicate = true;
+    saveState();
+  }
+}
+
+/* =============================== 8. UI RENDERING =============================== */
+function frame(inner, dark) {
+  return `<div class="phone" data-p="w" dir="${lang === 'ar' ? 'rtl' : 'ltr'}" lang="${lang}">
+    <div class="screen">
+      <div class="sb ${dark ? 'dark' : ''}">
+        <span class="num">9:41</span>
+        <div class="notch"></div>
+        <div class="r">${I('wifi', 15)}<svg width="24" height="12" viewBox="0 0 24 12"><rect x=".5" y=".5" width="20" height="11" rx="3.5" fill="none" stroke="currentColor"/><rect x="2" y="2" width="14" height="8" rx="2" fill="currentColor"/><rect x="21.5" y="4" width="2" height="4" rx="1" fill="currentColor"/></svg></div>
+      </div>
+      ${inner}
+      <div class="hi"></div>
+    </div>
+  </div>`;
+}
+
+function banner(icon, a, b) {
+  PH.w.banner = { icon, a, b };
+  render('w');
+  clearTimeout(PH.w.bt);
+  PH.w.bt = setTimeout(() => { PH.w.banner = null; render('w'); }, 3200);
+}
+
+const bannerHTML = () => PH.w.banner
+  ? `<div class="banner"><div class="ico g" style="background:rgba(255,255,255,.14);color:#fff">${I(PH.w.banner.icon)}</div><div><b>${PH.w.banner.a}</b><span>${PH.w.banner.b || ''}</span></div></div>`
+  : '';
+
+const nb = (tab, ic, lbl, badge) =>
+  `<button class="${PH.w.tab === tab ? 'on' : ''}" data-a="wtab" data-t="${tab}" data-tab="${tab}">${I(ic)}<span>${t(lbl)}</span>${badge ? `<i class="badge">${badge}</i>` : ''}</button>`;
+
+const addRow = (f, ic, c, a, b) =>
+  `<button class="row" style="width:100%;text-align:start" data-a="flow" data-f="${f}"><div class="ico ${c}">${I(ic)}</div><div class="t"><b>${t(a)}</b><span>${t(b)}</span></div><span class="mut flip">${I('chev')}</span></button>`;
+
+const todayKey = () => new Date().toISOString().slice(0, 10);
+const pendingTotal = () => S.acts.filter(a => a.st === 'pend').reduce((s, a) => s + (Number(a.amt) || 0), 0);
+const isQueued = a => S.offlineQueue.some(q => q.id === a.id);
+
+function statusText(a) {
+  if (isQueued(a)) return `<span class="stt q">${t('st_queued')}</span>`;
+  if (a.isRefund) return `<span class="stt ref">${t('st_ref')}</span>`;
+  if (a.st === 'ok') return `<span class="stt ok">${t('st_ok')}</span>`;
+  if (a.st === 'pend') return `<span class="stt pend">${t('st_pend')}</span>`;
+  return `<span class="stt ok">${t('st_done')}</span>`;
+}
+
+function actRow(a) {
+  const ic = a.k === 'receipt' ? ['receipt', a.st === 'pend' ? 'a' : 'g'] : a.k === 'labor' ? ['users', 'a'] : ['video', 'b'];
+  const sub = a.k === 'receipt' ? `${t('flt_receipt')} · ${stageName(a.stage)}` : a.k === 'labor' ? (a.no || '') : t('q_video');
+  const amtHtml = a.amt
+    ? `<span class="num" style="${a.isRefund ? 'color:var(--ok)' : ''}">${a.isRefund ? '+' : '−'}${Number(a.amt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`
+    : `<span class="num">${escHtml(a.dur || '')}</span>`;
+  return `<div class="row" style="cursor:pointer" data-a="openAct" data-id="${escAttr(a.id || '')}">
+    <div class="ico ${ic[1]}">${I(ic[0])}</div>
+    <div class="t"><b>${escHtml(L(a.ti))}</b><span>${escHtml(sub)} · <span class="num">${escHtml(a.tm)}</span></span></div>
+    <div class="amt">${amtHtml}${statusText(a)}</div>
+  </div>`;
+}
+
+function topHeader() {
+  const off = S.offline;
+  return `<div class="h">
+      <div style="display:flex;gap:11px;align-items:center">
+        <div class="av">${initial(t('wName'))}</div>
+        <div class="hello"><small>${t('gm')}</small><b>${t('wName')}</b></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="st-pill ${off ? 'off' : ''}" data-a="wtab" data-t="me" data-tab="me"><i></i>${off ? t('offline_short') : t('online')}</button>
+        <button class="lang-btn" data-a="lang" data-l="${lang === 'ar' ? 'en' : 'ar'}" aria-label="${lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'}">${lang === 'ar' ? 'EN' : 'ع'}</button>
+      </div>
+    </div>`;
+}
+
+function wHome() {
+  const acts = S.acts.slice(0, 4).map(actRow).join('') || `<div class="emp">${t('act_empty')}</div>`;
+  const offNote = S.offline
+    ? `<div class="note warn">${I('wifioff', 18)}<span style="flex:1">${S.offlineQueue.length ? t('off_note', { n: S.offlineQueue.length }) : t('off_note0')}</span>${S.offlineQueue.length ? `<button class="btn s sm" data-a="syncQueue">${t('sync_now')}</button>` : ''}</div>`
+    : '';
+  return `${topHeader()}
+    ${offNote}
+    <button class="proj" data-a="wtab" data-t="me" data-tab="me"><span><small>${t('project_lbl')}</small><b>${t('project_name')} · <span class="num">CHA-2611</span></b></span><span class="mut">${I('chevd')}</span></button>
+    <div class="hero">
+      <div class="lbl">${t('cash_hand2')} · العهدة</div>
+      <div class="big"><span class="num" id="home-wallet-bal">${Number(S.wallet).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><small>${t('sar')}</small></div>
+      <div class="stats">
+        <div class="stat"><small>${t('spent_today')}</small><b class="num" id="home-spent-today">${fmt(S.spentToday)}</b></div>
+        <div class="stat"><small>${t('awaiting')}</small><b class="num">${fmt(pendingTotal())}</b></div>
+      </div>
+      <button class="btn amber w" style="margin-top:12px" data-a="reqtop">${I('plus', 16)} ${t('req_topup')}</button>
+    </div>
+    <div class="sec"><span>${t('add_title')}</span></div>
+    <div class="quick">
+      <button data-a="flow" data-f="receipt"><div class="ico g">${I('scan', 22)}</div>${t('q_receipt')}</button>
+      <button data-a="flow" data-f="labor"><div class="ico a">${I('users', 22)}</div>${t('q_labor')}</button>
+      <button data-a="flow" data-f="video"><div class="ico b">${I('video', 22)}</div>${t('q_video')}</button>
+    </div>
+    <div class="sec"><span>${t('today')}</span><button data-a="wtab" data-t="act" data-tab="act">${t('see_all')}</button></div>
+    <div class="list">${acts}</div>`;
+}
+
+function wAct() {
+  const flt = S.actFilter || 'all';
+  const q = (PH.w.q || '').trim().toLowerCase();
+  const filtered = S.acts.filter(a => {
+    if (flt === 'pend' && a.st !== 'pend' && !isQueued(a)) return false;
+    if (flt !== 'all' && flt !== 'pend' && a.k !== flt) return false;
+    if (q && !(L(a.ti).toLowerCase().includes(q) || String(a.no || '').toLowerCase().includes(q))) return false;
+    return true;
+  });
+  const groups = {};
+  filtered.forEach(a => { const k = a.dt || todayKey(); (groups[k] = groups[k] || []).push(a); });
+  const keys = Object.keys(groups).sort().reverse();
+  const groupsHtml = keys.map(k => {
+    const items = groups[k];
+    const net = items.reduce((s, a) => s + (a.amt ? (a.isRefund ? 1 : -1) * Number(a.amt) : 0), 0);
+    return `<div class="grp-h"><span>${k === todayKey() ? t('today') : t('earlier')} · <span class="num">${k.slice(8, 10)}/${k.slice(5, 7)}</span></span><span class="num">${net < 0 ? '−' : '+'}${fmt(Math.abs(net))} ${t('sar')}</span></div>
+      <div class="list">${items.map(actRow).join('')}</div>`;
+  }).join('');
+  const chip = (k, lbl) => `<button class="chip ${flt === k ? 'sel' : ''}" data-a="actFilter" data-k="${k}" data-flt="${k}" data-filter="${k}">${t(lbl)}</button>`;
+  const offNote = S.offline
+    ? `<div class="note warn">${I('wifioff', 18)}<span style="flex:1">${S.offlineQueue.length ? t('off_note', { n: S.offlineQueue.length }) : t('off_note0')}</span></div>` : '';
+  return `<div class="h"><div class="hello"><b style="font-size:24px;color:var(--g9)">${t('my_activity')}</b></div></div>
+    ${offNote}
+    <div class="search">${I('search', 18)}<input id="act-search" class="inp" type="search" placeholder="${escAttr(t('search_ph'))}" value="${escAttr(PH.w.q || '')}" aria-label="${escAttr(t('search_ph'))}"></div>
+    <div class="chips scroll" style="margin-bottom:4px">
+      ${chip('all', 'flt_all')}${chip('pend', 'flt_pend')}${chip('receipt', 'flt_receipt')}${chip('labor', 'flt_labor')}${chip('video', 'flt_video')}
+    </div>
+    ${groupsHtml || `<div class="list"><div class="emp">${t('act_empty')}</div></div>`}`;
+}
+
+function wWallet() {
+  const lastReq = S.walletMoves.find(m => m.ty === 'req');
+  const reqAmt = PH.w.topAmt ?? 5000;
+  const moves = [
+    ...S.walletMoves.filter(m => m.ty === 'in').map(m => ({ kind: 'in', ti: L(m.ti), sub: m.tm, amt: m.amt, dt: m.dt || '' })),
+    ...S.acts.filter(a => a.amt > 0 && a.st !== 'pend').map(a => ({ kind: a.isRefund ? 'in' : 'out', ti: L(a.ti), sub: `${a.tm} · ${a.pay === 'card' ? t('p_card') : t('p_cash')}`, amt: a.amt }))
+  ];
+  const rows = moves.map(m => `<div class="row">
+      <div class="ico ${m.kind === 'in' ? 'g' : ''}" style="${m.kind === 'in' ? '' : 'background:#F0ECE2;color:#3D3B35'}">${I(m.kind === 'in' ? 'down' : 'up', 18)}</div>
+      <div class="t"><b>${escHtml(m.ti)}</b><span class="num">${escHtml(m.sub)}</span></div>
+      <div class="amt" style="color:${m.kind === 'in' ? 'var(--ok)' : 'var(--ink)'}">${m.kind === 'in' ? '+' : '−'}<span class="num">${Number(m.amt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
+    </div>`).join('');
+  const amtChip = v => `<button class="chip ${PH.w.topOther ? '' : (reqAmt === v ? 'sel' : '')}" data-a="topAmt" data-v="${v}"><span class="num">${fmt(v)}</span></button>`;
+  return `<div class="h"><div class="hello"><b style="font-size:24px;color:var(--g9)">${t('wallet_t')}</b><small>${t('project_name')} · <span class="num">CHA-2611</span></small></div></div>
+    <div class="hero">
+      <div class="lbl">${t('cash_hand2')}</div>
+      <div class="big"><span class="num" id="wallet-tab-bal">${Number(S.wallet).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span><small>${t('sar')}</small></div>
+      <div class="stats three">
+        <div class="stat"><small>${t('spent_today')}</small><b class="num">${fmt(S.spentToday)}</b></div>
+        <div class="stat"><small>${t('awaiting')}</small><b class="num">${fmt(pendingTotal())}</b></div>
+        <div class="stat"><small>${t('requested')}</small><b class="num">${lastReq ? fmt(lastReq.amt) : '0'}</b></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px" id="topup-card">
+      <b style="font-size:15px">${t('ask_office')}</b>
+      <div class="grid4" style="margin-top:10px">
+        ${amtChip(1000)}${amtChip(2500)}${amtChip(5000)}
+        <button class="chip ${PH.w.topOther ? 'sel' : ''}" data-a="topOther">${t('other')}</button>
+      </div>
+      <div style="display:${PH.w.topOther ? 'block' : 'none'};margin-top:8px">
+        <label class="lbl-f" for="topup-req-amt">${t('amount')} (${t('sar')})</label>
+        <input id="topup-req-amt" class="inp num" type="number" inputmode="numeric" value="${escAttr(reqAmt)}" min="100" step="100">
+      </div>
+      <label class="lbl-f" for="topup-reason" style="margin-top:10px">${t('reason')}</label>
+      <input id="topup-reason" class="inp" type="text" value="${escAttr(PH.w.topReason ?? t('reason_def'))}">
+      ${lastReq ? `<div class="note warn" style="margin:10px 0 0;font-size:12px">${I('clock', 16)}<span>${t('req_wait', { a: fmt(lastReq.amt), t: lastReq.tm })}</span></div>` : ''}
+      <button class="btn p w" style="margin-top:10px" data-a="topupReq">${I('send', 15)} ${t('send_req')}</button>
+    </div>
+    <div class="sec"><span>${t('money_inout')}</span></div>
+    <div class="list">${rows || `<div class="emp">${t('act_empty')}</div>`}</div>`;
+}
+
+function meScreen() {
+  const q = S.offlineQueue.length;
+  return `<div class="h"><b style="font-size:24px;color:var(--g9)">${t('me_t')}</b></div>
+    <div class="card" style="display:flex;gap:14px;align-items:center">
+      <div class="av" style="width:52px;height:52px;font-size:20px">${initial(t('wName'))}</div>
+      <div style="flex:1"><b style="font-size:16.5px">${t('wName')}</b><div class="mut sm-t">${t('role_w')} · ${t('project_name')}</div></div>
+    </div>
+
+    <div class="mh">${t('language')}</div>
+    <div class="card">
+      <div class="seg w big" role="group" aria-label="${escAttr(t('language'))}">
+        <button class="${lang === 'en' ? 'on' : ''}" data-a="lang" data-l="en">${D.en.lang_en}</button>
+        <button class="${lang === 'ar' ? 'on' : ''}" data-a="lang" data-l="ar">${D.ar.lang_ar}</button>
+      </div>
+      <div class="mut sm-t" style="margin-top:8px;text-align:center">${t('lang_hint')}</div>
+    </div>
+
+    <div class="mh">${t('acct')}</div>
+    <div class="list">
+      <div class="mrow">
+        <div class="ico a">${I('wifioff', 18)}</div>
+        <div class="t"><b>${t('work_off')}</b><span style="white-space:normal">${t('work_off_s')}</span></div>
+        <button class="sw ${S.offline ? 'on' : ''}" data-a="offline" aria-label="${escAttr(t('work_off'))}" aria-pressed="${S.offline}"></button>
+      </div>
+      <div class="mrow">
+        <div class="ico g">${I('refresh', 18)}</div>
+        <div class="t"><b>${t('send_now')}</b><span>${q ? t('queued_items', { n: q }) : t('nothing_q')}</span></div>
+        <button class="btn s sm" data-a="syncQueue" ${q ? '' : 'disabled'}>${t('send_btn')}</button>
+      </div>
+    </div>
+
+    <div class="mh">${t('app_sec')}</div>
+    <div class="list">
+      <button class="mrow" data-a="openInstall">
+        <div class="ico g">${I('download', 18)}</div>
+        <div class="t"><b>${t('install_title').replace(/^📲\s*/, '')}</b><span>${t('install_s')}</span></div>
+        <span class="mut flip">${I('chev')}</span>
+      </button>
+    </div>
+
+    <div class="mh">${t('adv')}</div>
+    <div class="list">
+      <div class="mrow">
+        <div class="ico b">${I('tool', 18)}</div>
+        <div class="t"><b>${t('dev_mode')}</b><span style="white-space:normal">${t('dev_mode_s')}</span></div>
+        <button class="sw ${S.devMode ? 'on' : ''}" data-a="devMode" aria-label="${escAttr(t('dev_mode'))}" aria-pressed="${!!S.devMode}"></button>
+      </div>
+      <div class="mrow" style="flex-wrap:wrap">
+        <label class="lbl-f" for="gemini-key-input" style="width:100%">${t('gemini_key')}</label>
+        <input id="gemini-key-input" class="inp" type="password" placeholder="AIzaSy..." value="${escAttr(S.geminiKey || '')}" style="flex:1">
+        <button class="btn s sm" style="height:40px" data-a="saveGeminiKey">${t('save_key')}</button>
+      </div>
+    </div>
+
+    <button class="btn d w" style="margin-top:14px" data-a="resetDemo">${I('refresh', 16)} ${t('reset_demo')}</button>
+    <div class="mut sm-t" style="text-align:center;margin-top:14px">${t('version')}</div>`;
+}
+
+function sheetUI() {
+  const s = PH.w.sheet;
+  if (!s) return '';
+  if (s === 'add') {
+    return `<div class="scrim" data-a="wclose"></div>
+      <div class="sheet"><div class="grab"></div><h3>${t('add_title')}</h3>
+        ${addRow('receipt', 'camera', 'g', 'q_receipt', 's_receipt')}
+        ${addRow('labor', 'users', 'a', 'q_labor', 's_labor')}
+        ${addRow('video', 'video', 'b', 'q_video', 's_video')}
+      </div>`;
+  }
+  if (s === 'install') {
+    return `<div class="scrim" data-a="wclose"></div>
+      <div class="sheet" id="install-sheet">
+        <div class="grab"></div>
+        <h3>${t('install_title')}</h3>
+        <p class="mut sm-t" style="margin-bottom:12px">${t('install_sub')}</p>
+
+        <div class="card" style="margin-bottom:10px;border:1.5px solid var(--g5)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <b>${t('ios_step_title')}</b>
+            <span class="pill g">${t('ios_rec_pill')}</span>
+          </div>
+          <div style="font-size:12px;line-height:1.6;color:var(--ink);margin-bottom:10px">
+            <div><span class="step-num">1</span> ${t('ios_s1')}</div>
+            <div style="margin-top:4px"><span class="step-num">2</span> ${t('ios_s2')}</div>
+            <div style="margin-top:4px"><span class="step-num">3</span> ${t('ios_s3')}</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <a id="dl-ios-profile" class="btn p sm" style="flex:1" href="Tamam.mobileconfig">${t('dl_profile')}</a>
+            <a id="dl-ios-ipa" class="btn s sm" style="flex:1" href="https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam-unsigned.ipa">${t('dl_ipa')}</a>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <b>${t('android_step_title')}</b>
+            <span class="pill a">${t('android_pill')}</span>
+          </div>
+          <p class="mut sm-t" style="margin-bottom:10px">${t('android_desc')}</p>
+          <a id="dl-android-apk" class="btn p sm w" href="https://github.com/ModySaggaf/tamam-demo-2/releases/latest/download/Tamam.apk">${I('download', 15)} ${t('dl_apk')}</a>
+        </div>
+
+        <button class="btn o w sm" data-a="wclose">${t('done')}</button>
+      </div>`;
+  }
+  if (s === 'actDetail') {
+    const a = S.acts.find(x => x.id === PH.w.actDetailId) || S.acts[0];
+    if (!a) return '';
+    return `<div class="scrim" data-a="wclose"></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <h3>${escHtml(L(a.ti))}</h3>
+        <div class="card">
+          ${a.no ? `<div class="kv"><span>${t('voucher')}</span><b class="num">${escHtml(a.no)}</b></div>` : ''}
+          <div class="kv"><span>${t('type_lbl')}</span><b>${escHtml(a.k.toUpperCase())}</b></div>
+          ${a.amt ? `<div class="kv"><span>${t('amount')}</span><b>${money(a.amt)}</b></div>` : ''}
+          ${a.vat !== undefined ? `<div class="kv"><span>${t('vat')}</span><b class="num">${Number(a.vat).toFixed(2)} ${t('sar')}</b></div>` : ''}
+          ${a.vatNo ? `<div class="kv"><span>${t('tax_id_lbl')}</span><b class="num">${escHtml(a.vatNo)}</b></div>` : ''}
+          ${a.sha256 ? `<div class="kv"><span>SHA-256</span><b class="num" style="font-size:10px">${escHtml(a.sha256.slice(0, 24))}…</b></div>` : ''}
+          ${a.compKey ? `<div class="kv"><span>${t('comp_key_lbl')}</span><b class="num" style="font-size:10.5px">${escHtml(a.compKey)}</b></div>` : ''}
+          ${a.tafqeetAr ? `<div class="kv"><span>${t('tafqeet_ar_lbl')}</span><b>${escHtml(a.tafqeetAr)}</b></div>` : ''}
+          ${a.tafqeetEn ? `<div class="kv"><span>${t('tafqeet_en_lbl')}</span><b>${escHtml(a.tafqeetEn)}</b></div>` : ''}
+        </div>
+        <button class="btn p w" style="margin-top:12px" data-a="wclose">${t('done')}</button>
+      </div>`;
+  }
+  return '';
+}
+
+/* =============================== 9. WORKER FLOWS (F3-F9) =============================== */
+const fhead = (title, f, steps) =>
+  `<div class="fh"><button class="ib ${f.dark ? 'd' : ''}" data-a="fclose" aria-label="Close">${I('x')}</button><span class="ti">${title}</span><span style="width:38px"></span></div>${steps ? `<div class="dots">${Array.from({ length: steps }, (_, i) => `<i class="${i <= f.step ? 'on' : ''}"></i>`).join('')}</div>` : ''}`;
+
+function fReceipt(f) {
+  if (f.step === 3) {
+    const over = !f.isRefund && f.total > 500;
+    return `<div class="flow">${fhead(t('q_receipt'), f, 3)}
+      <div class="fb" style="text-align:center">
+        <div class="okc">${I('check', 34)}</div>
+        <h2 style="font-size:21px">${t('saved')}</h2>
+        <p class="mut" style="margin:6px 0 16px">${f.isRefund ? t('refund_ok') : over ? t('sent_mgr') : t('recorded')}</p>
+        <div class="card" style="text-align:start">
+          <div class="kv"><span>${t('voucher')}</span><b class="num">${escHtml(f.no)}</b></div>
+          <div class="kv"><span>${t('merchant')}</span><b>${escHtml(f.merchant)}</b></div>
+          <div class="kv"><span>${t('tax_id_lbl')}</span><b class="num">${escHtml(f.taxNo || t('none_lbl'))}</b></div>
+          <div class="kv"><span>${t('total')}</span><b>${moneyDec(f.total)}</b></div>
+          <div class="kv"><span>${t('vat')}</span><b class="num">${Number(f.vat || 0).toFixed(2)} ${t('sar')}</b></div>
+          <div class="kv"><span>${t('stage')}</span><b>${stageName(f.stage)}</b></div>
+          <div class="kv"><span>SHA-256</span><b class="num" style="font-size:10px">${escHtml((f.sha256 || '').slice(0, 20))}…</b></div>
+        </div>
+      </div>
+      <div class="ff" style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn p w" data-a="fclose">${t('back_home')}</button>
+        <button class="btn s w sm" data-a="flow" data-f="receipt">${t('scan_another')}</button>
+      </div>
+    </div>`;
+  }
+
+  const validTax = /^3\d{13}3$/.test(String(f.taxNo || '').trim());
+  const vatVal = computeReceiptVat(f.taxNo, f.total);
+  f.vat = vatVal;
+  const over = !f.isRefund && Number(f.total || 0) > 500;
+  const qrRead = Boolean(f.rawTlv);
+
+  const devTools = S.devMode ? `
+      <div class="dev">
+        <span class="lbl-f">${I('tool', 14)} ${t('sample_rcpt_lbl')}</span>
+        <div class="chips" style="margin-bottom:8px">
+          <button class="chip ${f.idx === 0 ? 'on' : ''}" data-a="sampleRcpt" data-idx="0">1. Al-Fanar ≤500</button>
+          <button class="chip ${f.idx === 1 ? 'on' : ''}" data-a="sampleRcpt" data-idx="1">2. Readymix >500</button>
+          <button class="chip ${f.idx === 2 ? 'on' : ''}" data-a="sampleRcpt" data-idx="2">3. No-Tax (0 VAT)</button>
+          <button class="chip ${f.idx === 3 ? 'on' : ''}" data-a="sampleRcpt" data-idx="3">4. Duplicate Test</button>
+        </div>
+        <label class="lbl-f" for="zatca-b64-input">${t('tlv_lbl')}</label>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <input id="zatca-b64-input" class="inp num" type="text" value="${escAttr(f.rawTlv || '')}" placeholder="${escAttr(t('tlv_ph'))}" style="flex:1;height:40px;font-size:11.5px">
+          <button class="btn s sm" style="height:40px" data-a="decodeTlv">${t('decode_tlv')}</button>
+        </div>
+        ${f.tlvError ? `<div class="sm-t" style="color:var(--red);margin-top:4px;font-weight:600" id="tlv-error-msg">${escHtml(f.tlvError)}</div>` : ''}
+        <div class="num mut" style="font-size:10.5px;margin-top:6px">SHA-256: <span id="rcpt-hash-short">${escHtml((f.sha256 || '').slice(0, 12))}</span></div>
+      </div>` : '';
+
+  return `<div class="flow">${fhead(t('review_t'), f, 3)}
+    <div class="fb">
+      <div class="cam-box">
+        <video id="rcpt-video" autoplay playsinline muted></video>
+        <div class="paper">
+          <b id="cam-paper-merchant" style="font-size:10px">${escHtml(f.merchant || 'Al-Fanar Electrical')}</b>
+          <div class="num" id="cam-paper-tax">VAT: ${escHtml(f.taxNo || t('none_lbl'))}</div>
+          <hr>
+          <div class="ln"><span>TOTAL</span><b class="num" id="cam-paper-total">${Number(f.total || 0).toFixed(2)} SAR</b></div>
+          <div class="ln"><span>VAT 15%</span><b class="num" id="cam-paper-vat">${vatVal.toFixed(2)} SAR</b></div>
+        </div>
+        <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
+        <div class="scanline"></div>
+      </div>
+
+      <label class="btn s w" style="cursor:pointer;margin-bottom:12px">
+        ${I('camera', 18)} ${t('take_photo')}
+        <input type="file" id="rcpt-file" accept="image/*" capture="environment" style="display:none">
+      </label>
+
+      ${devTools}
+
+      <div id="dup-shield-alert" class="note bad" style="display:${f.isDuplicate ? 'flex' : 'none'};align-items:flex-start">
+        ${I('alert', 20)}
+        <div>
+          <div>${t('dup_blocked')}</div>
+          <div id="dup-shield-meta" class="num" style="font-size:10.5px;font-weight:500;margin-top:2px">${t('key_lbl')}: ${escHtml(f.compKey || '')} · SHA-256: ${escHtml((f.sha256 || '').slice(0, 16))}…</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:12px 14px">
+        <div class="rc-head">
+          <div class="rc-thumb"><i></i></div>
+          <div style="flex:1;min-width:0">
+            <span class="pill ${qrRead ? 'g' : 'a'}">${I(qrRead ? 'check' : 'alert', 12)} ${qrRead ? t('qr_ok') : t('qr_manual')}</span>
+            <div style="margin-top:6px"><label class="lbl-f" for="rcpt-merchant" style="margin:0">${t('merchant')}</label>
+            <input id="rcpt-merchant" class="inp" type="text" value="${escAttr(f.merchant || '')}" style="height:38px;font-size:15px"></div>
+          </div>
+        </div>
+        <div class="fld">
+          <label for="rcpt-taxno">${t('tax_id_lbl')}</label>
+          <input id="rcpt-taxno" class="num" type="text" inputmode="numeric" maxlength="15" placeholder="300123456700003" value="${escAttr(f.taxNo || '')}">
+        </div>
+        <div class="fld">
+          <label for="rcpt-total">${t('total')}</label>
+          <input id="rcpt-total" class="num" type="number" inputmode="decimal" step="0.01" min="0" value="${escAttr(f.total ?? 0)}">
+        </div>
+        <div class="fld">
+          <span>${t('vat')}</span>
+          <b id="rcpt-vat" class="num" style="font-size:15px;color:${validTax ? 'var(--g7)' : 'var(--muted)'}">${vatVal.toFixed(2)} ${t('sar')}</b>
+        </div>
+        <div style="margin-top:8px">
+          <span id="zatca-tax-pill" class="pill ${validTax ? 'g' : 'a'}" style="white-space:normal">${validTax ? `${I('shield', 12)} ${t('zatca_ok')}` : t('no_vat')}</span>
+        </div>
+      </div>
+
+      <div class="sec" style="margin:14px 0 7px"><span>${t('stage')}</span></div>
+      <div class="grid4">
+        ${Object.keys(STAGES).map(k => `<button class="chip ${f.stage === k ? 'sel' : ''}" data-a="stage" data-v="${k}">${stageName(k)}</button>`).join('')}
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:12px;align-items:stretch">
+        <div class="seg" style="flex:1;display:grid;grid-template-columns:1fr 1fr">
+          <button class="${f.pay === 'cash' ? 'on' : ''}" style="height:42px" data-a="pay" data-v="cash">${t('p_cash')}</button>
+          <button class="${f.pay === 'card' ? 'on' : ''}" style="height:42px" data-a="pay" data-v="card">${t('p_card')}</button>
+        </div>
+        <div class="card" style="padding:6px 10px;display:flex;align-items:center;gap:8px">
+          <b style="font-size:12.5px">${lang === 'ar' ? 'رجيع' : 'Refund'}</b>
+          <button class="sw ${f.isRefund ? 'on' : ''}" data-a="toggleRefund" aria-pressed="${f.isRefund ? 'true' : 'false'}" aria-label="${escAttr(t('refund_lbl'))}"></button>
+        </div>
+      </div>
+
+      <div id="no-dup-ok" class="note ok" style="margin-top:12px;display:${f.isDuplicate ? 'none' : 'flex'};align-items:flex-start">
+        ${I('shield', 18)}<div><b>${t('no_dup')}</b><div style="font-weight:500;font-size:12px;margin-top:2px">${t('no_dup_s', { n: S.seenHashes.length })}</div></div>
+      </div>
+    </div>
+    <div class="ff">
+      <div id="rcpt-routing-pill" class="pill ${f.isRefund ? 'b' : over ? 'a' : 'g'}" style="margin-bottom:8px;padding:8px 12px;border-radius:11px;font-size:12px;white-space:normal;display:flex;justify-content:center">
+        ${f.isRefund ? I('check', 14) : over ? I('clock', 14) : I('check', 14)}
+        <span>${f.isRefund ? t('refund_ok') : over ? t('over_limit') : t('auto_ok')}</span>
+      </div>
+      <button class="btn p w big ${f.isDuplicate ? 'dis' : ''}" data-a="subRcpt" ${f.isDuplicate ? 'disabled' : ''}>${t('submit')}</button>
+    </div>
+  </div>`;
+}
+
+function getAllWorkers() {
+  return [...DEFAULT_WORKERS, ...(S.customWorkers || [])];
+}
+
+function fLabor(f) {
+  const allW = getAllWorkers();
+  const w = allW.find(x => x.id === f.worker) || allW[0];
+  const wNameStr = w.custom ? w.name : L(w.n);
+  const wTradeStr = w.custom ? w.trade : t(w.tr);
+  const wJobStr = w.custom ? w.job : t(w.j);
+
+  if (f.step === 0) {
+    const wq = (f.wq || '').trim().toLowerCase();
+    const shown = allW.filter(x => {
+      const nm = x.custom ? x.name : L(x.n);
+      const tr = x.custom ? x.trade : t(x.tr);
+      return !wq || nm.toLowerCase().includes(wq) || tr.toLowerCase().includes(wq);
+    });
+    return `<div class="flow">${fhead(t('q_labor'), f, 4)}
+      <div class="fb">
+        <h2 style="font-size:20px;margin:2px 0 10px;letter-spacing:-.02em">${t('pick_worker')}</h2>
+        <div class="search">${I('search', 18)}<input id="worker-search" class="inp" type="search" placeholder="${escAttr(t('search_w'))}" value="${escAttr(f.wq || '')}" aria-label="${escAttr(t('search_w'))}"></div>
+        <div class="list">
+          ${shown.map(x => {
+            const nm = x.custom ? x.name : L(x.n);
+            const tr = x.custom ? x.trade : t(x.tr);
+            return `<button class="row" style="width:100%;text-align:start" data-a="pickw" data-w="${escAttr(x.id)}">
+              <div class="av">${initial(nm)}</div>
+              <div class="t"><b>${escHtml(nm)}</b><span>${escHtml(tr)}</span></div>
+              <span class="wk-rate"><span class="num">${fmt(x.amt)}</span> ${t('sar')}</span>
+              <span class="mut flip">${I('chev')}</span>
+            </button>`;
+          }).join('') || `<div class="emp">${t('act_empty')}</div>`}
+        </div>
+        ${f.showCw ? `
+        <div class="sec"><span>${t('custom_worker_t')}</span></div>
+        <div class="card">
+          <div style="margin-bottom:8px">
+            <label class="lbl-f" for="custom-worker-name">${t('cw_name')}</label>
+            <input id="custom-worker-name" class="inp" type="text" placeholder="e.g. Tariq Al-Harbi / طارق الحربي" value="${escAttr(f.cwName || '')}">
+          </div>
+          <div style="margin-bottom:8px">
+            <label class="lbl-f" for="custom-worker-trade">${t('cw_trade')}</label>
+            <input id="custom-worker-trade" class="inp" type="text" placeholder="e.g. Steel Fixer / حداد مسلح" value="${escAttr(f.cwTrade || '')}">
+          </div>
+          <div style="margin-bottom:10px">
+            <label class="lbl-f" for="custom-worker-job">${t('cw_job')}</label>
+            <input id="custom-worker-job" class="inp" type="text" placeholder="e.g. Villa 3 Tie Beams / ميد الفيلا 3" value="${escAttr(f.cwJob || '')}">
+          </div>
+          <button class="btn p w" data-a="addCustomWorker">${I('plus', 16)} ${t('add_cw')}</button>
+        </div>` : `<button class="btn o w" style="margin-top:12px" data-a="showCw">${I('plus', 16)} ${t('add_worker')}</button>`}
+      </div>
+    </div>`;
+  }
+
+  if (f.step === 1) {
+    const numAmt = Math.max(0, Number(f.amt || 0));
+    const liveAr = arWords(numAmt);
+    const liveEn = enWords(numAmt);
+    return `<div class="flow">${fhead(t('q_labor'), f, 4)}
+      <div class="fb">
+        <div class="row" style="border:0;padding:4px 0">
+          <div class="av">${initial(wNameStr)}</div>
+          <div class="t"><b>${escHtml(wNameStr)}</b><span>${escHtml(wTradeStr)} · ${escHtml(wJobStr)}</span></div>
+        </div>
+        <div class="amount">
+          <div class="mut sm-t">${t('enter_amount')}</div>
+          <div class="v"><span class="num" id="labor-amt-display">${escHtml(f.amt || '0')}</span><small>${t('sar')}</small></div>
+        </div>
+        <!-- Live Arabic & English Tafqeet on Step 1 -->
+        <div class="card" style="padding:10px 12px;margin-bottom:8px;background:var(--g1);border:1px solid var(--g5)">
+          <div id="live-tafqeet-ar" dir="rtl" style="font-weight:700;font-size:13px;color:var(--g9)">${liveAr}</div>
+          <div id="live-tafqeet-en" dir="ltr" style="font-weight:600;font-size:11.5px;color:var(--g7);margin-top:2px">${liveEn}</div>
+        </div>
+        <div class="grid4">
+          ${[200, 350, 500, 800].map(v => `<button class="chip" data-a="qa" data-v="${v}">${v}</button>`).join('')}
+        </div>
+        <div class="pad">
+          ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 'C', 0, '⌫'].map(k => `<button data-a="key" data-k="${k}">${k}</button>`).join('')}
+        </div>
+      </div>
+      <div class="ff">
+        <button class="btn p w big ${numAmt > 0 ? '' : 'dis'}" data-a="toSig" ${numAmt > 0 ? '' : 'disabled'}>${t('next')}</button>
+      </div>
+    </div>`;
+  }
+
+  if (f.step === 2) {
+    return `<div class="flow">${fhead(t('q_labor'), f, 4)}
+      <div class="fb">
+        <h2 style="font-size:21px;margin:4px 0;letter-spacing:-.02em">${t('sign_here')}</h2>
+        <p class="mut" style="margin-bottom:10px">${escHtml(wNameStr)} (${escHtml(wTradeStr)}) · <span class="num">${fmt(f.amt)}</span> ${t('sar')}</p>
+        <div class="sigbox">
+          <canvas id="sig" width="680" height="360"></canvas>
+          <div class="ph" id="sigph" style="display:${SIG.did ? 'none' : 'grid'}">${t('sign_hint')}</div>
+          <div class="base"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+          <button class="btn o sm" data-a="sigclr">${t('clear')}</button>
+          <span class="mut sm-t">${arWords(f.amt)}</span>
+        </div>
+      </div>
+      <div class="ff">
+        <button class="btn p w big ${SIG.did ? '' : 'dis'}" id="sig-issue-btn" data-a="sigok" ${SIG.did ? '' : 'disabled'}>${t('issue')}</button>
+      </div>
+    </div>`;
+  }
+
+  const tqAr = arWords(+f.amt);
+  const tqEn = enWords(+f.amt);
+  return `<div class="flow">${fhead(t('q_labor'), f, 4)}
+    <div class="fb">
+      <div style="text-align:center"><div class="okc" style="width:52px;height:52px">${I('check', 26)}</div></div>
+      <div class="voucher">
+        <div style="display:flex;justify-content:space-between">
+          <span class="no num" id="voucher-no-display">${escHtml(f.no)}</span>
+          <span style="font-size:11px;opacity:.75" class="num">${todayDisplay()}</span>
+        </div>
+        <div style="margin-top:10px;font-size:11.5px;opacity:.75">${t('paid_to')}</div>
+        <div style="font-size:18px;font-weight:700">${escHtml(wNameStr)} · ${escHtml(wTradeStr)}</div>
+        <div style="margin-top:8px;font-size:11.5px;opacity:.75">${t('amount')}</div>
+        <div style="font-size:28px;font-weight:800;letter-spacing:-.02em;color:var(--amber)">${money(f.amt)}</div>
+        <div class="tq" id="voucher-tafqeet">
+          <div dir="rtl">${tqAr}</div>
+          <div dir="ltr" style="font-size:12px;opacity:.88;margin-top:3px">${tqEn}</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:10px">
+          <div style="font-size:11.5px;opacity:.8;max-width:62%">${t('job')}:<br>${escHtml(wJobStr)}</div>
+          ${f.sig ? `<img src="${f.sig}" style="height:44px;background:rgba(255,255,255,.9);border-radius:8px;padding:2px 6px" alt="Signature">` : ''}
+        </div>
+      </div>
+    </div>
+    <div class="ff" style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;gap:8px">
+        <a id="voucher-dl-btn" class="btn p" style="flex:1" data-a="dlVoucherPng" download="${escAttr(f.no)}.png" href="${f.voucherPngUrl || '#'}">${I('download', 16)} ${t('dl_png')}</a>
+        <button class="btn s" style="flex:1" data-a="shareVoucherPng">${I('send', 16)} ${t('share')}</button>
+      </div>
+      <button class="btn o w sm" data-a="fclose">${t('back_home')}</button>
+    </div>
+  </div>`;
+}
+
+function fVideo(f) {
+  if (f.step === 0 || f.step === 1) {
+    return `<div class="flow dark">${fhead(t('q_video'), f)}
+      <div class="fb" style="display:flex;flex-direction:column">
+        <div class="cam-box" style="flex:1;min-height:260px;background:linear-gradient(180deg,#3d5a4c,#1b2a23 60%,#4d4231)">
+          <svg viewBox="0 0 300 400" style="position:absolute;inset:0;width:100%;height:100%;opacity:.85" preserveAspectRatio="xMidYMid slice">
+            <rect y="300" width="300" height="100" fill="#5b4d38"/>
+            <rect x="40" y="120" width="220" height="180" fill="#8a8f8c"/>
+            <g stroke="#5a5f5c" stroke-width="3"><path d="M40 160h220M40 200h220M40 240h220M100 120v180M170 120v180"/></g>
+            <rect x="20" y="90" width="260" height="30" fill="#a6aaa7"/>
+            <rect x="215" y="40" width="10" height="260" fill="#E9A23B"/>
+            <path d="M220 44l-90 26" stroke="#E9A23B" stroke-width="6"/>
+          </svg>
+          <video id="site-video-preview" autoplay playsinline muted style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+          <div style="position:absolute;top:14px;inset-inline-start:14px;background:rgba(0,0,0,.65);padding:6px 12px;border-radius:20px;display:flex;gap:8px;align-items:center;font-weight:700;z-index:5">
+            <i class="rec-dot"></i>
+            <span class="num" id="vt">0:${String(f.sec || 0).padStart(2, '0')}</span>
+          </div>
+          <div style="position:absolute;bottom:14px;left:12px;right:12px;text-align:center;font-size:12px;background:rgba(0,0,0,.45);padding:6px 10px;border-radius:10px">${t('rec_hint')}</div>
+        </div>
+
+        <div style="display:flex;gap:8px;justify-content:center;align-items:center;margin-top:8px">
+          <button class="btn ${f.step === 0 ? 'p' : 'o'} sm" data-a="vstart">${t('rec_tap')}</button>
+          <button class="btn ${f.step === 1 ? 'd' : 's'} sm" data-a="vstop">${t('rec_stop')}</button>
+          <label class="btn o sm" style="cursor:pointer;color:#fff;border-color:rgba(255,255,255,.3)">
+            ${t('upload_video')}
+            <input type="file" id="video-file" accept="video/*" capture="environment" style="display:none">
+          </label>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  return `<div class="flow">${fhead(t('ai_report'), f)}
+    <div class="fb">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="pill b">${I('spark', 12)} Tamam Site Vision AI</span>
+          <span class="mut sm-t num">0:${String(Math.max(1, f.sec || 8)).padStart(2, '0')}</span>
+        </div>
+        <p style="margin:12px 0;line-height:1.6;font-weight:500">${f.aiSummary || t('ai_sum')}</p>
+        <div class="kv"><span>${t('detected')}</span><b id="ai-stage">${f.aiStage || t('stage_fnd')}</b></div>
+        <div class="kv"><span>${t('progress')}</span><b id="ai-progress" style="color:var(--g7)">${f.aiProgress || '+3%'}</b></div>
+        <div class="kv"><span>${t('materials')}</span><b id="ai-materials" style="text-align:end;max-width:62%">${f.aiMaterials || t('mat_list')}</b></div>
+        <div class="kv"><span>${t('safety')}</span><b id="ai-safety" style="color:var(--g7);text-align:end;max-width:62%">${I('check', 13)} ${f.aiSafety || t('all_safe')}</b></div>
+      </div>
+    </div>
+    <div class="ff"><button class="btn p w big" data-a="subVid">${t('post_report')}</button></div>
+  </div>`;
+}
+
+function flowUI() {
+  const f = PH.w.flow;
+  if (f.type === 'receipt') return fReceipt(f);
+  if (f.type === 'labor') return fLabor(f);
+  return fVideo(f);
+}
+
+function workerUI() {
+  const w = PH.w;
+  const nav = `<nav class="nav">
+    ${nb('home', 'home', 't_home')}
+    ${nb('act', 'list', 't_act')}
+    <button class="fab" data-a="wsheet" aria-label="add">${I('plus', 26)}</button>
+    ${nb('wallet', 'wallet', 't_wallet')}
+    ${nb('me', 'user', 't_me')}
+  </nav>`;
+  let main = '';
+  if (w.tab === 'home') main = wHome();
+  else if (w.tab === 'act') main = wAct();
+  else if (w.tab === 'wallet') main = wWallet();
+  else main = meScreen();
+  if (w.flow) return frame(`${bannerHTML()}${flowUI()}${sheetUI()}`, w.flow.dark);
+  return frame(`${bannerHTML()}<div class="body">${main}</div>${nav}${sheetUI()}`, false);
+}
+
+function render() {
+  const host = document.getElementById('pw');
+  if (!host) return;
+  const body = host.querySelector('.body');
+  const sc = body ? body.scrollTop : 0;
+  host.innerHTML = workerUI();
+  const nbEl = host.querySelector('.body');
+  if (nbEl && !PH.w.resetScroll) nbEl.scrollTop = sc;
+  PH.w.resetScroll = false;
+  afterRender(host);
+}
+
+/* =============================== 10. ACTIONS (data-a) =============================== */
+const SIG = { did: false, strokes: [] };
+window._lastSigStrokes = [];
+
+const A = {
+  wtab(p, d) {
+    stopActiveMedia();
+    PH.w.tab = d.t || d.tab || 'home';
+    PH.w.flow = null;
+    PH.w.sheet = null;
+    PH.w.resetScroll = true;
+    render();
+  },
+  tab(p, d) { A.wtab(p, d); },
+  wsheet() { PH.w.sheet = 'add'; render(); },
+  wclose() { PH.w.sheet = null; render(); },
+  openInstall() { PH.w.sheet = 'install'; render(); },
+  openAct(p, d) { PH.w.actDetailId = d.id; PH.w.sheet = 'actDetail'; render(); },
+  actFilter(p, d) { S.actFilter = d.k || d.flt || d.filter || 'all'; saveState(); render(); },
+  showCw() { if (PH.w.flow) { PH.w.flow.showCw = true; render(); } },
+  topAmt(p, d) { PH.w.topAmt = Number(d.v) || 5000; PH.w.topOther = false; render(); },
+  topOther() { PH.w.topOther = true; render(); const i = document.getElementById('topup-req-amt'); if (i) { i.focus(); i.select(); } },
+  devMode() { S.devMode = !S.devMode; saveState(); render(); },
+
+  async flow(p, d) {
+    stopActiveMedia();
+    PH.w.sheet = null;
+    const type = d.f || 'receipt';
+    const f = {
+      type,
+      step: 0,
+      stage: 'fnd',
+      pay: 'cash',
+      isRefund: false,
+      amt: '350',
+      worker: 'plumber',
+      sec: 0,
+      dark: type === 'video'
+    };
+    if (type === 'receipt') {
+      const idx = S.rcIdx % 3;
+      await loadReceiptPresetIntoFlow(f, idx);
+    }
+    PH.w.flow = f;
+    render();
+    if (type === 'receipt') attachRearCamera('rcpt-video', false);
+    if (type === 'video') attachRearCamera('site-video-preview', true);
+  },
+  wflow(p, d) { A.flow(p, d); },
+
+  fclose() {
+    stopActiveMedia();
+    PH.w.flow = null;
+    render();
+  },
+
+  async sampleRcpt(p, d) {
+    const f = PH.w.flow;
+    if (!f || f.type !== 'receipt') return;
+    const idx = parseInt(d.idx || '0', 10);
+    f.tlvError = null;
+    await loadReceiptPresetIntoFlow(f, idx);
+    render();
+  },
+
+  async shoot() {
+    const f = PH.w.flow;
+    if (!f || f.type !== 'receipt') return;
+    f.tlvError = null;
+    await evaluateReceiptState(f, f.rawTlv);
+    render();
+  },
+
+  async decodeTlv() {
+    const f = PH.w.flow;
+    if (!f || f.type !== 'receipt') return;
+    const inp = document.getElementById('zatca-b64-input');
+    const b64 = inp ? inp.value.trim() : (f.rawTlv || '');
+    f.rawTlv = b64;
+    const res = decodeZatcaTLV(b64);
+    if (!res.valid) {
+      f.tlvError = res.error || 'Invalid ZATCA TLV Base64';
+      render();
+      return;
+    }
+    f.tlvError = null;
+    f.merchant = res.seller || f.merchant;
+    f.taxNo = res.vatNo || '';
+    f.total = res.total;
+    f.dateStr = (res.timestamp || '2026-11-16').slice(0, 10);
+    f.forceDup = false;
+    f.edited = false;
+    f.fileSha256 = null;
+    await evaluateReceiptState(f, b64);
+    render();
+  },
+
+  stage(p, d) {
+    const f = PH.w.flow;
+    if (!f) return;
+    f.stage = d.v || 'fnd';
+    render();
+  },
+  pay(p, d) {
+    const f = PH.w.flow;
+    if (!f) return;
+    f.pay = d.v || 'cash';
+    render();
+  },
+  fset(p, d) {
+    const f = PH.w.flow;
+    if (!f) return;
+    f[d.k] = d.v;
+    render();
+  },
+  async toggleRefund() {
+    const f = PH.w.flow;
+    if (!f || f.type !== 'receipt') return;
+    f.isRefund = !f.isRefund;
+    f.edited = true;
+    await evaluateReceiptState(f);
+    render();
+  },
+
+  async subRcpt() {
+    const f = PH.w.flow;
+    if (!f || f.type !== 'receipt') return;
+    await evaluateReceiptState(f);
+    if (f.isDuplicate) {
+      render();
+      return;
+    }
+    const total = Math.max(0, +(Number(f.total) || 0).toFixed(2));
+    const vat = computeReceiptVat(f.taxNo, total);
+    const over = !f.isRefund && total > 500;
+    const vno = 'CHA-2611-' + String(S.vno++).padStart(4, '0');
+    f.no = vno;
+    f.total = total;
+    f.vat = vat;
+
+    S.seenHashes.push(f.sha256);
+    S.seenKeys.push(f.compKey);
+    S.rcIdx++;
+
+    const actItem = {
+      id: 'act-' + Date.now(),
+      k: 'receipt',
+      no: vno,
+      ti: { en: f.merchant, ar: f.merchant },
+      amt: total,
+      vat,
+      vatNo: f.taxNo || '',
+      st: f.isRefund ? 'ok' : (over ? 'pend' : 'ok'),
+      isRefund: Boolean(f.isRefund),
+      pay: f.pay,
+      stage: f.stage,
+      sha256: f.sha256,
+      compKey: f.compKey,
+      dt: todayKey(),
+      tm: nowT()
+    };
+    S.acts.unshift(actItem);
+    if (S.offline) S.offlineQueue.push(actItem);
+
+    if (f.isRefund) {
+      if (f.pay === 'cash') S.wallet = +(S.wallet + total).toFixed(2);
+      S.spentToday = Math.max(0, +(S.spentToday - total).toFixed(2));
+    } else {
+      if (!over && f.pay === 'cash') S.wallet = +(S.wallet - total).toFixed(2);
+      if (!over) S.spentToday = +(S.spentToday + total).toFixed(2);
+    }
+
+    saveState();
+    f.step = 3;
+    stopActiveMedia();
+    render();
+  },
+
+  pickw(p, d) {
+    const f = PH.w.flow;
+    if (!f) return;
+    f.worker = d.w;
+    const w = getAllWorkers().find(x => x.id === d.w);
+    f.amt = String(w ? w.amt : 350);
+    f.step = 1;
+    render();
+  },
+
+  addCustomWorker() {
+    const f = PH.w.flow;
+    if (!f) return;
+    const nameEl = document.getElementById('custom-worker-name');
+    const tradeEl = document.getElementById('custom-worker-trade');
+    const jobEl = document.getElementById('custom-worker-job');
+    const name = (nameEl ? nameEl.value.trim() : f.cwName) || 'Custom Worker';
+    const trade = (tradeEl ? tradeEl.value.trim() : f.cwTrade) || 'Technician';
+    const job = (jobEl ? jobEl.value.trim() : f.cwJob) || 'Site construction work';
+    const id = 'cw-' + Date.now();
+    const cw = { id, custom: true, name, trade, job, amt: 400 };
+    S.customWorkers.push(cw);
+    saveState();
+    f.worker = id;
+    f.amt = '400';
+    f.step = 1;
+    render();
+  },
+
+  key(p, d) {
+    const f = PH.w.flow;
+    if (!f) return;
+    let a = String(f.amt || '');
+    if (d.k === 'C') a = '';
+    else if (d.k === '⌫') a = a.slice(0, -1);
+    else if (a.length < 7) a = (a + d.k).replace(/^0+/, '');
+    f.amt = a || '0';
+    render();
+  },
+
+  qa(p, d) {
+    const f = PH.w.flow;
+    if (!f) return;
+    f.amt = String(d.v || '350');
+    render();
+  },
+
+  toSig() {
+    const f = PH.w.flow;
+    if (!f || !(+f.amt > 0)) return;
+    SIG.did = false;
+    SIG.strokes = [];
+    window._lastSigStrokes = [];
+    f.step = 2;
+    render();
+  },
+  fstep() { A.toSig(); },
+
+  sigclr() {
+    const c = document.getElementById('sig');
+    if (c) {
+      c.getContext('2d').clearRect(0, 0, c.width, c.height);
+    }
+    SIG.did = false;
+    SIG.strokes = [];
+    window._lastSigStrokes = [];
+    const ph = document.getElementById('sigph');
+    if (ph) ph.style.display = 'grid';
+    const btn = document.getElementById('sig-issue-btn');
+    if (btn) {
+      btn.classList.add('dis');
+      btn.setAttribute('disabled', 'disabled');
+    }
+  },
+
+  sigok() {
+    const f = PH.w.flow;
+    if (!f || !SIG.did) return;
+    const c = document.getElementById('sig');
+    f.sig = c ? c.toDataURL('image/png') : '';
+    const vno = 'CHA-2611-' + String(S.vno++).padStart(4, '0');
+    f.no = vno;
+    const w = getAllWorkers().find(x => x.id === f.worker) || DEFAULT_WORKERS[0];
+    const wNameStr = w.custom ? w.name : L(w.n);
+    const wTradeStr = w.custom ? w.trade : t(w.tr);
+    const wJobStr = w.custom ? w.job : t(w.j);
+    const amt = Math.max(0, Number(f.amt) || 0);
+
+    f.voucherPngUrl = generateVoucherPng({
+      no: vno,
+      workerName: wNameStr,
+      trade: wTradeStr,
+      job: wJobStr,
+      amt,
+      sigStrokes: SIG.strokes
+    });
+
+    const actItem = {
+      id: 'act-' + Date.now(),
+      k: 'labor',
+      no: vno,
+      ti: {
+        en: w.custom ? `${w.name} · ${w.trade}` : `${w.n.en} · ${D.en[w.tr]}`,
+        ar: w.custom ? `${w.name} · ${w.trade}` : `${w.n.ar} · ${D.ar[w.tr]}`
+      },
+      amt,
+      st: 'ok',
+      pay: 'cash',
+      dt: todayKey(),
+      tm: nowT(),
+      tafqeetAr: arWords(amt),
+      tafqeetEn: enWords(amt),
+      job: wJobStr,
+      voucherPngUrl: f.voucherPngUrl
+    };
+    S.acts.unshift(actItem);
+    if (S.offline) S.offlineQueue.push(actItem);
+    S.wallet = +(S.wallet - amt).toFixed(2);
+    S.spentToday = +(S.spentToday + amt).toFixed(2);
+    saveState();
+
+    f.step = 3;
+    render();
+  },
+  issue() { A.sigok(); },
+
+  dlVoucherPng() {
+    const f = PH.w.flow;
+    if (!f) return;
+    if (!f.voucherPngUrl) {
+      f.voucherPngUrl = generateVoucherPng({ no: f.no, amt: f.amt });
+    }
+    const link = document.createElement('a');
+    link.download = `${f.no || 'CHA-2611-0009'}.png`;
+    link.href = f.voucherPngUrl;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  },
+
+  async shareVoucherPng() {
+    const f = PH.w.flow;
+    if (!f) return;
+    const dataUrl = f.voucherPngUrl || generateVoucherPng({ no: f.no, amt: f.amt });
+    if (navigator.share) {
+      try {
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], `${f.no || 'voucher'}.png`, { type: 'image/png' });
+        await navigator.share({ title: `Tamam Voucher ${f.no}`, files: [file] });
+        return;
+      } catch (_) {}
+    }
+    A.dlVoucherPng();
+  },
+
+  vstart() {
+    const f = PH.w.flow;
+    if (!f || f.type !== 'video') return;
+    f.step = 1;
+    f.sec = Math.max(1, f.sec || 0);
+    render();
+    attachRearCamera('site-video-preview', true).then(stream => {
+      if (!stream || !PH.w.flow || PH.w.flow !== f || f.step !== 1) {
+        if (stream) try { stream.getTracks().forEach(tr => tr.stop()); } catch (_) {}
+        return;
+      }
+      if (typeof MediaRecorder !== 'undefined') {
+        try {
+          recordedChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
+          mediaRecorder.start();
+        } catch (_) {}
+      }
+    });
+    clearInterval(vTimer);
+    vTimer = setInterval(() => {
+      f.sec++;
+      const e = document.getElementById('vt');
+      if (e) e.textContent = '0:' + String(f.sec).padStart(2, '0');
+    }, 500);
+  },
+
+  vstop() {
+    const f = PH.w.flow;
+    if (!f || f.type !== 'video') return;
+    stopActiveMedia();
+    f.sec = Math.max(2, f.sec || 8);
+    f.step = 3;
+    f.dark = false;
+    f.aiStage = t('stage_fnd');
+    f.aiProgress = '+3%';
+    f.aiMaterials = t('mat_list');
+    f.aiSafety = t('all_safe');
+    f.aiSummary = t('ai_sum');
+    render();
+    tryGeminiVisionForVideo(f);
+  },
+
+  subVid() {
+    const f = PH.w.flow;
+    const dur = '0:' + String(Math.max(2, (f && f.sec) || 8)).padStart(2, '0');
+    const actItem = {
+      id: 'act-' + Date.now(),
+      k: 'video',
+      ti: { en: 'Villa 3 roof slab (' + dur + ')', ar: 'سقف الفيلا 3 (' + dur + ')' },
+      amt: 0,
+      st: 'done',
+      dt: todayKey(),
+      tm: nowT(),
+      stage: 'fnd',
+      dur
+    };
+    S.acts.unshift(actItem);
+    if (S.offline) S.offlineQueue.push(actItem);
+    S.progressBoost = (S.progressBoost || 0) + 3;
+    S.feed.unshift({
+      ti: 'Villa 3 roof slab pour',
+      dur,
+      st: 'fnd',
+      progress: '+3%',
+      materials: t('mat_list'),
+      safety: t('all_safe')
+    });
+    saveState();
+    A.fclose();
+  },
+
+  topupReq() {
+    const inp = document.getElementById('topup-req-amt');
+    const rsn = document.getElementById('topup-reason');
+    const raw = PH.w.topOther && inp ? Number(inp.value) : (PH.w.topAmt ?? (inp ? Number(inp.value) : 5000));
+    const reqAmt = Math.max(100, raw || 5000);
+    PH.w.topReason = rsn ? rsn.value : PH.w.topReason;
+    S.walletMoves.unshift({
+      id: 'wm-' + Date.now(),
+      ty: 'req',
+      ti: { en: `Top-up Requested (${fmt(reqAmt)} SAR)`, ar: `طلب تغذية عهدة (${fmt(reqAmt)} ر.س)` },
+      amt: reqAmt,
+      dt: todayKey(),
+      tm: nowT()
+    });
+    saveState();
+    banner('send', t('sent'), `${fmt(reqAmt)} ${t('sar')}`);
+  },
+  reqtop() { A.wtab('w', { t: 'wallet' }); },
+
+  lang(p, d) {
+    lang = d.l === 'ar' ? 'ar' : 'en';
+    S.lang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    saveState();
+    render();
+  },
+
+  offline() {
+    S.offline = !S.offline;
+    S.autoOff = false;
+    if (!S.offline && S.offlineQueue.length > 0) {
+      S.offlineQueue = [];
+    }
+    saveState();
+    banner(S.offline ? 'wifi' : 'check', S.offline ? t('offline') : t('synced'), '');
+  },
+
+  syncQueue() {
+    const count = S.offlineQueue.length;
+    S.offlineQueue = [];
+    S.offline = false;
+    saveState();
+    banner('check', t('synced'), t('items_synced', { n: count }));
+  },
+
+  saveGeminiKey() {
+    const inp = document.getElementById('gemini-key-input');
+    S.geminiKey = inp ? inp.value.trim() : '';
+    saveState();
+    banner('check', t('key_saved'), '');
+  },
+
+  resetDemo() {
+    resetTamamDemo();
+    banner('refresh', t('reset_done'), '');
+  }
+};
+
+async function tryGeminiVisionForVideo(f) {
+  const key = (S.geminiKey || '').trim();
+  if (S.offline || key.length < 30 || !/^AIza[0-9A-Za-z_-]{26,}$/.test(key)) return;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3000);
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: ctrl.signal,
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: `Summarize a Saudi villa construction site video (${f.sec}s) in JSON with keys stage, progress, materials, safety, summary in ${lang === 'ar' ? 'Arabic' : 'English'}.`
+          }]
+        }],
+        generationConfig: { responseMimeType: 'application/json' }
+      })
+    });
+    clearTimeout(timer);
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const txt = data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+    if (!txt) return;
+    const parsed = JSON.parse(txt);
+    if (PH.w.flow === f && f.step === 3) {
+      if (parsed.stage) f.aiStage = String(parsed.stage);
+      if (parsed.progress) f.aiProgress = String(parsed.progress);
+      if (parsed.materials) f.aiMaterials = String(parsed.materials);
+      if (parsed.safety) f.aiSafety = String(parsed.safety);
+      if (parsed.summary) f.aiSummary = String(parsed.summary);
+      render();
+    }
+  } catch (_) {}
+}
+
+async function tryGeminiVisionForReceipt(f, file) {
+  const key = (S.geminiKey || '').trim();
+  if (S.offline || !file || key.length < 30 || !/^AIza[0-9A-Za-z_-]{26,}$/.test(key)) return;
+  try {
+    const buf = await file.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    const b64 = btoa(bin);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3500);
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: ctrl.signal,
+      body: JSON.stringify({
+        contents: [{
+          parts: [
+            { text: 'Extract Saudi receipt JSON: {"merchant": string, "taxNo": string, "total": number}.' },
+            { inlineData: { mimeType: file.type || 'image/jpeg', data: b64 } }
+          ]
+        }],
+        generationConfig: { responseMimeType: 'application/json' }
+      })
+    });
+    clearTimeout(timer);
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const txt = data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+    if (!txt) return;
+    const parsed = JSON.parse(txt);
+    if (PH.w.flow === f) {
+      if (parsed.merchant) f.merchant = String(parsed.merchant);
+      if (parsed.taxNo) f.taxNo = String(parsed.taxNo);
+      if (parsed.total !== undefined && !isNaN(Number(parsed.total))) f.total = Number(parsed.total);
+      await evaluateReceiptState(f);
+      render();
+    }
+  } catch (_) {}
+}
+
+/* =============================== 11. DOM EVENTS & LIVE INPUT BINDINGS =============================== */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-a]');
+  if (!el) return;
+  const act = el.dataset.a;
+  if (act === 'dlVoucherPng' && el.tagName === 'A' && el.getAttribute('href') && el.getAttribute('href').startsWith('data:image/png')) {
+    return;
+  }
+  if (A[act]) {
+    e.preventDefault();
+    A[act]('w', el.dataset, el);
+  }
+});
+
+// Live input handlers for Receipt Review & Custom Worker fields (without losing focus!)
+document.addEventListener('input', async e => {
+  const tEl = e.target;
+  if (tEl.id === 'act-search' || tEl.id === 'worker-search') {
+    if (tEl.id === 'act-search') PH.w.q = tEl.value;
+    else if (PH.w.flow) PH.w.flow.wq = tEl.value;
+    render();
+    const again = document.getElementById(tEl.id);
+    if (again) { again.focus(); const n = again.value.length; try { again.setSelectionRange(n, n); } catch (_) {} }
+    return;
+  }
+  if (tEl.id === 'topup-reason') { PH.w.topReason = tEl.value; return; }
+  if (tEl.id === 'topup-req-amt') { PH.w.topAmt = Number(tEl.value) || 0; return; }
+  const f = PH.w.flow;
+  if (!f) return;
+
+  if (f.type === 'receipt' && (tEl.id === 'rcpt-merchant' || tEl.id === 'rcpt-taxno' || tEl.id === 'rcpt-total' || tEl.id === 'zatca-b64-input')) {
+    if (tEl.id === 'rcpt-merchant') { f.merchant = tEl.value; f.edited = true; f.fileSha256 = null; }
+    if (tEl.id === 'rcpt-taxno') { f.taxNo = tEl.value.trim(); f.edited = true; f.fileSha256 = null; }
+    if (tEl.id === 'rcpt-total') { f.total = parseFloat(tEl.value || '0') || 0; f.edited = true; f.fileSha256 = null; }
+    if (tEl.id === 'zatca-b64-input') { f.rawTlv = tEl.value.trim(); f.edited = false; f.fileSha256 = null; }
+    f.forceDup = false;
+    await evaluateReceiptState(f);
+
+    const vatEl = document.getElementById('rcpt-vat');
+    if (vatEl) {
+      vatEl.textContent = `${f.vat.toFixed(2)} ${t('sar')}`;
+      vatEl.style.color = f.validTax ? 'var(--g7)' : 'var(--muted)';
+    }
+    const taxPill = document.getElementById('zatca-tax-pill');
+    if (taxPill) {
+      taxPill.className = `pill ${f.validTax ? 'g' : 'a'}`;
+      taxPill.innerHTML = f.validTax ? `${I('shield', 12)} ${t('zatca_ok')}` : t('no_vat');
+    }
+    const dupAlert = document.getElementById('dup-shield-alert');
+    if (dupAlert) dupAlert.style.display = f.isDuplicate ? 'flex' : 'none';
+    const noDup = document.getElementById('no-dup-ok');
+    if (noDup) noDup.style.display = f.isDuplicate ? 'none' : 'flex';
+    const dupMeta = document.getElementById('dup-shield-meta');
+    if (dupMeta) dupMeta.textContent = `${t('key_lbl')}: ${f.compKey || ''} · SHA-256: ${(f.sha256 || '').slice(0, 16)}…`;
+    const hashShort = document.getElementById('rcpt-hash-short');
+    if (hashShort) hashShort.textContent = (f.sha256 || '').slice(0, 12);
+    const camM = document.getElementById('cam-paper-merchant');
+    if (camM) camM.textContent = f.merchant || 'Al-Fanar Electrical';
+    const camT = document.getElementById('cam-paper-tax');
+    if (camT) camT.textContent = `VAT: ${f.taxNo || t('none_lbl')}`;
+    const camTot = document.getElementById('cam-paper-total');
+    if (camTot) camTot.textContent = `${Number(f.total || 0).toFixed(2)} SAR`;
+    const camVat = document.getElementById('cam-paper-vat');
+    if (camVat) camVat.textContent = `${f.vat.toFixed(2)} SAR`;
+
+    const subBtn = document.querySelector('[data-a="subRcpt"]');
+    if (subBtn) {
+      subBtn.classList.toggle('dis', f.isDuplicate);
+      if (f.isDuplicate) subBtn.setAttribute('disabled', 'disabled');
+      else subBtn.removeAttribute('disabled');
+    }
+    const over = !f.isRefund && Number(f.total || 0) > 500;
+    const routePill = document.getElementById('rcpt-routing-pill');
+    if (routePill) {
+      routePill.className = `pill ${f.isRefund ? 'b' : over ? 'a' : 'g'}`;
+      routePill.innerHTML = `${f.isRefund ? I('check', 14) : over ? I('clock', 14) : I('check', 14)} <span>${f.isRefund ? t('refund_ok') : over ? t('over_limit') : t('auto_ok')}</span>`;
+    }
+  }
+
+  if (f.type === 'labor') {
+    if (tEl.id === 'custom-worker-name') f.cwName = tEl.value;
+    if (tEl.id === 'custom-worker-trade') f.cwTrade = tEl.value;
+    if (tEl.id === 'custom-worker-job') f.cwJob = tEl.value;
+  }
+});
+
+// File upload handlers for Receipt Photo (#rcpt-file) and Site Video (#video-file)
+document.addEventListener('change', async e => {
+  const tEl = e.target;
+  const f = PH.w.flow;
+  if (!f) return;
+
+  if (tEl.id === 'rcpt-file' && tEl.files && tEl.files[0]) {
+    const file = tEl.files[0];
+    const hash = await sha256Hex(file);
+    f.forceDup = false;
+    f.edited = false;
+    f.tlvError = null;
+    f.rawTlv = '';
+    f.fileSha256 = hash;
+    f.sha256 = hash;
+    if ('BarcodeDetector' in window) {
+      try {
+        const bmp = await createImageBitmap(file);
+        const det = new BarcodeDetector({ formats: ['qr_code'] });
+        const codes = await det.detect(bmp);
+        if (codes && codes.length > 0 && codes[0].rawValue) {
+          f.rawTlv = codes[0].rawValue;
+          const dec = decodeZatcaTLV(f.rawTlv);
+          if (dec.valid) {
+            f.merchant = dec.seller || f.merchant;
+            f.taxNo = dec.vatNo || '';
+            f.total = dec.total;
+            if (dec.timestamp) f.dateStr = dec.timestamp.slice(0, 10);
+          }
+        }
+      } catch (_) {}
+    }
+    await evaluateReceiptState(f);
+    render();
+    tryGeminiVisionForReceipt(f, file);
+  }
+
+  if (tEl.id === 'video-file' && tEl.files && tEl.files[0]) {
+    A.vstop();
+  }
+});
+
+// Real network detection: go offline automatically when the phone loses signal, send saved items when it returns
+window.addEventListener('offline', () => {
+  if (!S.offline) { S.offline = true; S.autoOff = true; saveState(); render(); }
+});
+window.addEventListener('online', () => {
+  if (S.offline && S.autoOff) { S.autoOff = false; A.syncQueue(); }
+});
+
+/* =============================== 12. SIGNATURE CANVAS BINDING =============================== */
+function afterRender(host) {
+  const c = host.querySelector('#sig');
+  if (!c) return;
+  const rect = c.getBoundingClientRect();
+  const w = Math.max(300, Math.round(rect.width || 340));
+  const h = Math.max(150, Math.round(rect.height || 180));
+  c.width = w * 2;
+  c.height = h * 2;
+  const ctx = c.getContext('2d');
+  ctx.scale(2, 2);
+  ctx.lineWidth = 2.6;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#0F2219';
+
+  // Redraw existing strokes if any
+  if (SIG.strokes.length > 0) {
+    for (const s of SIG.strokes) {
+      if (!s.length) continue;
+      ctx.beginPath();
+      ctx.moveTo(s[0][0], s[0][1]);
+      for (let i = 1; i < s.length; i++) ctx.lineTo(s[i][0], s[i][1]);
+      ctx.stroke();
+    }
+  }
+
+  let down = false;
+  let currentStroke = [];
+  const getPos = ev => {
+    const b = c.getBoundingClientRect();
+    const clientX = ev.touches && ev.touches[0] ? ev.touches[0].clientX : ev.clientX;
+    const clientY = ev.touches && ev.touches[0] ? ev.touches[0].clientY : ev.clientY;
+    return [clientX - b.left, clientY - b.top];
+  };
+  const markSigned = () => {
+    if (!SIG.did) {
+      SIG.did = true;
+      const ph = host.querySelector('#sigph');
+      if (ph) ph.style.display = 'none';
+      const btn = host.querySelector('#sig-issue-btn');
+      if (btn) {
+        btn.classList.remove('dis');
+        btn.removeAttribute('disabled');
+      }
+    }
+  };
+  const startDraw = ev => {
+    down = true;
+    const pt = getPos(ev);
+    currentStroke = [pt];
+    SIG.strokes.push(currentStroke);
+    window._lastSigStrokes = SIG.strokes;
+    ctx.beginPath();
+    ctx.moveTo(pt[0], pt[1]);
+    ctx.lineTo(pt[0] + 0.5, pt[1] + 0.5);
+    ctx.stroke();
+    markSigned();
+  };
+  const moveDraw = ev => {
+    if (!down) return;
+    const pt = getPos(ev);
+    currentStroke.push(pt);
+    ctx.lineTo(pt[0], pt[1]);
+    ctx.stroke();
+    markSigned();
+  };
+  const endDraw = () => { down = false; };
+
+  if (window.PointerEvent) {
+    c.addEventListener('pointerdown', ev => {
+      try { c.setPointerCapture(ev.pointerId); } catch (_) {}
+      startDraw(ev);
+    });
+    c.addEventListener('pointermove', moveDraw);
+    c.addEventListener('pointerup', endDraw);
+    c.addEventListener('pointercancel', endDraw);
+  } else {
+    c.addEventListener('mousedown', startDraw);
+    c.addEventListener('mousemove', moveDraw);
+    c.addEventListener('mouseup', endDraw);
+    c.addEventListener('touchstart', ev => { ev.preventDefault(); startDraw(ev); }, { passive: false });
+    c.addEventListener('touchmove', ev => { ev.preventDefault(); moveDraw(ev); }, { passive: false });
+    c.addEventListener('touchend', endDraw);
+  }
+}
+
+/* =============================== 13. BOOT =============================== */
+loadState();
+if (navigator.onLine === false && !S.offline) { S.offline = true; S.autoOff = true; }
+render();
+</script>
+</body>
+</html>

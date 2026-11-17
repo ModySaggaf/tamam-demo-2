@@ -1,0 +1,32 @@
+{
+  "name": "Tamam تمام — Site Engineer",
+  "short_name": "Tamam تمام",
+  "description": "Tamam field accounting app for Saudi construction site engineers.",
+  "start_url": "./?ios=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F1EA",
+  "theme_color": "#0A3A2D",
+  "dir": "auto",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

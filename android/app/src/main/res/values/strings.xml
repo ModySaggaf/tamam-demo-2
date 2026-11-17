@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tamam</string>
+    <string name="title_activity_main">Tamam</string>
+    <string name="package_name">sa.tamam.engineer</string>
+    <string name="custom_url_scheme">sa.tamam.engineer</string>
+</resources>
