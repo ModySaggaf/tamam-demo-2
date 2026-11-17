@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tamam-field-v3';
+const CACHE_NAME = 'tamam-field-v4';
 const APP_SHELL = [
   './',
   './index.html',
@@ -33,6 +33,19 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   // only the app's own files are cached; Supabase and other APIs always go to the network
   if (new URL(event.request.url).origin !== self.location.origin) return;
+  // The app page itself: always try the network first so updates show immediately; use the saved copy offline.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', clone));
+          return response;
+        })
+        .catch(() => caches.match('./index.html').then((c) => c || caches.match('./')))
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const networkFetch = fetch(event.request)
